@@ -13,9 +13,9 @@ class DebugAppScene extends StatefulWidget {
 class _DebugAppSceneState extends State<DebugAppScene> {
   demoFunction(String value) {
     print("This is a test function " + value);
-    debugger();
+    //debugger();
     print("test");
-    debugDumpApp();
+    //debugDumpApp();
   }
 
   testTime(){
