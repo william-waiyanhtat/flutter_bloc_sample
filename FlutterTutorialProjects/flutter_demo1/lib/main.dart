@@ -3,6 +3,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_demo1/debug/debug_app.dart';
 import 'package:flutter/scheduler.dart';
 import 'widgets/switch_demo.dart';
+import 'package:flutter_demo1/custom_widget/custom_widget_demo.dart';
 
 void main() {
   // You can also debug a layout problem visually, by setting debugPaintSizeEnabled to true.
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: SwitchDemoScreen(),
+      home: CustomWidgetDemo(),
     );
   }
 }
