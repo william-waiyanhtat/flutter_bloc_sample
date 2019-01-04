@@ -16,6 +16,12 @@
             android:name="com.androidtutorialprojects.SelectImageActivity"
             android:label="@string/title_activity_select_image"
             android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
+        <activity
+            android:name="store_image_in_sqlite.StoreImageActivity"
+            android:label="@string/title_activity_select_image"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,5 +29,6 @@
             </intent-filter>
         </activity>
     </application>
+
 
 </manifest>
