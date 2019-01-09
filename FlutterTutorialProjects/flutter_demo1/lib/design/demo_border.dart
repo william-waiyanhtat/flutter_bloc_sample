@@ -10,28 +10,29 @@ class DemoBorderScreen extends StatefulWidget {
 }
 
 class _DemoBorderScreenState extends State<DemoBorderScreen> {
-
   BoxDecoration myBoxDecoration() {
     return BoxDecoration(
       border: Border(
         left: BorderSide(
-            width: 5.0,
-            color: Colors.red,
-        ),
-        top: BorderSide(
-            width: 5.0,
-            color: Colors.red
+          width: 2.0,
+          color: Colors.green,
         ),
         right: BorderSide(
-            width: 5.0,
-            color: Colors.red
+          width: 2.0,
+          color: Colors.green,
+        ),
+        top: BorderSide(
+          width: 2.0,
+          color: Colors.green,
         ),
         bottom: BorderSide(
-            width: 10.0,
-            color: Colors.green
+          width: 2.0,
+          color: Colors.green,
         ),
       ),
-     // borderRadius: BorderRadius.all(Radius.circular(10.0),),
+      borderRadius: BorderRadius.all(
+        Radius.circular(10.0),
+      ),
     );
   }
 
@@ -39,7 +40,7 @@ class _DemoBorderScreenState extends State<DemoBorderScreen> {
     return Container(
       margin: const EdgeInsets.all(30.0),
       padding: const EdgeInsets.all(10.0),
-      decoration: myBoxDecoration(), //       <--- BoxDecoration here
+      decoration: myBoxDecoration(),
       child: Text(
         "Hello",
         style: TextStyle(fontSize: 30.0),
@@ -56,7 +57,7 @@ class _DemoBorderScreenState extends State<DemoBorderScreen> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          myWidget()
+          myWidget(),
         ],
       ),
     );
