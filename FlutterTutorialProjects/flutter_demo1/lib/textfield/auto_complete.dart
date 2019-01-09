@@ -14,43 +14,55 @@ class AutoCompleteDemo extends StatefulWidget {
 }
 
 class _AutoCompleteDemoState extends State<AutoCompleteDemo> {
-  static List<User> players;
-  AutoCompleteTextField searchTextField;
-  TextEditingController controller = new TextEditingController();
-  GlobalKey<AutoCompleteTextFieldState<User>> key = new GlobalKey();
 
-  void callService() async {
-    print("Calling Service...");
+  static List<User> players = new List<User>();
+  AutoCompleteTextField searchTextField;
+  GlobalKey<AutoCompleteTextFieldState<User>> key = new GlobalKey();
+  bool loading = true;
+
+  void getUsers() async {
 
     try {
       final response =
           await http.get("https://jsonplaceholder.typicode.com/users");
       if (response.statusCode == 200) {
-        await loadPlayers(response.body);
+       players = loadPlayers(response.body);
+       print('Users : ${players.length}');
+       setState(() {
+                loading = false;
+              });
       } else {
-        print("Error");
+        print("Error getting users");
       }
     } catch (e) {}
   }
 
-  static Future loadPlayers(String jsonString) async {
-    try {
-      List<User> players;
-      players = new List<User>();
-      Map parsedJson = json.decode(jsonString);
-      var categoryJson = parsedJson as List;
-      for (int i = 0; i < categoryJson.length; i++) {
-        players.add(new User.fromJson(categoryJson[i]));
-      }
-      print('Length {$players.length}');
-    } catch (e) {
-      print(e);
-    }
+  static List<User> loadPlayers(String jsonString) {
+    final parsed = json.decode(jsonString).cast<Map<String, dynamic>>();
+    return parsed.map<User>((json) => User.fromJson(json)).toList();
+  }
+
+  Widget row(User user){
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Text(
+            user.name,
+            style: TextStyle(fontSize: 16.0),
+          ),
+          SizedBox(
+             width: 10.0,
+          ),
+          Text(
+            user.email,
+          ),
+        ],
+      );
   }
 
   @override
   void initState() {
-    callService();
+    getUsers();
     super.initState();
   }
 
@@ -63,8 +75,10 @@ class _AutoCompleteDemoState extends State<AutoCompleteDemo> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          AutoCompleteTextField<User>(
+          loading ? CircularProgressIndicator() :
+          searchTextField = AutoCompleteTextField<User>(
             key: key,
+            clearOnSubmit: false,
             suggestions: players,
             style: new TextStyle(color: Colors.black, fontSize: 16.0),
             decoration: new InputDecoration(
@@ -73,9 +87,8 @@ class _AutoCompleteDemoState extends State<AutoCompleteDemo> {
                   height: 60.0,
                 ),
                 contentPadding: EdgeInsets.fromLTRB(10.0, 30.0, 10.0, 20.0),
-                filled: true,
                 hintText: 'Search Name',
-                hintStyle: TextStyle(color: Colors.black)),
+                hintStyle: TextStyle(color: Colors.black),),
             itemFilter: (item, query) {
               return item.name.toLowerCase().startsWith(query.toLowerCase());
             },
@@ -87,21 +100,7 @@ class _AutoCompleteDemoState extends State<AutoCompleteDemo> {
                   () => searchTextField.textField.controller.text = item.name);
             },
             itemBuilder: (context, item) {
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text(
-                    item.name,
-                    style: TextStyle(fontSize: 16.0),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(15.0),
-                  ),
-                  Text(
-                    item.email,
-                  )
-                ],
-              );
+              return row(item);
             },
           ),
         ],
