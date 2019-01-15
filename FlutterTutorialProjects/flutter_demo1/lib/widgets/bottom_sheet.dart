@@ -69,6 +69,7 @@ controller.close();
  controller = _scaffoldKey.currentState
     .showBottomSheet<Null>((BuildContext context) {
   return new Container(
+    color: Colors.green,
       child: new Column(
     mainAxisSize: MainAxisSize.min,
     children: <Widget>[
@@ -84,7 +85,7 @@ controller.close();
         textAlign: TextAlign.left,
       ),
       SizedBox(
-        height: 50,
+        height: 100,
       ),
     ],
   ));

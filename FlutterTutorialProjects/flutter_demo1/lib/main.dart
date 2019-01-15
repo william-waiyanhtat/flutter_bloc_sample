@@ -8,6 +8,7 @@ import 'package:flutter_demo1/design/demo_border.dart';
 import 'textfield/auto_complete.dart';
 import 'tips/container_tip.dart';
 import 'widgets/bottom_sheet.dart';
+import 'widgets/navigation_drawer_demo.dart';
 
 void main() {
   // You can also debug a layout problem visually, by setting debugPaintSizeEnabled to true.
@@ -31,7 +32,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: BottomSheetDemo(),
+      home: NavigationDrawerDemo(),
     );
   }
 }
