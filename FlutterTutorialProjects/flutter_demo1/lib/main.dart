@@ -1,81 +1,39 @@
 import 'package:flutter/material.dart';
-import 'inherited_widgets/form_page.dart';
-import 'inherited_widgets/state_container.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter_demo1/debug/debug_app.dart';
+import 'package:flutter/scheduler.dart';
+import 'widgets/switch_demo.dart';
+import 'package:flutter_demo1/custom_widget/custom_widget_demo.dart';
+import 'package:flutter_demo1/design/demo_border.dart';
+import 'textfield/auto_complete.dart';
+import 'tips/container_tip.dart';
+import 'widgets/bottom_sheet.dart';
+import 'widgets/navigation_drawer_demo.dart';
+import 'widgets/navigation_drawer_demo.dart';
 
 void main() {
-  runApp(new StateContainer(child: new TodoApp()));
+  // You can also debug a layout problem visually, by setting debugPaintSizeEnabled to true.
+  // debugPaintSizeEnabled = true;
+  // Debugging animations
+  //timeDilation = 50.0;
+  // debugPaintPointersEnabled = true;
+  //debugPrintBeginFrameBanner = true;
+  //debugPaintLayerBordersEnabled = true;
+  runApp(MyApp());
 }
 
-class TodoApp extends StatelessWidget {
+class MyApp extends StatelessWidget {
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
-      title: 'Some Todos',
-      home: new HomeScreen(),
-    );
-  }
-}
-
-class HomeScreen extends StatefulWidget {
-  @override
-  HomeScreenState createState() => new HomeScreenState();
-}
-
-class HomeScreenState extends State<HomeScreen> {
-  User user;
-
-  Widget get _userInfo {
-    return new Center(
-      child: new Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          new Text("${user.firstName} ${user.lastName}",
-              style: new TextStyle(fontSize: 24.0)),
-          new Text(user.email, style: new TextStyle(fontSize: 24.0)),
-        ],
+    return MaterialApp(
+      //showPerformanceOverlay:true,
+      //debugShowMaterialGrid: true,
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
       ),
-    );
-  }
-
-  Widget get _logInPrompt {
-    return new Center(
-      child: new Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          new Text('Please add user information'),
-        ],
-      ),
-    );
-  }
-
-  void _updateUser(BuildContext context) {
-    Navigator.push(
-      context,
-      new MaterialPageRoute(
-        fullscreenDialog: true,
-        builder: (context) {
-          return new UpdateUserScreen();
-        },
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final container = StateContainer.of(context);
-    user = container.user;
-    var body = user != null ? _userInfo : _logInPrompt;
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text('Inherited Widget Test'),
-      ),
-      body: body,
-      floatingActionButton: new FloatingActionButton(
-        onPressed: () => _updateUser(context),
-        child: new Icon(Icons.edit),
-      ),
+      home: NavigationDrawerDemo(),
     );
   }
 }
