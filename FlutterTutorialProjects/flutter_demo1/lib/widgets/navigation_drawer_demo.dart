@@ -22,12 +22,15 @@ class _NavigationDrawerDemoState extends State<NavigationDrawerDemo> {
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Image.asset('images/flutter.jpg',
-                  width: 80,
-                  height: 80,),
-                  SizedBox(height: 15,),
-                  Text("name",
-                  style: TextStyle(color: Colors.grey),)
+                  Image.asset(
+                    "images/flutter.jpg",
+                    width: 80,
+                    height: 80,
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Text("test@gmail.com"),
                 ],
               ),
               decoration: BoxDecoration(
@@ -35,20 +38,22 @@ class _NavigationDrawerDemoState extends State<NavigationDrawerDemo> {
               ),
             ),
             ListTile(
-              leading: Icon(Icons.add_to_photos),
-              title: Text('Add to Photos'),
-              onTap: () {
-                Navigator.pop(context);
-              },
+              leading: Icon(Icons.photo),
+              title: Text("Photos"),
+              onTap: () {},
             ),
             ListTile(
-              leading: Icon(Icons.add_alarm),
-              title: Text('Alarm'),
+              leading: Icon(Icons.photo_album),
+              title: Text("Photo Album"),
+              onTap: () {},
+            ),
+            ListTile(
+              leading: Icon(Icons.video_library),
+              title: Text("Video Library"),
               onTap: () {
                 Navigator.pop(context);
               },
-            ),
-            
+            )
           ],
         ),
       ),
