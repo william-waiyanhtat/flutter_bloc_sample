@@ -17,21 +17,26 @@ class _ScreenTwoState extends State<ScreenTwo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+      body: Padding(
+        padding: EdgeInsets.all(40.0),
+        child: Stack(
+          alignment: Alignment.bottomCenter,
           children: <Widget>[
-            Text(
-              widget.title,
+            Hero(
+              tag: "image1",
+              child: Container(
+                height: 800.0,
+                width: 800.0,
+                child: Image.asset(
+                  "images/flutter.jpg",
+                  width: 800,
+                  height: 800,
+                ),
+              ),
             ),
-            RaisedButton(
-              child: Text("Go Back"),
-              onPressed: () {
-                goBack(context);
-              },
+            OutlineButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Icon(Icons.close),
             )
           ],
         ),

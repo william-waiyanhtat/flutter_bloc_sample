@@ -2,29 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_demo1/inherited_widgets/demo/state_container.dart';
 
 class FormScreen extends StatefulWidget {
-  FormScreen();
-
   @override
-  State<StatefulWidget> createState() {
-    return _FormScreenState();
-  }
+  FormScreenState createState() => new FormScreenState();
 }
 
-class _FormScreenState extends State<FormScreen> {
+class FormScreenState extends State<FormScreen> {
   String name;
   final formKey = new GlobalKey<FormState>();
 
-  validateFormAndSave() {
-
+  validateAndSave() {
     final container = StateContainer.of(context);
 
     if (formKey.currentState.validate()) {
       formKey.currentState.save();
-      print('Name $name');
-
-      container.updateUserInfo(name: name);
-
-      //
+      container.updateUser(name: name);
       Navigator.pop(context);
     } else {
       print("Validation Error");
@@ -33,32 +24,32 @@ class _FormScreenState extends State<FormScreen> {
 
   @override
   Widget build(BuildContext context) {
-    
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text('Flutter Form Demo'),
+        title: new Text('Flutter Inherited Widget Demo'),
       ),
       body: Form(
         key: formKey,
         child: Padding(
-          padding: EdgeInsets.all(10.0),
-          child: new Container(
-            child: new Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                verticalDirection: VerticalDirection.down,
-                children: <Widget>[
-                  TextFormField(
-                    keyboardType: TextInputType.text,
-                    decoration: InputDecoration(labelText: "Name"),
-                    validator: (val) => val.length == 0 ? "Enter Name" : null,
-                    onSaved: (val) => name = val,
-                  ),
-                  RaisedButton(
-                    child: Text("Save"),
-                    onPressed: validateFormAndSave,
-                  )
-                ]),
+          padding: EdgeInsets.all(20.0),
+          child: Container(
+            alignment: Alignment.center,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                TextFormField(
+                  keyboardType: TextInputType.text,
+                  decoration: InputDecoration(labelText: "Name"),
+                  validator: (val) => val.length == 0 ? "Enter Name" : null,
+                  onSaved: (val) => name = val,
+                ),
+                RaisedButton(
+                  child: Text("Save"),
+                  onPressed: validateAndSave,
+                )
+              ],
+            ),
           ),
         ),
       ),

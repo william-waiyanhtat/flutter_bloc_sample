@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'screen2.dart';
+import 'package:flutter_demo1/transition/details.dart';
 
 class ScreenOne extends StatefulWidget {
   ScreenOne() : super();
@@ -11,12 +11,13 @@ class ScreenOne extends StatefulWidget {
 }
 
 class _ScreenOneState extends State<ScreenOne> {
-  void goToNextPage(BuildContext context) {
+  goToDetails(BuildContext context) {
     Navigator.push(
-        context,
-        new MaterialPageRoute(
-            fullscreenDialog: true,
-            builder: (BuildContext context) => new ScreenTwo("Screen Two")));
+      context,
+      new MaterialPageRoute(
+          fullscreenDialog: true,
+          builder: (BuildContext context) => new DetailsScreen()),
+    );
   }
 
   @override
@@ -27,8 +28,8 @@ class _ScreenOneState extends State<ScreenOne> {
       ),
       body: Container(
         color: Colors.green,
-        alignment: Alignment.center,
         padding: EdgeInsets.all(30.0),
+        alignment: Alignment.center,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -37,7 +38,6 @@ class _ScreenOneState extends State<ScreenOne> {
               child: ClipOval(
                 child: Image.asset(
                   "images/flutter.jpg",
-                  alignment: Alignment.center,
                   width: 200,
                   height: 200,
                 ),
@@ -47,13 +47,13 @@ class _ScreenOneState extends State<ScreenOne> {
               height: 30.0,
             ),
             OutlineButton(
-              padding: EdgeInsets.all(20.0),
               child: Text(
-                "Show Full Image",
+                "Show Full  Image",
                 style: TextStyle(color: Colors.white),
               ),
+              padding: EdgeInsets.all(20.0),
               onPressed: () {
-                goToNextPage(context);
+                goToDetails(context);
               },
             )
           ],

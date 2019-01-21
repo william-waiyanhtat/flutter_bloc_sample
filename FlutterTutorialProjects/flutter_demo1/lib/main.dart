@@ -1,39 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter_demo1/debug/debug_app.dart';
-import 'package:flutter/scheduler.dart';
-import 'widgets/switch_demo.dart';
-import 'package:flutter_demo1/custom_widget/custom_widget_demo.dart';
-import 'package:flutter_demo1/design/demo_border.dart';
-import 'textfield/auto_complete.dart';
-import 'tips/container_tip.dart';
-import 'widgets/bottom_sheet.dart';
-import 'widgets/navigation_drawer_demo.dart';
-import 'widgets/navigation_drawer_demo.dart';
+import 'widgets/data_table/data_table.dart';
 
 void main() {
-  // You can also debug a layout problem visually, by setting debugPaintSizeEnabled to true.
-  // debugPaintSizeEnabled = true;
-  // Debugging animations
-  //timeDilation = 50.0;
-  // debugPaintPointersEnabled = true;
-  //debugPrintBeginFrameBanner = true;
-  //debugPaintLayerBordersEnabled = true;
-  runApp(MyApp());
+  runApp(
+    new HomeApp(),
+  );
 }
 
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+class HomeApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      //showPerformanceOverlay:true,
-      //debugShowMaterialGrid: true,
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: NavigationDrawerDemo(),
+    return new MaterialApp(
+      title: 'Demo',
+      home: new DataTableDemo(),
     );
   }
 }

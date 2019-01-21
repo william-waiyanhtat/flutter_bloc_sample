@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'user.dart';
 
-class StateContainer extends StatefulWidget {
+class StateContainer extends StatefulWidget{
   final Widget child;
   final User user;
 
-  StateContainer({@required this.child, this.user});
+  StateContainer({
+    @required this.child,
+    this.user
+  });
 
   static StateContainerState of(BuildContext context) {
-    return (context.inheritFromWidgetOfExactType(InheritedStateContainer)
-            as InheritedStateContainer)
+    return (context.inheritFromWidgetOfExactType(_InheritedStateContainer)
+            as _InheritedStateContainer)
         .data;
   }
 
@@ -20,9 +23,9 @@ class StateContainer extends StatefulWidget {
 class StateContainerState extends State<StateContainer> {
   User user;
 
-  void updateUser({name}) {
+  void updateUserInfo({name}) {
     if (user == null) {
-      user = new User(name: name);
+      user = new User(name);
       setState(() {
         user = user;
       });
@@ -35,21 +38,22 @@ class StateContainerState extends State<StateContainer> {
 
   @override
   Widget build(BuildContext context) {
-    return InheritedStateContainer(
+    return new _InheritedStateContainer(
       data: this,
       child: widget.child,
     );
   }
 }
 
-class InheritedStateContainer extends InheritedWidget {
+class _InheritedStateContainer extends InheritedWidget {
   final StateContainerState data;
-  InheritedStateContainer({
+
+  _InheritedStateContainer({
     Key key,
     @required this.data,
     @required Widget child,
   }) : super(key: key, child: child);
 
   @override
-  bool updateShouldNotify(InheritedWidget oldWidget) => true;
+  bool updateShouldNotify(_InheritedStateContainer old) => true;
 }
