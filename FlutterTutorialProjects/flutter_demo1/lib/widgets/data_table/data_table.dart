@@ -4,7 +4,7 @@ import 'package:flutter_demo1/widgets/data_table/user.dart';
 class DataTableDemo extends StatefulWidget {
   DataTableDemo() : super();
 
-  final String title = "Data Table Demo App";
+  final String title = "Data Table Flutter Demo";
 
   @override
   DataTableDemoState createState() => DataTableDemoState();
@@ -12,6 +12,7 @@ class DataTableDemo extends StatefulWidget {
 
 class DataTableDemoState extends State<DataTableDemo> {
   List<User> users;
+  List<User> selectedUsers;
   bool sort;
   bool selected;
 
@@ -19,11 +20,22 @@ class DataTableDemoState extends State<DataTableDemo> {
   void initState() {
     sort = false;
     selected = false;
+    selectedUsers = [];
     users = User.getUsers();
     super.initState();
   }
 
-  onSortColumn(int columnIndex, bool ascending) {
+  onSelectedRow(bool selected, User user) async {
+    setState(() {
+      if (selected) {
+        selectedUsers.add(user);
+      } else {
+        selectedUsers.remove(user);
+      }
+    });
+  }
+
+  onSortColumn(int columnIndex, bool ascending) async {
     if (0 == columnIndex) {
       if (ascending) {
         users.sort((a, b) => a.firstName.compareTo(b.firstName));
@@ -31,6 +43,19 @@ class DataTableDemoState extends State<DataTableDemo> {
         users.sort((a, b) => b.firstName.compareTo(a.firstName));
       }
     }
+  }
+
+  deleteSelected() async {
+    setState(() {
+      if (selectedUsers.isNotEmpty) {
+        List<User> temp = [];
+        temp.addAll(selectedUsers);
+        for (User user in temp) {
+          users.remove(user);
+          selectedUsers.remove(user);
+        }
+      }
+    });
   }
 
   SingleChildScrollView dataBody() {
@@ -41,7 +66,7 @@ class DataTableDemoState extends State<DataTableDemo> {
         sortColumnIndex: 0,
         columns: [
           DataColumn(
-              label: Text("First Name"),
+              label: Text("FIRST NAME"),
               numeric: false,
               onSort: (columnIndex, ascending) {
                 setState(() {
@@ -51,27 +76,17 @@ class DataTableDemoState extends State<DataTableDemo> {
               },
               tooltip: "This is the first name"),
           DataColumn(
-              label: Text("Last Name"),
+              label: Text("LAST NAME"),
               numeric: false,
               onSort: (i, b) {},
               tooltip: "This is the last name"),
-          DataColumn(
-              label: Text("Place"),
-              numeric: false,
-              onSort: (i, b) {},
-              tooltip: "This is the place"),
         ],
         rows: users
             .map(
               (user) => DataRow(
-                    selected: selected,
+                    selected: selectedUsers.contains(user),
                     onSelectChanged: (b) {
-                      if (b) {
-                        print('row-selected: ${user.firstName}');
-                        setState(() {
-                          selected = user.firstName == "a";
-                        });
-                      }
+                      onSelectedRow(b, user);
                     },
                     cells: [
                       DataCell(
@@ -83,9 +98,6 @@ class DataTableDemoState extends State<DataTableDemo> {
                       DataCell(
                         Text(user.lastName),
                       ),
-                      DataCell(
-                        Text(user.place),
-                      )
                     ],
                   ),
             )
@@ -97,11 +109,43 @@ class DataTableDemoState extends State<DataTableDemo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(widget.title),
-        ),
-        body: Container(
-          child: dataBody(),
-        ));
+      appBar: AppBar(
+        title: Text(widget.title),
+      ),
+      body: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        verticalDirection: VerticalDirection.down,
+        children: <Widget>[
+          Center(
+            child: dataBody(),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.all(20.0),
+                child: OutlineButton(
+                  child: Text('SELECTED ${selectedUsers.length}'),
+                  onPressed: () {},
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(20.0),
+                child: OutlineButton(
+                  child: Text("DELETE SELETED"),
+                  onPressed: selectedUsers.isEmpty
+                      ? null
+                      : () {
+                          deleteSelected();
+                        },
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 }
