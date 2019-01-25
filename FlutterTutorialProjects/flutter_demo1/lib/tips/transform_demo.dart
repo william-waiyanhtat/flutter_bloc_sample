@@ -88,6 +88,19 @@ class Tip3State extends State<Tip3> {
     );
   }
 
+  Slider slider() {
+    return Slider(
+      value: sliderVal,
+      min: 0,
+      max: 100.0,
+      onChanged: (val) {
+        setState(() {
+          sliderVal = val;
+        });
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -97,16 +110,7 @@ class Tip3State extends State<Tip3> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
-          Slider(
-            value: sliderVal,
-            min: 0,
-            max: 100,
-            onChanged: (val) {
-              setState(() {
-                sliderVal = val;
-              });
-            },
-          ),
+          slider(),
           skew(),
           rotate(),
           scale(),
