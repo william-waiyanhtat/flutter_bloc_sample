@@ -35,7 +35,7 @@ class Tip3State extends State<Tip3> {
   Container scale() {
     return Container(
       child: Transform.scale(
-        scale: sliderVal / 50,
+        scale: sliderVal == 0 ? 1 : sliderVal / 50,
         origin: Offset(0.0, 0.0),
         child: Container(
           height: 100.0,
@@ -54,6 +54,19 @@ class Tip3State extends State<Tip3> {
           height: 100.0,
           width: 100.0,
           color: Colors.yellow,
+        ),
+      ),
+    );
+  }
+
+  skew() {
+    return Container(
+      child: Transform(
+        transform: Matrix4.skewX(sliderVal / 100),
+        child: Container(
+          height: 100.0,
+          width: 100.0,
+          color: Colors.blue,
         ),
       ),
     );
@@ -94,6 +107,7 @@ class Tip3State extends State<Tip3> {
               });
             },
           ),
+          skew(),
           rotate(),
           scale(),
           threeD(),
