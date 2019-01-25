@@ -1,0 +1,125 @@
+Rotate, Scale, Skew or Translate Widgets in Flutter using Transform
+
+This articles describes how easily you can rotate, scale or translate widgets in Flutter. We can do that with the 
+help of Transform Widget.
+
+Transform Widget has below functions
+
+The types of Transform widgets are:
+
+<ul>
+<li>Transform (default constructor)</li>
+<li>Transform.rotate</li>
+<li>Transform.scale</li>
+<li>Transform.translate</li>
+</ul>
+
+<font color="purple" size="5">1. Rotate</font>
+
+Our Screen will have a Slider to change the value of rotate or scale, translate or skew. Then three container widgets that does all the four transformations.
+So Let's start with rotate.
+
+Below function returns a container that implements Rotate Transform.
+
+[java]
+ Container rotate() {
+    return Container(
+      child: Transform.rotate(
+        angle: sliderVal,
+        origin: Offset(0.0, 0.0),
+        child: Container(
+          height: 50.0,
+          width: 50.0,
+          color: Colors.red,
+        ),
+      ),
+    );
+  }
+  [/java]
+
+
+You can change the offset co change the point at which you want to rotate the widget.
+
+[java]
+   origin: Offset(100.0, 0.0),
+[/java]
+
+This applies to all the 'Transform' variations.
+
+<font color="purple" size="5">Scale</font>
+
+Below function does a scale on the Widget. Change the 'scale' value to change the scale for the Widget.
+
+[java]
+   Container scale() {
+    return Container(
+      child: Transform.scale(
+        scale: sliderVal == 0 ? 1 : sliderVal / 50,
+        origin: Offset(0.0, 0.0),
+        child: Container(
+          height: 100.0,
+          width: 100.0,
+          color: Colors.green,
+        ),
+      ),
+    );
+  }
+[/java]
+
+<font color="purple" size="5">Translate</font>
+
+[java]
+  Container translate() {
+    return Container(
+      child: Transform.translate(
+        offset: Offset(200.0, 110.0),
+        child: Container(
+          height: 100.0,
+          width: 100.0,
+          color: Colors.yellow,
+        ),
+      ),
+    );
+  }
+[/java]
+
+<font color="purple" size="5">Skew</font>
+
+You can do a skew(), skewX(), or skewY() on the Transform.
+
+[java]
+  skew() {
+    return Container(
+      child: Transform(
+        transform: Matrix4.skewX(sliderVal / 100),
+        child: Container(
+          height: 100.0,
+          width: 100.0,
+          color: Colors.blue,
+        ),
+      ),
+    );
+  }
+[/java]
+
+<font color="purple" size="5">Other Transformations</font>
+
+Below methods does a 3D transformation on a square box.
+
+[java]
+  threeD() {
+    return Container(
+      child: Transform(
+        transform: Matrix4.identity()
+          ..setEntry(3, 2, sliderVal / 1000)
+          ..rotateX(3.14 / 20.0),
+        alignment: FractionalOffset.center,
+        child: Container(
+          height: 100.0,
+          width: 100.0,
+          color: Colors.blue,
+        ),
+      ),
+    );
+  }
+  [/java]
