@@ -24,6 +24,7 @@ dependencies:
   sqflite: any
   image_picker: ^0.4.10
   autocomplete_textfield: ^1.6.4
+  shared_preferences: ^0.5.0
   
 dev_dependencies:
   flutter_test:
