@@ -1,4 +1,4 @@
-package client_server_tutorials.coderzheaven.com.clientserverdemo;
+package client_server_tutorials.coderzheaven.com.clientserverdemo.client_server;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -20,6 +20,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import client_server_tutorials.coderzheaven.com.clientserverdemo.R;
 
 public class ServerActivity extends AppCompatActivity implements View.OnClickListener {
 

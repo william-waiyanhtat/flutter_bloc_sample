@@ -6,6 +6,7 @@ import 'widgets/tranformdemo/transform_demo.dart';
 import 'widgets/radio_widget_demo/radio_widget_demo.dart';
 import 'textfield/auto_complete.dart';
 import 'others/shared_preference/shared_preference_demo.dart';
+import 'widgets/animated_container/animated_cont_demo.dart';
 
 void main() {
   runApp(
@@ -18,7 +19,7 @@ class HomeApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return new MaterialApp(
       title: 'Demo',
-      home: new SharedPreferenceDemo(),
+      home: new AnimatedDemo(),
     );
   }
 }
