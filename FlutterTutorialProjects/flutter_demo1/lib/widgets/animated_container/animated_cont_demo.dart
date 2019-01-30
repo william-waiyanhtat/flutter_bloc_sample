@@ -52,6 +52,7 @@ class AnimatedDemoState extends State<AnimatedDemo> {
           children: <Widget>[
             AnimatedContainer(
               duration: Duration(seconds: 1),
+              curve: Curves.bounceInOut,
               color: _color,
               height: _height,
               width: _width,
