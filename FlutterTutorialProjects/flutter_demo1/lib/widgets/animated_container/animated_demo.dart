@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class AnimatedDemo extends StatefulWidget {
   AnimatedDemo() : super();
 
-  final String title = "Animatedt Demo";
+  final String title = "Animated Demo";
 
   @override
   AnimatedDemoState createState() => AnimatedDemoState();
@@ -11,15 +11,15 @@ class AnimatedDemo extends StatefulWidget {
 
 class AnimatedDemoState extends State<AnimatedDemo> {
   //
-  bool _isFirstState = false;
   var _color = Colors.red;
   var _height = 100.0;
   var _width = 100.0;
+  var _isFirstCrossFadeEnabled = false;
   var _opacity = 0.0;
 
   animateContainer() {
     setState(() {
-      _color = _color == Colors.green ? Colors.red : Colors.green;
+      _color = _color == Colors.red ? Colors.green : Colors.red;
       _height = _height == 100 ? 200 : 100;
       _width = _width == 100 ? 200 : 100;
     });
@@ -27,7 +27,7 @@ class AnimatedDemoState extends State<AnimatedDemo> {
 
   animateCrossFade() {
     setState(() {
-      _isFirstState = !_isFirstState;
+      _isFirstCrossFadeEnabled = !_isFirstCrossFadeEnabled;
     });
   }
 
@@ -52,7 +52,7 @@ class AnimatedDemoState extends State<AnimatedDemo> {
           children: <Widget>[
             AnimatedContainer(
               duration: Duration(seconds: 1),
-              curve: Curves.bounceInOut,
+              curve: Curves.bounceIn,
               color: _color,
               height: _height,
               width: _width,
@@ -64,26 +64,20 @@ class AnimatedDemoState extends State<AnimatedDemo> {
               },
             ),
             AnimatedCrossFade(
+              duration: Duration(milliseconds: 3000),
               firstChild: Container(
-                padding: EdgeInsets.all(15.0),
-                child: Image.asset(
-                  "images/apple.png",
-                ),
+                child: Image.asset("images/apple.png"),
                 height: 200.0,
                 width: 200.0,
               ),
               secondChild: Container(
-                padding: EdgeInsets.all(15.0),
-                child: Image.asset(
-                  "images/android.png",
-                ),
+                child: Image.asset("images/android.png"),
                 height: 200.0,
                 width: 200.0,
               ),
-              crossFadeState: _isFirstState
+              crossFadeState: _isFirstCrossFadeEnabled
                   ? CrossFadeState.showFirst
                   : CrossFadeState.showSecond,
-              duration: Duration(milliseconds: 2000),
             ),
             OutlineButton(
               child: Text("Animate CrossFade"),
@@ -93,7 +87,7 @@ class AnimatedDemoState extends State<AnimatedDemo> {
             ),
             AnimatedOpacity(
               opacity: _opacity,
-              duration: Duration(seconds: 1),
+              duration: Duration(seconds: 2),
               child: FlutterLogo(
                 size: 200.0,
               ),
