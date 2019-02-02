@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'progress_painter.dart';
+import 'package:flutter_demo1/widgets/old/progress_painter.dart';
 import 'dart:ui';
 import 'dart:async';
 
@@ -17,32 +17,30 @@ class CustomDemoState extends State<CustomDemo>
   //
   double _percentage;
   double _nextPercentage;
+  bool _progressDone;
   Timer _timer;
   AnimationController _progressAnimationController;
-  bool _progressDone;
 
   @override
-  initState() {
+  void initState() {
     super.initState();
     _percentage = 0.0;
     _nextPercentage = 0.0;
-    _timer = null;
     _progressDone = false;
+    _timer = null;
     initAnimationController();
   }
 
   initAnimationController() {
-    _progressAnimationController = AnimationController(
+    _progressAnimationController = new AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 1000),
-    )..addListener(
-        () {
-          setState(() {
-            _percentage = lerpDouble(_percentage, _nextPercentage,
-                _progressAnimationController.value);
-          });
-        },
-      );
+      duration: new Duration(milliseconds: 1000),
+    )..addListener(() {
+        setState(() {
+          _percentage = lerpDouble(
+              _percentage, _nextPercentage, _progressAnimationController.value);
+        });
+      });
   }
 
   start() {
@@ -61,19 +59,7 @@ class CustomDemoState extends State<CustomDemo>
     }
   }
 
-  startProgress() {
-    if (null != _timer && _timer.isActive) {
-      _timer.cancel();
-    }
-    setState(() {
-      _percentage = 0.0;
-      _nextPercentage = 0.0;
-      _progressDone = false;
-      start();
-    });
-  }
-
-  publishProgress() {
+  publishProgress() async {
     setState(() {
       _percentage = _nextPercentage;
       _nextPercentage += 0.5;
@@ -82,6 +68,18 @@ class CustomDemoState extends State<CustomDemo>
         _nextPercentage = 0.0;
       }
       _progressAnimationController.forward(from: 0.0);
+    });
+  }
+
+  startProgress() {
+    if (null != _timer && _timer.isActive) {
+      _timer.cancel();
+    }
+    setState(() {
+      _percentage = 0;
+      _nextPercentage = 0;
+      _progressDone = false;
+      start();
     });
   }
 
@@ -106,10 +104,10 @@ class CustomDemoState extends State<CustomDemo>
       child: Center(
         child: _progressDone ? getDoneImage() : getProgressText(),
       ),
-      foregroundPainter: ProgressPainter(
+      foregroundPainter: new ProgressPainter(
           defaultCircleColor: Colors.amber,
           percentageCompletedCircleColor: Colors.green,
-          completedPercentage: _percentage,
+          completedPercent: _percentage,
           circleWidth: 50.0),
     );
   }
@@ -127,18 +125,17 @@ class CustomDemoState extends State<CustomDemo>
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Container(
-              height: 200.0,
-              width: 200.0,
+              height: 200,
+              width: 200,
+              alignment: Alignment.center,
               padding: EdgeInsets.all(20.0),
               margin: EdgeInsets.all(30.0),
               child: progressView(),
             ),
             OutlineButton(
               child: Text("START"),
-              onPressed: () {
-                startProgress();
-              },
-            )
+              onPressed: startProgress,
+            ),
           ],
         ),
       ),

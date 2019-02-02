@@ -46,6 +46,7 @@ flutter:
   assets:
    - images/apple.png
    - images/android.png
+   - images/checkmark.png
    - images/flutter.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
