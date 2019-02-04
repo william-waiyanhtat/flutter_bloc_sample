@@ -9,6 +9,7 @@ import 'others/shared_preference/shared_preference_demo.dart';
 import 'widgets/animated_container/animated_demo.dart';
 import 'widgets/custom_paint/custom_paint.dart';
 import 'widgets/backdropfliter/backdrop_filter.dart';
+import 'widgets/gridview/gridview_demo.dart';
 
 void main() {
   runApp(
@@ -21,7 +22,7 @@ class HomeApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return new MaterialApp(
       title: 'Demo',
-      home: new BackDropFilterDemo(),
+      home: new GridViewDemo(),
     );
   }
 }
