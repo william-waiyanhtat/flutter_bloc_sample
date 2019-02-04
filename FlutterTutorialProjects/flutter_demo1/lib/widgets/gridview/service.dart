@@ -4,9 +4,9 @@ import 'album.dart';
 
 class Services {
   static Future<List<Album>> getPhotos() async {
-    final response =
-        await http.get("https://jsonplaceholder.typicode.com/photos");
     try {
+      final response =
+          await http.get("https://jsonplaceholder.typicode.com/photos");
       if (response.statusCode == 200) {
         List<Album> list = parsePhotos(response.body);
         return list;

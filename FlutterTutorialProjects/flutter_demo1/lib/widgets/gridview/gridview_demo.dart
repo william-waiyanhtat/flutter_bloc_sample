@@ -16,12 +16,10 @@ class GridViewDemo extends StatefulWidget {
 class GridViewDemoState extends State<GridViewDemo> {
   //
   StreamController<int> streamController = new StreamController<int>();
-  int numPhotos;
 
   @override
   void initState() {
     super.initState();
-    numPhotos = 0;
   }
 
   @override
@@ -48,51 +46,23 @@ class GridViewDemoState extends State<GridViewDemo> {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           Flexible(
-            child: Container(
-              child: FutureBuilder<List<Album>>(
-                future: Services.getPhotos(),
-                builder: (context, snapshot) {
-                  //
-                  if (snapshot.hasError) {
-                    return Text("Error occured");
-                  }
-                  //
-                  if (snapshot.hasData) {
-                    numPhotos = snapshot.data.length;
-                    streamController.sink.add(numPhotos);
-                    print(numPhotos);
-                    return new Padding(
-                      padding: new EdgeInsets.all(5.0),
-                      child: GridView.count(
-                        crossAxisCount: 2,
-                        childAspectRatio: 1.0,
-                        padding: const EdgeInsets.all(4.0),
-                        mainAxisSpacing: 4.0,
-                        crossAxisSpacing: 4.0,
-                        children: snapshot.data.map(
-                          (item) {
-                            return GestureDetector(
-                              child: GridTile(
-                                child: AlbumCell(
-                                  context,
-                                  item,
-                                ),
-                              ),
-                              onTap: () {
-                                rowClick(context, item);
-                              },
-                            );
-                          },
-                        ).toList(),
-                      ),
-                    );
-                  } else if (snapshot.hasError) {
-                    return Text("Error 2");
-                  } else {
-                    return circularProgress();
-                  }
-                },
-              ),
+            child: FutureBuilder<List<Album>>(
+              future: Services.getPhotos(),
+              builder: (context, snapshot) {
+                //
+                if (snapshot.hasError) {
+                  return error(snapshot);
+                }
+                //
+                if (snapshot.hasData) {
+                  streamController.sink.add(snapshot.data.length);
+                  return gridview(snapshot);
+                } else if (snapshot.hasError) {
+                  return error(snapshot);
+                } else {
+                  return circularProgress();
+                }
+              },
             ),
           ),
         ],
@@ -100,15 +70,47 @@ class GridViewDemoState extends State<GridViewDemo> {
     );
   }
 
+  gridview(AsyncSnapshot<List<Album>> snapshot) {
+    return Padding(
+      padding: EdgeInsets.all(5.0),
+      child: GridView.count(
+        crossAxisCount: 2,
+        childAspectRatio: 1.0,
+        padding: const EdgeInsets.all(4.0),
+        mainAxisSpacing: 4.0,
+        crossAxisSpacing: 4.0,
+        children: snapshot.data.map(
+          (item) {
+            return GestureDetector(
+              child: GridTile(
+                child: AlbumCell(
+                  context,
+                  item,
+                ),
+              ),
+              onTap: () {
+                rowClick(context, item);
+              },
+            );
+          },
+        ).toList(),
+      ),
+    );
+  }
+
+  error(AsyncSnapshot<List<Album>> snapshot) {
+    return Text("Error occured ${snapshot.error}");
+  }
+
   rowClick(BuildContext context, Album album) {
-    //
     print("Clicked ${album.title}");
   }
 
   static Center circularProgress() {
     return Center(
-        child: CircularProgressIndicator(
-      valueColor: new AlwaysStoppedAnimation<Color>(Colors.lightGreen),
-    ));
+      child: CircularProgressIndicator(
+        valueColor: new AlwaysStoppedAnimation<Color>(Colors.lightGreen),
+      ),
+    );
   }
 }
