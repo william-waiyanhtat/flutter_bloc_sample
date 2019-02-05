@@ -3,10 +3,10 @@ import 'package:http/http.dart' as http;
 import 'album.dart';
 
 class Services {
+  static const String url = "https://jsonplaceholder.typicode.com/photos";
   static Future<List<Album>> getPhotos() async {
     try {
-      final response =
-          await http.get("https://jsonplaceholder.typicode.com/photos");
+      final response = await http.get(url);
       if (response.statusCode == 200) {
         List<Album> list = parsePhotos(response.body);
         return list;

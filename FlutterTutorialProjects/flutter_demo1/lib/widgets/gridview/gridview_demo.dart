@@ -18,10 +18,54 @@ class GridViewDemoState extends State<GridViewDemo> {
   //
   StreamController<int> streamController = new StreamController<int>();
 
-  @override
-  void dispose() {
-    streamController.close();
-    super.dispose();
+  gridview(AsyncSnapshot<List<Album>> snapshot) {
+    return Padding(
+      padding: EdgeInsets.all(5.0),
+      child: GridView.count(
+        crossAxisCount: 2,
+        childAspectRatio: 1.0,
+        padding: const EdgeInsets.all(4.0),
+        mainAxisSpacing: 4.0,
+        crossAxisSpacing: 4.0,
+        children: snapshot.data.map(
+          (album) {
+            return GestureDetector(
+              child: GridTile(
+                child: AlbumCell(album),
+              ),
+              onTap: () {
+                cellClick(context, album);
+              },
+            );
+          },
+        ).toList(),
+      ),
+    );
+  }
+
+  cellClick(BuildContext context, Album album) {
+    print("Clicked ${album.title}");
+    goToNextPage(context, album);
+  }
+
+  void goToNextPage(BuildContext context, Album curAlbum) {
+    Navigator.push(
+      context,
+      new MaterialPageRoute(
+        fullscreenDialog: true,
+        builder: (BuildContext context) => GridDetails(
+              curAlbum: curAlbum,
+            ),
+      ),
+    );
+  }
+
+  static Center circularProgress() {
+    return Center(
+      child: CircularProgressIndicator(
+        valueColor: new AlwaysStoppedAnimation<Color>(Colors.lightGreen),
+      ),
+    );
   }
 
   @override
@@ -47,17 +91,15 @@ class GridViewDemoState extends State<GridViewDemo> {
               builder: (context, snapshot) {
                 //
                 if (snapshot.hasError) {
-                  return error(snapshot);
+                  return Text("Error occured ${snapshot.error}");
                 }
                 //
                 if (snapshot.hasData) {
                   streamController.sink.add(snapshot.data.length);
                   return gridview(snapshot);
-                } else if (snapshot.hasError) {
-                  return error(snapshot);
-                } else {
-                  return circularProgress();
                 }
+                //
+                return circularProgress();
               },
             ),
           ),
@@ -66,59 +108,9 @@ class GridViewDemoState extends State<GridViewDemo> {
     );
   }
 
-  gridview(AsyncSnapshot<List<Album>> snapshot) {
-    return Padding(
-      padding: EdgeInsets.all(5.0),
-      child: GridView.count(
-        crossAxisCount: 2,
-        childAspectRatio: 1.0,
-        padding: const EdgeInsets.all(4.0),
-        mainAxisSpacing: 4.0,
-        crossAxisSpacing: 4.0,
-        children: snapshot.data.map(
-          (item) {
-            return GestureDetector(
-              child: GridTile(
-                child: AlbumCell(
-                  item,
-                ),
-              ),
-              onTap: () {
-                rowClick(context, item);
-              },
-            );
-          },
-        ).toList(),
-      ),
-    );
-  }
-
-  error(AsyncSnapshot<List<Album>> snapshot) {
-    return Text("Error occured ${snapshot.error}");
-  }
-
-  rowClick(BuildContext context, Album album) {
-    print("Clicked ${album.title}");
-    goToNextPage(context, album);
-  }
-
-  void goToNextPage(BuildContext context, Album curAlbum) {
-    Navigator.push(
-      context,
-      new MaterialPageRoute(
-        fullscreenDialog: true,
-        builder: (BuildContext context) => GridDetails(
-              curAlbum: curAlbum,
-            ),
-      ),
-    );
-  }
-
-  static Center circularProgress() {
-    return Center(
-      child: CircularProgressIndicator(
-        valueColor: new AlwaysStoppedAnimation<Color>(Colors.lightGreen),
-      ),
-    );
+  @override
+  void dispose() {
+    streamController.close();
+    super.dispose();
   }
 }

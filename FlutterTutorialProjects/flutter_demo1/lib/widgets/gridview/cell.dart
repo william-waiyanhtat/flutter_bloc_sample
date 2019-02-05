@@ -38,7 +38,7 @@ class AlbumCell extends StatelessWidget {
                 padding: EdgeInsets.all(10.0),
                 child: Text(
                   album.title,
-                  maxLines: 1,
+                  maxLines: 2,
                   softWrap: true,
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w500),
