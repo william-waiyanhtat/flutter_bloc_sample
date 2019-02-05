@@ -2,28 +2,36 @@ import 'package:flutter/material.dart';
 import 'album.dart';
 
 class AlbumCell extends StatelessWidget {
-  const AlbumCell(this.context, this.album);
+  const AlbumCell(this.album);
   @required
   final Album album;
-  final BuildContext context;
 
   @override
   Widget build(BuildContext context) {
     return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
       color: Colors.white,
       child: Padding(
-        padding:
-            EdgeInsets.only(left: 10.0, right: 10.0, bottom: 10.0, top: 10.0),
+        padding: EdgeInsets.all(10.0),
         child: Container(
           alignment: Alignment.center,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Flexible(
-                child: Image.network(
-                  album.thumbnailUrl,
-                  width: 150,
-                  height: 150,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10.0),
+                  child: Hero(
+                    tag: "image${album.id}",
+                    child: FadeInImage.assetNetwork(
+                      placeholder: 'images/no_image.png',
+                      image: album.thumbnailUrl,
+                      width: 100,
+                      height: 100,
+                    ),
+                  ),
                 ),
               ),
               Padding(
@@ -33,6 +41,7 @@ class AlbumCell extends StatelessWidget {
                   maxLines: 1,
                   softWrap: true,
                   textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w500),
                 ),
               ),
             ],

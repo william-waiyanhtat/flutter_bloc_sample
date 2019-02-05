@@ -3,11 +3,12 @@ import 'service.dart';
 import 'album.dart';
 import 'cell.dart';
 import 'dart:async';
+import 'details.dart';
 
 class GridViewDemo extends StatefulWidget {
   GridViewDemo() : super();
 
-  final String title = "Grid Demo";
+  final String title = "Photos Demo";
 
   @override
   GridViewDemoState createState() => GridViewDemoState();
@@ -16,11 +17,6 @@ class GridViewDemo extends StatefulWidget {
 class GridViewDemoState extends State<GridViewDemo> {
   //
   StreamController<int> streamController = new StreamController<int>();
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   void dispose() {
@@ -36,7 +32,7 @@ class GridViewDemoState extends State<GridViewDemo> {
           initialData: 0,
           stream: streamController.stream,
           builder: (BuildContext context, AsyncSnapshot snapshot) {
-            return Text('${widget.title} ${snapshot.data}');
+            return Text('${widget.title} [${snapshot.data}]');
           },
         ),
       ),
@@ -84,7 +80,6 @@ class GridViewDemoState extends State<GridViewDemo> {
             return GestureDetector(
               child: GridTile(
                 child: AlbumCell(
-                  context,
                   item,
                 ),
               ),
@@ -104,6 +99,19 @@ class GridViewDemoState extends State<GridViewDemo> {
 
   rowClick(BuildContext context, Album album) {
     print("Clicked ${album.title}");
+    goToNextPage(context, album);
+  }
+
+  void goToNextPage(BuildContext context, Album curAlbum) {
+    Navigator.push(
+      context,
+      new MaterialPageRoute(
+        fullscreenDialog: true,
+        builder: (BuildContext context) => GridDetails(
+              curAlbum: curAlbum,
+            ),
+      ),
+    );
   }
 
   static Center circularProgress() {
