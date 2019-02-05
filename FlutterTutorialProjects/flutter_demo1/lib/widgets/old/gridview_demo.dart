@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'services.dart';
+import 'service.dart';
 import 'album.dart';
-import 'gridcell.dart';
-import 'details.dart';
+import 'cell.dart';
 import 'dart:async';
+import 'details.dart';
 
 class GridViewDemo extends StatefulWidget {
   GridViewDemo() : super();
 
-  final String title = "Photos";
+  final String title = "Photos Demo";
 
   @override
   GridViewDemoState createState() => GridViewDemoState();
@@ -24,6 +24,7 @@ class GridViewDemoState extends State<GridViewDemo> {
       child: GridView.count(
         crossAxisCount: 2,
         childAspectRatio: 1.0,
+        padding: const EdgeInsets.all(4.0),
         mainAxisSpacing: 4.0,
         crossAxisSpacing: 4.0,
         children: snapshot.data.map(
@@ -33,7 +34,7 @@ class GridViewDemoState extends State<GridViewDemo> {
                 child: AlbumCell(album),
               ),
               onTap: () {
-                goToDetailsPage(context, album);
+                cellClick(context, album);
               },
             );
           },
@@ -42,21 +43,28 @@ class GridViewDemoState extends State<GridViewDemo> {
     );
   }
 
-  goToDetailsPage(BuildContext context, Album album) {
+  cellClick(BuildContext context, Album album) {
+    print("Clicked ${album.title}");
+    goToNextPage(context, album);
+  }
+
+  void goToNextPage(BuildContext context, Album curAlbum) {
     Navigator.push(
       context,
-      MaterialPageRoute(
+      new MaterialPageRoute(
         fullscreenDialog: true,
         builder: (BuildContext context) => GridDetails(
-              curAlbum: album,
+              curAlbum: curAlbum,
             ),
       ),
     );
   }
 
-  circularProgress() {
+  static Center circularProgress() {
     return Center(
-      child: const CircularProgressIndicator(),
+      child: CircularProgressIndicator(
+        valueColor: new AlwaysStoppedAnimation<Color>(Colors.lightGreen),
+      ),
     );
   }
 
@@ -64,13 +72,14 @@ class GridViewDemoState extends State<GridViewDemo> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: StreamBuilder(
-        initialData: 0,
-        stream: streamController.stream,
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          return Text('${widget.title} ${snapshot.data}');
-        },
-      )),
+        title: StreamBuilder(
+          initialData: 0,
+          stream: streamController.stream,
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            return Text('${widget.title} [${snapshot.data}]');
+          },
+        ),
+      ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -80,18 +89,16 @@ class GridViewDemoState extends State<GridViewDemo> {
             child: FutureBuilder<List<Album>>(
               future: Services.getPhotos(),
               builder: (context, snapshot) {
-                // not setstate here
                 //
                 if (snapshot.hasError) {
-                  return Text('Error ${snapshot.error}');
+                  return Text("Error occured ${snapshot.error}");
                 }
                 //
                 if (snapshot.hasData) {
                   streamController.sink.add(snapshot.data.length);
-                  // gridview
                   return gridview(snapshot);
                 }
-
+                //
                 return circularProgress();
               },
             ),

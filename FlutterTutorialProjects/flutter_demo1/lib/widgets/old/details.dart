@@ -3,7 +3,8 @@ import 'album.dart';
 
 class GridDetails extends StatefulWidget {
   final Album curAlbum;
-  GridDetails({@required this.curAlbum});
+
+  GridDetails({@required this.curAlbum}) : super();
 
   @override
   GridDetailsState createState() => GridDetailsState();
@@ -24,17 +25,16 @@ class GridDetailsState extends State<GridDetails> {
             Hero(
               tag: "image${widget.curAlbum.id}",
               child: FadeInImage.assetNetwork(
-                placeholder: "images/no_image.png",
-                image: widget.curAlbum.url,
-              ),
+                  placeholder: 'images/no_image.png',
+                  image: widget.curAlbum.url),
             ),
             SizedBox(
-              height: 30.0,
+              height: 30,
             ),
             OutlineButton(
-              child: Icon(Icons.close),
               onPressed: () => Navigator.of(context).pop(),
-            ),
+              child: Icon(Icons.close),
+            )
           ],
         ),
       ),
