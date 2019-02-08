@@ -1,23 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-class FBRealtimeDB extends StatefulWidget {
-  FBRealtimeDB(this.title) : super();
+class FBRealTimeDB extends StatefulWidget {
+  FBRealTimeDB() : super();
 
-  final String title;
-
+  final String title = "Firebase Realtime DB";
   @override
-  FBRealtimeDBState createState() => FBRealtimeDBState();
+  FBRealTimeDBState createState() => FBRealTimeDBState();
 }
 
-class FBRealtimeDBState extends State<FBRealtimeDB> {
+class FBRealTimeDBState extends State<FBRealTimeDB> {
+
+  @override
+  void initState() {
+    super.initState();
+
+    final mainReference = FirebaseDatabase.instance.reference();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title),
+      ),
       body: Padding(
         padding: EdgeInsets.all(40.0),
-        child: Stack(
-          alignment: Alignment.bottomCenter,
-          children: <Widget>[],
+        child: Container(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+
+          ),
         ),
       ),
     );

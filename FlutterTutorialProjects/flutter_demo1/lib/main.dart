@@ -23,7 +23,7 @@ class HomeApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return new MaterialApp(
       title: 'Demo',
-      home: new GridViewDemo(),
+      home: new FBRealTimeDB(),
     );
   }
 }
