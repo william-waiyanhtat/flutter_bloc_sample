@@ -13,10 +13,13 @@ class FireBaseFireStoreDemo extends StatefulWidget {
 
 class FireBaseFireStoreDemoState extends State<FireBaseFireStoreDemo> {
   //
-
+  TextEditingController controller = TextEditingController();
+  bool showTextField;
+  //
   @override
   void initState() {
     super.initState();
+    showTextField = false;
   }
 
   Widget _buildBody(BuildContext context) {
@@ -53,6 +56,18 @@ class FireBaseFireStoreDemoState extends State<FireBaseFireStoreDemo> {
           borderRadius: BorderRadius.circular(5.0),
         ),
         child: ListTile(
+          trailing: IconButton(
+            icon: Icon(Icons.add),
+            onPressed: () {
+              print("Deleting Record");
+            },
+          ),
+          leading: IconButton(
+            icon: Icon(Icons.edit),
+            onPressed: () {
+              print("Deleting Record");
+            },
+          ),
           title: Text(record.name),
           onTap: () {
             update(record, record.name + "_new");
@@ -60,6 +75,10 @@ class FireBaseFireStoreDemoState extends State<FireBaseFireStoreDemo> {
         ),
       ),
     );
+  }
+
+  createDatabase() async {
+    Firestore.instance.collection("baby").document("babies");
   }
 
   getUsers() {
@@ -93,26 +112,63 @@ class FireBaseFireStoreDemoState extends State<FireBaseFireStoreDemo> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
-      ),
-      body: Padding(
-        padding: EdgeInsets.all(40.0),
-        child: Container(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Flexible(
-                child: _buildBody(context),
-              ),
-              OutlineButton(
-                child: Text("Save"),
-                onPressed: () async {
-                  User user = User("Vipin", "Vijayan");
-                  add(user);
-                },
-              ),
-            ],
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.add),
+            onPressed: () {
+              setState(() {
+                showTextField = !showTextField;
+              });
+            },
           ),
+        ],
+      ),
+      body: Container(
+        padding: EdgeInsets.all(10.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            showTextField
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      TextFormField(
+                        controller: controller,
+                        decoration: InputDecoration(
+                          labelText: "Name",
+                          hintText: "Enter name",
+                        ),
+                      ),
+                      OutlineButton(
+                        child: Text("Save"),
+                        onPressed: () async {
+                          User user = User("Vipin", "Vijayan");
+                          //add(user);
+                          print(controller.text);
+                          setState(() {
+                            showTextField = !showTextField;
+                          });
+                        },
+                      ),
+                    ],
+                  )
+                : Container(),
+            SizedBox(
+              height: 30,
+            ),
+            Text(
+              "DATA",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            Flexible(
+              child: _buildBody(context),
+            ),
+          ],
         ),
       ),
     );
