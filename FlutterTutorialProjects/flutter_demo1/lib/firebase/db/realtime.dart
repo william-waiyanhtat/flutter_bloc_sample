@@ -3,15 +3,15 @@ import 'user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'record.dart';
 
-class FBRealTimeDB extends StatefulWidget {
-  FBRealTimeDB() : super();
+class FireBaseFireStoreDemo extends StatefulWidget {
+  FireBaseFireStoreDemo() : super();
 
   final String title = "Firebase Realtime DB";
   @override
-  FBRealTimeDBState createState() => FBRealTimeDBState();
+  FireBaseFireStoreDemoState createState() => FireBaseFireStoreDemoState();
 }
 
-class FBRealTimeDBState extends State<FBRealTimeDB> {
+class FireBaseFireStoreDemoState extends State<FireBaseFireStoreDemo> {
   //
 
   @override
@@ -20,12 +20,15 @@ class FBRealTimeDBState extends State<FBRealTimeDB> {
   }
 
   Widget _buildBody(BuildContext context) {
-    print("here");
     return StreamBuilder<QuerySnapshot>(
-      stream: Firestore.instance.collection('baby').snapshots(),
+      stream: getUsers(),
       builder: (context, snapshot) {
-        if (!snapshot.hasData) return LinearProgressIndicator();
-
+        if (snapshot.hasError) {
+          return Text('Error ${snapshot.error}');
+        }
+        if (!snapshot.hasData) {
+          return CircularProgressIndicator();
+        }
         return _buildList(context, snapshot.data.documents);
       },
     );
@@ -51,18 +54,38 @@ class FBRealTimeDBState extends State<FBRealTimeDB> {
         ),
         child: ListTile(
           title: Text(record.name),
-          onTap: () => Firestore.instance.runTransaction((transaction) async {
-                final freshSnapshot = await transaction.get(record.reference);
-                final fresh = Record.fromSnapshot(freshSnapshot);
-
-                // await transaction
-                //     .update(record.reference, {'name': fresh.name + "11"});
-                await transaction
-                    .set(record.reference, {'name4': 'New Value4'});
-              }),
+          onTap: () {
+            update(record, record.name + "_new");
+          },
         ),
       ),
     );
+  }
+
+  getUsers() {
+    return Firestore.instance.collection('baby').snapshots();
+  }
+
+  add(User user) {
+    Firestore.instance.runTransaction((Transaction transaction) async {
+      CollectionReference collectionReference =
+          Firestore.instance.collection("baby");
+      await collectionReference.add({"name": "New Baby"});
+    });
+  }
+
+  delete(var record) {
+    Firestore.instance.runTransaction((transaction) async {
+      await transaction.delete(record.reference);
+    });
+  }
+
+  update(var record, String newName) {
+    Firestore.instance.runTransaction((transaction) async {
+      // final freshSnapshot = await transaction.get(record.reference);
+      // final fresh = Record.fromSnapshot(freshSnapshot);
+      await transaction.update(record.reference, {'name': newName});
+    });
   }
 
   @override
@@ -85,15 +108,7 @@ class FBRealTimeDBState extends State<FBRealTimeDB> {
                 child: Text("Save"),
                 onPressed: () async {
                   User user = User("Vipin", "Vijayan");
-                  // Firestore.instance
-                  //     .collection('baby')
-                  //     .document('Baby3')
-                  //     .setData({'name': 'My Baby3'});
-
-                  await Firestore.instance
-                      .collection('baby')
-                      .document('dana')
-                      .setData({'name': 'Name1'});
+                  add(user);
                 },
               ),
             ],
