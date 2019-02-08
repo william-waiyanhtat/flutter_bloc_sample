@@ -1,6 +1,7 @@
 package com.example.flutterdemo1;
 
 import android.os.Bundle;
+import android.support.multidex.MultiDex;
 
 import java.util.Map;
 
@@ -17,6 +18,7 @@ public class MainActivity extends FlutterActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         GeneratedPluginRegistrant.registerWith(this);
+        MultiDex.install(this);
 
         new MethodChannel(getFlutterView(), CHANNEL).setMethodCallHandler(new MethodChannel.MethodCallHandler() {
             @Override
