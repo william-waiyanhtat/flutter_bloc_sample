@@ -1,7 +1,7 @@
 package com.example.flutterdemo1;
 
 import android.os.Bundle;
-//import android.support.multidex.MultiDex;
+import android.support.multidex.MultiDex;
 
 import java.util.Map;
 
@@ -16,30 +16,31 @@ public class MainActivity extends FlutterActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        MultiDex.install(this);
         super.onCreate(savedInstanceState);
         GeneratedPluginRegistrant.registerWith(this);
-       // MultiDex.install(this);
 
-//        new MethodChannel(getFlutterView(), CHANNEL).setMethodCallHandler(new MethodChannel.MethodCallHandler() {
-//            @Override
-//            public void onMethodCall(MethodCall methodCall, MethodChannel.Result result) {
-//
-//                Map<String, Object> params = (Map<String, Object>) methodCall.arguments;
-//
-//                if(methodCall.method.equals("myNativeFunction")){
-//                    String messageToFlutter = myNativeFunction();
-//                    String fromParam = params.get("from").toString();
-//                    result.success(messageToFlutter + ", Back to " + fromParam);
-//                }else{
-//                    result.notImplemented();
-//                }
-//            }
-//        });
+
+        new MethodChannel(getFlutterView(), CHANNEL).setMethodCallHandler(new MethodChannel.MethodCallHandler() {
+            @Override
+            public void onMethodCall(MethodCall methodCall, MethodChannel.Result result) {
+
+                Map<String, Object> params = (Map<String, Object>) methodCall.arguments;
+
+                if(methodCall.method.equals("myNativeFunction")){
+                    String messageToFlutter = myNativeFunction();
+                    String fromParam = params.get("from").toString();
+                    result.success(messageToFlutter + ", Back to " + fromParam);
+                }else{
+                    result.notImplemented();
+                }
+            }
+        });
 
     }
-//
-//    String myNativeFunction(){
-//        return "Message From Android";
-//    }
+
+    String myNativeFunction(){
+        return "Message From Android";
+    }
 
 }
