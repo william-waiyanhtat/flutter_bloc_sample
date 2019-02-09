@@ -6,7 +6,7 @@ import 'record.dart';
 class FireBaseFireStoreDemo extends StatefulWidget {
   FireBaseFireStoreDemo() : super();
 
-  final String title = "Firebase Realtime DB";
+  final String title = "Firebase FireStore DB";
   @override
   FireBaseFireStoreDemoState createState() => FireBaseFireStoreDemoState();
 }
