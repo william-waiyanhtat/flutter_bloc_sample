@@ -1,10 +1,13 @@
 #include "AppDelegate.h"
 #include "GeneratedPluginRegistrant.h"
+@import Firebase;
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application
     didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    
+    [FIRApp configure];
     
     FlutterViewController *controller = (FlutterViewController *) self.window.rootViewController;
     FlutterMethodChannel *channel = [FlutterMethodChannel methodChannelWithName:@"MyChannel" binaryMessenger:controller];

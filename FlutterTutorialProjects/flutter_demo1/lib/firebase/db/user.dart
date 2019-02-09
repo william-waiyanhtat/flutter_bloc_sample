@@ -1,10 +1,19 @@
-class User {
-  String firstName;
-  String lastName;
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-  User(this.firstName, this.lastName);
+class User {
+  String name;
+  DocumentReference reference;
+
+  User({this.name});
+
+  User.fromMap(Map<String, dynamic> map, {this.reference}) {
+    name = map['name'];
+  }
+
+  User.fromSnapshot(DocumentSnapshot snapshot)
+      : this.fromMap(snapshot.data, reference: snapshot.reference);
 
   toJson() {
-    return {"first_name": firstName, "last_name": lastName};
+    return {"name": name};
   }
 }

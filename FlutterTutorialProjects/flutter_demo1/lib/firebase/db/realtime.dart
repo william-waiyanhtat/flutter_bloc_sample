@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
-import 'user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'record.dart';
+import 'user.dart';
 
 class FireBaseFireStoreDemo extends StatefulWidget {
   FireBaseFireStoreDemo() : super();
 
-  final String title = "Firebase FireStore DB";
+  final String title = "CloudFireStore Demo";
   @override
   FireBaseFireStoreDemoState createState() => FireBaseFireStoreDemoState();
 }
 
 class FireBaseFireStoreDemoState extends State<FireBaseFireStoreDemo> {
   //
+  String collectionName = 'Users';
   TextEditingController controller = TextEditingController();
   bool showTextField = false;
   bool isEditing = false;
-  Record curRecord;
+  User curRecord;
   String btnText;
 
   Widget _buildBody(BuildContext context) {
@@ -26,48 +26,39 @@ class FireBaseFireStoreDemoState extends State<FireBaseFireStoreDemo> {
         if (snapshot.hasError) {
           return Text('Error ${snapshot.error}');
         }
-        if (!snapshot.hasData) {
-          return CircularProgressIndicator();
+        if (snapshot.hasData) {
+          return _buildList(context, snapshot.data.documents);
         }
-        return _buildList(context, snapshot.data.documents);
+        return CircularProgressIndicator();
       },
     );
   }
 
   Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
     return ListView(
-      padding: const EdgeInsets.only(top: 20.0),
       children: snapshot.map((data) => _buildListItem(context, data)).toList(),
     );
   }
 
   Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
-    final record = Record.fromSnapshot(data);
+    final record = User.fromSnapshot(data);
 
     return Padding(
       key: ValueKey(record.name),
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Container(
         decoration: BoxDecoration(
           border: Border.all(color: Colors.grey),
           borderRadius: BorderRadius.circular(5.0),
         ),
         child: ListTile(
+          title: Text(record.name),
           trailing: IconButton(
             icon: Icon(Icons.delete),
             onPressed: () {
-              print("Deleting Record");
               delete(record);
             },
           ),
-          leading: IconButton(
-            icon: Icon(Icons.edit),
-            onPressed: () {
-              print("Editing Record");
-              setUpdateUI(record);
-            },
-          ),
-          title: Text(record.name),
           onTap: () {
             setUpdateUI(record);
           },
@@ -76,7 +67,7 @@ class FireBaseFireStoreDemoState extends State<FireBaseFireStoreDemo> {
     );
   }
 
-  setUpdateUI(Record record) {
+  setUpdateUI(User record) {
     controller.text = record.name;
     setState(() {
       showTextField = true;
@@ -86,33 +77,29 @@ class FireBaseFireStoreDemoState extends State<FireBaseFireStoreDemo> {
   }
 
   getUsers() {
-    return Firestore.instance.collection('baby').snapshots();
+    return Firestore.instance.collection(collectionName).snapshots();
   }
 
   add() async {
-    // Firestore.instance.runTransaction((Transaction transaction) async {
-    //   CollectionReference collectionReference =
-    //       Firestore.instance.collection("baby");
-    //   await collectionReference.add({'name': 'NewBaby'});
-    // });
-
     if (isEditing) {
-      print("Updating...");
       update(curRecord, controller.text);
       setState(() {
         isEditing = false;
       });
-      controller.text = '';
-      return;
+    } else {
+      addUser();
     }
+    controller.text = '';
+  }
 
-    Record user = Record(name: controller.text);
-    user.name = controller.text;
+  addUser() {
+    User user = User(name: controller.text);
     try {
-      await Firestore.instance
-          .collection('baby')
-          .document('Babies')
-          .setData(<String, dynamic>{'name': user.name});
+      Firestore.instance.runTransaction((Transaction transaction) async {
+        // if you give the same document, then it will be overwritten
+        await Firestore.instance.collection(collectionName).document().setData(
+            user.toJson()); // you can manually specify the json as well
+      });
     } catch (e) {
       print(e.toString());
     }
@@ -126,10 +113,23 @@ class FireBaseFireStoreDemoState extends State<FireBaseFireStoreDemo> {
 
   update(var record, String newName) {
     Firestore.instance.runTransaction((transaction) async {
-      // final freshSnapshot = await transaction.get(record.reference);
-      // final fresh = Record.fromSnapshot(freshSnapshot);
       await transaction.update(record.reference, {'name': newName});
     });
+  }
+
+  button() {
+    return SizedBox(
+      width: double.infinity,
+      child: OutlineButton(
+        child: Text(isEditing ? "UPDATE" : "ADD"),
+        onPressed: () async {
+          add();
+          setState(() {
+            showTextField = !showTextField;
+          });
+        },
+      ),
+    );
   }
 
   @override
@@ -151,7 +151,7 @@ class FireBaseFireStoreDemoState extends State<FireBaseFireStoreDemo> {
         ],
       ),
       body: Container(
-        padding: EdgeInsets.all(10.0),
+        padding: EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.start,
@@ -171,24 +171,15 @@ class FireBaseFireStoreDemoState extends State<FireBaseFireStoreDemo> {
                       SizedBox(
                         height: 10,
                       ),
-                      OutlineButton(
-                        child: Text(isEditing ? "UPDATE" : "ADD"),
-                        onPressed: () async {
-                          add();
-                          //print(controller.text);
-                          setState(() {
-                            showTextField = !showTextField;
-                          });
-                        },
-                      ),
+                      button(),
                     ],
                   )
                 : Container(),
             SizedBox(
-              height: 30,
+              height: 20,
             ),
             Text(
-              "DATA",
+              "USERS",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),
             ),
             SizedBox(
