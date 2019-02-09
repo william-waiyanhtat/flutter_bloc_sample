@@ -14,13 +14,10 @@ class FireBaseFireStoreDemo extends StatefulWidget {
 class FireBaseFireStoreDemoState extends State<FireBaseFireStoreDemo> {
   //
   TextEditingController controller = TextEditingController();
-  bool showTextField;
-  //
-  @override
-  void initState() {
-    super.initState();
-    showTextField = false;
-  }
+  bool showTextField = false;
+  bool isEditing = false;
+  Record curRecord;
+  String btnText;
 
   Widget _buildBody(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
@@ -57,40 +54,68 @@ class FireBaseFireStoreDemoState extends State<FireBaseFireStoreDemo> {
         ),
         child: ListTile(
           trailing: IconButton(
-            icon: Icon(Icons.add),
+            icon: Icon(Icons.delete),
             onPressed: () {
               print("Deleting Record");
+              delete(record);
             },
           ),
           leading: IconButton(
             icon: Icon(Icons.edit),
             onPressed: () {
-              print("Deleting Record");
+              print("Editing Record");
+              setUpdateUI(record);
             },
           ),
           title: Text(record.name),
           onTap: () {
-            update(record, record.name + "_new");
+            setUpdateUI(record);
           },
         ),
       ),
     );
   }
 
-  createDatabase() async {
-    Firestore.instance.collection("baby").document("babies");
+  setUpdateUI(Record record) {
+    controller.text = record.name;
+    setState(() {
+      showTextField = true;
+      isEditing = true;
+      curRecord = record;
+    });
   }
 
   getUsers() {
     return Firestore.instance.collection('baby').snapshots();
   }
 
-  add(User user) {
-    Firestore.instance.runTransaction((Transaction transaction) async {
-      CollectionReference collectionReference =
-          Firestore.instance.collection("baby");
-      await collectionReference.add({"name": "New Baby"});
-    });
+  add() async {
+    // Firestore.instance.runTransaction((Transaction transaction) async {
+    //   CollectionReference collectionReference =
+    //       Firestore.instance.collection("baby");
+    //   await collectionReference.add({'name': 'NewBaby'});
+    // });
+
+    if (isEditing) {
+      print("Updating...");
+      update(curRecord, controller.text);
+      setState(() {
+        isEditing = false;
+      });
+      controller.text = '';
+      return;
+    }
+
+    Record user = Record(name: controller.text);
+    user.name = controller.text;
+    try {
+      await Firestore.instance
+          .collection('baby')
+          .document('Babies')
+          .setData(<String, dynamic>{'name': user.name});
+    } catch (e) {
+      print(e.toString());
+    }
   }
 
   delete(var record) {
@@ -118,6 +143,8 @@ class FireBaseFireStoreDemoState extends State<FireBaseFireStoreDemo> {
             onPressed: () {
               setState(() {
                 showTextField = !showTextField;
+                controller.text = '';
+                isEditing = false;
               });
             },
           ),
@@ -141,12 +168,14 @@ class FireBaseFireStoreDemoState extends State<FireBaseFireStoreDemo> {
                           hintText: "Enter name",
                         ),
                       ),
+                      SizedBox(
+                        height: 10,
+                      ),
                       OutlineButton(
-                        child: Text("Save"),
+                        child: Text(isEditing ? "UPDATE" : "ADD"),
                         onPressed: () async {
-                          User user = User("Vipin", "Vijayan");
-                          //add(user);
-                          print(controller.text);
+                          add();
+                          //print(controller.text);
                           setState(() {
                             showTextField = !showTextField;
                           });
