@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'album.dart';
+import 'models.dart';
 
 class Services {
   static const String url = "https://jsonplaceholder.typicode.com/photos";

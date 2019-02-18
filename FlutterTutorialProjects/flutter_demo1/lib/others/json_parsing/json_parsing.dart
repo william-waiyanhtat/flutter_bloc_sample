@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:flutter/services.dart';
 import 'dart:convert';
-import 'person.dart';
+import 'models.dart';
 import 'services.dart';
 
 class JSONDemo extends StatefulWidget {
@@ -30,8 +30,9 @@ class _JSONDemoState extends State<JSONDemo> {
     print('House No ${person.address.details.houseNo}');
     print('Name ${person.images[0].name}');
 
+    print("Loading Albums...");
     Services.getPhotos().then((albums) {
-      print("Loaded Photos Count: ${albums.length}");
+      print("Loaded Albums ${albums.length}");
     });
   }
 

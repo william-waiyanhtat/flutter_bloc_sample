@@ -1,5 +1,3 @@
-import 'details.dart';
-
 class Person {
   final String id;
   final String name;
@@ -36,6 +34,20 @@ class Person {
   }
 }
 
+class Details {
+  int houseNo;
+  String town;
+
+  Details({this.houseNo, this.town});
+
+  factory Details.fromJson(Map<String, dynamic> json) {
+    return Details(
+      houseNo: json['house_no'] as int,
+      town: json['town'],
+    );
+  }
+}
+
 class Address {
   final String streetNo;
   final Details details;
@@ -58,5 +70,25 @@ class Images {
 
   factory Images.fromJson(Map<String, dynamic> parsedJson) {
     return Images(id: parsedJson['id'], name: parsedJson['name']);
+  }
+}
+
+class Album {
+  int albumId;
+  int id;
+  String title;
+  String url;
+  String thumbnailUrl;
+
+  Album({this.albumId, this.id, this.title, this.url, this.thumbnailUrl});
+
+  factory Album.fromJson(Map<String, dynamic> json) {
+    return Album(
+      albumId: json['albumId'] as int,
+      id: json['id'] as int,
+      title: json['title'] as String,
+      url: json['url'] as String,
+      thumbnailUrl: json['thumbnailUrl'] as String,
+    );
   }
 }

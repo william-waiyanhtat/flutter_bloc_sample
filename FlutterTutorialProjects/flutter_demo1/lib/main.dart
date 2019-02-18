@@ -11,7 +11,7 @@ import 'widgets/custom_paint/custom_paint.dart';
 import 'widgets/backdropfliter/backdrop_filter.dart';
 import 'widgets/gridview/gridview_demo.dart';
 import 'firebase/cloudstore/realtime.dart';
-import 'package:flutter_demo1/others/json_parsing/json_parsin.dart';
+import 'package:flutter_demo1/others/json_parsing/json_parsing.dart';
 
 void main() {
   runApp(
