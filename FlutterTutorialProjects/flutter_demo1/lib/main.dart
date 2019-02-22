@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_demo1/others/json_parsing/json_parsing.dart';
+import 'widgets/layout_builder/layout_builder.dart';
 
 void main() {
   runApp(
@@ -13,7 +13,7 @@ class HomeApp extends StatelessWidget {
     return new MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Demo',
-      home: new JSONDemo(),
+      home: new LayoutBuilderDemo(),
     );
   }
 }
