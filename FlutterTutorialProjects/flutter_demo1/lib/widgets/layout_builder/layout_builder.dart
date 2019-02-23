@@ -11,13 +11,12 @@ class LayoutBuilderDemo extends StatefulWidget {
 
 class LayoutBuilderDemoState extends State<LayoutBuilderDemo> {
   //
-
+  //gridviewForPhone(Orientation orientation) {
   gridviewForPhone() {
-    //Orientation orientation) {
     return Padding(
       padding: EdgeInsets.all(5.0),
       child: GridView.count(
-        crossAxisCount: 2, //orientation == Orientation.portrait ? 2 : 4,
+        crossAxisCount: 2,
         childAspectRatio: 1.0,
         mainAxisSpacing: 4.0,
         crossAxisSpacing: 4.0,
@@ -34,12 +33,12 @@ class LayoutBuilderDemoState extends State<LayoutBuilderDemo> {
     );
   }
 
+  //gridviewForTablet(Orientation orientation) {
   gridviewForTablet() {
-    //Orientation orientation) {
     return Padding(
       padding: EdgeInsets.all(5.0),
       child: GridView.count(
-        crossAxisCount: 4, //orientation == Orientation.portrait ? 2 : 6,
+        crossAxisCount: 4,
         childAspectRatio: 1.0,
         mainAxisSpacing: 4.0,
         crossAxisSpacing: 4.0,
@@ -58,8 +57,9 @@ class LayoutBuilderDemoState extends State<LayoutBuilderDemo> {
 
   @override
   Widget build(BuildContext context) {
-    final double shorterSide = MediaQuery.of(context).size.shortestSide;
-    final bool useMobileLayout = shorterSide < 600.0;
+    //
+    final double shortestSide = MediaQuery.of(context).size.shortestSide;
+    final bool useMobileLayout = shortestSide < 600.0;
     final Orientation orientation = MediaQuery.of(context).orientation;
 
     return Scaffold(
@@ -69,15 +69,17 @@ class LayoutBuilderDemoState extends State<LayoutBuilderDemo> {
       // body: useMobileLayout
       //     ? gridviewForPhone(orientation)
       //     : gridviewForTablet(orientation),
-      body: SafeArea(child: LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) {
-          if (constraints.maxWidth < 600.0)
-            return gridviewForPhone();
-          else {
-            return gridviewForTablet();
-          }
-        },
-      )),
+      body: SafeArea(
+        child: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+            if (constraints.maxWidth < 600.0) {
+              return gridviewForPhone();
+            } else {
+              return gridviewForTablet();
+            }
+          },
+        ),
+      ),
     );
   }
 }
