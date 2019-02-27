@@ -11,8 +11,8 @@ class LayoutBuilderDemo extends StatefulWidget {
 
 class LayoutBuilderDemoState extends State<LayoutBuilderDemo> {
   //
-  //gridviewForPhone(Orientation orientation) {
-  gridviewForPhone() {
+  gridviewForPhone(Orientation orientation) {
+    //gridviewForPhone() {
     return Padding(
       padding: EdgeInsets.all(5.0),
       child: GridView.count(
@@ -33,12 +33,12 @@ class LayoutBuilderDemoState extends State<LayoutBuilderDemo> {
     );
   }
 
-  //gridviewForTablet(Orientation orientation) {
-  gridviewForTablet() {
+  gridviewForTablet(Orientation orientation) {
+    //gridviewForTablet() {
     return Padding(
       padding: EdgeInsets.all(5.0),
       child: GridView.count(
-        crossAxisCount: 4,
+        crossAxisCount: orientation == Orientation.portrait ? 4 : 6,
         childAspectRatio: 1.0,
         mainAxisSpacing: 4.0,
         crossAxisSpacing: 4.0,
@@ -66,20 +66,20 @@ class LayoutBuilderDemoState extends State<LayoutBuilderDemo> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      // body: useMobileLayout
-      //     ? gridviewForPhone(orientation)
-      //     : gridviewForTablet(orientation),
-      body: SafeArea(
-        child: LayoutBuilder(
-          builder: (BuildContext context, BoxConstraints constraints) {
-            if (constraints.maxWidth < 600.0) {
-              return gridviewForPhone();
-            } else {
-              return gridviewForTablet();
-            }
-          },
-        ),
-      ),
+      body: useMobileLayout
+          ? gridviewForPhone(orientation)
+          : gridviewForTablet(orientation),
+      // body: SafeArea(
+      //   child: LayoutBuilder(
+      //     builder: (BuildContext context, BoxConstraints constraints) {
+      //       if (constraints.maxWidth < 600.0) {
+      //         return gridviewForPhone();
+      //       } else {
+      //         return gridviewForTablet();
+      //       }
+      //     },
+      //   ),
+      // ),
     );
   }
 }
