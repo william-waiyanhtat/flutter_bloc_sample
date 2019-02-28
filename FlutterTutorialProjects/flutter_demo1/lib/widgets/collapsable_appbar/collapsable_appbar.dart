@@ -18,7 +18,7 @@ class CollapsableAppbarDemoState extends State<CollapsableAppbarDemo> {
         SliverAppBar(
           expandedHeight: 200.0,
           floating: false,
-          pinned: true,
+          pinned: false,
           flexibleSpace: FlexibleSpaceBar(
               title: Text("title"),
               background: Image.network(
@@ -68,6 +68,9 @@ class CollapsableAppbarDemoState extends State<CollapsableAppbarDemo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text("Hello"),
+      ),
       body: custom(),
     );
   }
