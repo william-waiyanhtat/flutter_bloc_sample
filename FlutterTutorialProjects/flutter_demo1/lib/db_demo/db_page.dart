@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'db_helper.dart';
-import 'person.dart';
+import 'employee.dart';
 import 'dart:async';
 import 'form.dart';
 import 'list.dart';
@@ -18,7 +18,7 @@ class DBTestPage extends StatefulWidget {
 
 class _DBTestPageState extends State<DBTestPage> {
   var dbHelper = DBHelper();
-  Future<List<Person>> employees;
+  Future<List<Employee>> employees;
 
   refreshList() {
     setState(() {
@@ -27,7 +27,7 @@ class _DBTestPageState extends State<DBTestPage> {
   }
 
   void saveToDB(name, age, mobileNo) {
-    var employee = Person(name, age, mobileNo);
+    var employee = Employee(name, age, mobileNo);
     dbHelper.saveEmployee(employee);
     refreshList();
   }
@@ -35,17 +35,20 @@ class _DBTestPageState extends State<DBTestPage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-        appBar: new AppBar(
-          title: new Text('Flutter SQLite Demo'),
+      appBar: new AppBar(
+        title: new Text('Flutter SQLite Demo'),
+      ),
+      body: new Container(
+        child: new Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          verticalDirection: VerticalDirection.down,
+          children: <Widget>[
+            MyForm(saveToDB),
+            MyList(employees),
+          ],
         ),
-        body: new Container(
-            child: new Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                verticalDirection: VerticalDirection.down,
-                children: <Widget>[
-              MyForm(saveToDB),
-              MyList(employees),
-            ])));
+      ),
+    );
   }
 }

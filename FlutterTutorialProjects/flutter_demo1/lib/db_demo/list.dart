@@ -1,57 +1,63 @@
 import 'package:flutter/material.dart';
-import 'row.dart';
 import 'dart:async';
-import 'person.dart';
+import 'employee.dart';
 
-class MyList extends StatefulWidget {
-  final Future<List<Person>> employees;
+class MyList extends StatelessWidget {
+  final Future<List<Employee>> employees;
 
   MyList(this.employees);
 
-  @override
-  State<StatefulWidget> createState() {
-    return _MyListState();
-  }
-}
-
-class _MyListState extends State<MyList> {
-  TextStyle getTextStyle() {
-    return new TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0);
-  }
-
-  Text getRowText(value) {
-    return new Text(value, style: getTextStyle());
+  SingleChildScrollView dataBody(List<Employee> employees) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.vertical,
+      child: DataTable(
+        columns: [
+          DataColumn(
+            label: Text("NAME"),
+          ),
+          DataColumn(
+            label: Text("AGE"),
+          ),
+          DataColumn(
+            label: Text("MOBILE"),
+          ),
+        ],
+        rows: employees
+            .map(
+              (user) => DataRow(
+                    cells: [
+                      DataCell(
+                        Text(user.name),
+                      ),
+                      DataCell(
+                        Text(user.age),
+                      ),
+                      DataCell(
+                        Text(user.mobileNo),
+                      ),
+                    ],
+                  ),
+            )
+            .toList(),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return new Container(
-      padding: new EdgeInsets.all(16.0),
+    return new Expanded(
       child: new FutureBuilder(
-          future: widget.employees,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return new ListView.builder(
-                scrollDirection: Axis.vertical,
-                itemCount: snapshot.data == null ? 0 : snapshot.data.length,
-                itemBuilder: (context, index) {
-                  return new Padding(
-                      padding: new EdgeInsets.all(8.0),
-                      child: ListRow(
-                          snapshot.data[index].name,
-                          snapshot.data[index].age,
-                          snapshot.data[index].mobileNo));
-                },
-                shrinkWrap: true,
-              );
-            } else if (null == snapshot.data || snapshot.data.length == 0) {
-              return new Text("No Records Found");
-            }
-            return new Container(
-              alignment: AlignmentDirectional.center,
-              child: new CircularProgressIndicator(),
-            );
-          }),
+        future: employees,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return dataBody(snapshot.data);
+          }
+          if (null == snapshot.data || snapshot.data.length == 0) {
+            return new Text("No Records Found");
+          }
+          return CircularProgressIndicator();
+        },
+      ),
     );
   }
 }

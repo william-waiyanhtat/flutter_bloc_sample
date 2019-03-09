@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'widgets/collapsable_appbar/collapsable_appbar.dart';
+import 'db_demo/db_page.dart';
 
 void main() {
   runApp(
@@ -13,7 +13,7 @@ class HomeApp extends StatelessWidget {
     return new MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Demo',
-      home: new CollapsableAppbarDemo(),
+      home: new DBTestPage(),
     );
   }
 }
