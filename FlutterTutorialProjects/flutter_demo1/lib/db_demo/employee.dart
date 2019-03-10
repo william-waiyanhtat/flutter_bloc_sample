@@ -1,22 +1,19 @@
 class Employee {
   int id;
-  String firstname;
-  String lastname;
+  String name;
 
-  Employee(this.id, this.firstname, this.lastname);
+  Employee(this.id, this.name);
 
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{
       'id': id,
-      'firstname': firstname,
-      'lastname': lastname
+      'name': name,
     };
     return map;
   }
 
   Employee.fromMap(Map<String, dynamic> map) {
     id = map['id'];
-    firstname = map['firstname'];
-    lastname = map['lastname'];
+    name = map['name'];
   }
 }

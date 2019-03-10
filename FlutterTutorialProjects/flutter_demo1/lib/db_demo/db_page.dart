@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'db_helper.dart';
 import 'employee.dart';
 import 'dart:async';
-import 'form.dart';
 
 class DBTestPage extends StatefulWidget {
   final String title;
@@ -16,8 +15,33 @@ class DBTestPage extends StatefulWidget {
 }
 
 class _DBTestPageState extends State<DBTestPage> {
-  var dbHelper = DBHelper();
   Future<List<Employee>> employees;
+  TextEditingController controller = TextEditingController();
+  String name;
+  int curUserId;
+
+  final formKey = new GlobalKey<FormState>();
+  var dbHelper = DBHelper();
+  bool isUpdating = false;
+
+  validate() {
+    if (formKey.currentState.validate()) {
+      formKey.currentState.save();
+      if (isUpdating) {
+        Employee e = new Employee(curUserId, name);
+        dbHelper.update(e);
+        setState(() {
+          isUpdating = false;
+        });
+        clearName();
+      } else {
+        Employee e = new Employee(null, name);
+        dbHelper.save(e);
+      }
+      refreshList();
+      clearName();
+    }
+  }
 
   refreshList() {
     setState(() {
@@ -25,10 +49,8 @@ class _DBTestPageState extends State<DBTestPage> {
     });
   }
 
-  void saveToDB(firstName, lastName) {
-    Employee e = new Employee(null, firstName, lastName);
-    dbHelper.save(e);
-    refreshList();
+  clearName() {
+    controller.text = '';
   }
 
   SingleChildScrollView dataBody(List<Employee> employees) {
@@ -37,10 +59,7 @@ class _DBTestPageState extends State<DBTestPage> {
       child: DataTable(
         columns: [
           DataColumn(
-            label: Text("F NAME"),
-          ),
-          DataColumn(
-            label: Text("L NAME"),
+            label: Text("NAME"),
           ),
           DataColumn(
             label: Text("DELETE"),
@@ -48,24 +67,20 @@ class _DBTestPageState extends State<DBTestPage> {
         ],
         rows: employees
             .map(
-              (user) => DataRow(
+              (employee) => DataRow(
                     cells: [
-                      DataCell(Text(user.firstname), onTap: () {
-                        Employee e = new Employee(user.id, 'xxx', 'yyy');
-                        dbHelper.update(e);
-                        refreshList();
+                      DataCell(Text(employee.name), onTap: () {
+                        setState(() {
+                          isUpdating = true;
+                          curUserId = employee.id;
+                        });
+                        controller.text = employee.name;
                       }),
-                      DataCell(
-                        Text(user.lastname),
-                      ),
                       DataCell(
                         IconButton(
                           icon: Icon(Icons.delete),
                           onPressed: () {
-                            // delete
-                            //delete(user);
-                            print("ID : ${user.id}");
-                            dbHelper.delete(user.id);
+                            dbHelper.delete(employee.id);
                             refreshList();
                           },
                         ),
@@ -78,11 +93,68 @@ class _DBTestPageState extends State<DBTestPage> {
     );
   }
 
+  form() {
+    return Form(
+      key: formKey,
+      child: new Padding(
+        padding: new EdgeInsets.all(15.0),
+        child: new Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            verticalDirection: VerticalDirection.down,
+            children: <Widget>[
+              new TextFormField(
+                controller: controller,
+                keyboardType: TextInputType.text,
+                decoration: new InputDecoration(labelText: 'Name'),
+                validator: (val) => val.length == 0 ? "Enter Name" : null,
+                onSaved: (val) => name = val,
+              ),
+              new Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  new OutlineButton(
+                    onPressed: validate,
+                    child: new Text(isUpdating ? 'UPDATE' : 'ADD'),
+                  ),
+                  new OutlineButton(
+                    onPressed: () {
+                      setState(() {
+                        isUpdating = false;
+                      });
+                      clearName();
+                    },
+                    child: new Text('CANCEL'),
+                  ),
+                ],
+              )
+            ]),
+      ),
+    );
+  }
+
+  list() {
+    return Expanded(
+      child: new FutureBuilder(
+        future: employees,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return dataBody(snapshot.data);
+          }
+          if (null == snapshot.data || snapshot.data.length == 0) {
+            return new Text("No Records Found");
+          }
+          return CircularProgressIndicator();
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text('Flutter SQLite CRUD Demo'),
+        title: new Text('Flutter SQLITE CRUD DEMO'),
       ),
       body: new Container(
         child: new Column(
@@ -90,21 +162,8 @@ class _DBTestPageState extends State<DBTestPage> {
           mainAxisSize: MainAxisSize.min,
           verticalDirection: VerticalDirection.down,
           children: <Widget>[
-            MyForm(saveToDB),
-            new Expanded(
-              child: new FutureBuilder(
-                future: employees,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return dataBody(snapshot.data);
-                  }
-                  if (null == snapshot.data || snapshot.data.length == 0) {
-                    return new Text("No Records Found");
-                  }
-                  return CircularProgressIndicator();
-                },
-              ),
-            ),
+            form(),
+            list(),
           ],
         ),
       ),

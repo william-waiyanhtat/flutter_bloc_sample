@@ -8,10 +8,9 @@ import 'employee.dart';
 class DBHelper {
   static Database _db;
   static const String ID = 'id';
-  static const String FIRST_NAME = 'firstname';
-  static const String LAST_NAME = 'lastname';
+  static const String NAME = 'name';
   static const String TABLE = 'Employee';
-  static const String DB_NAME = "employee6.db";
+  static const String DB_NAME = "employee7.db";
 
   Future<Database> get db async {
     if (_db != null) {
@@ -29,16 +28,13 @@ class DBHelper {
   }
 
   void _onCreate(Database db, int version) async {
-    await db.execute(
-        "CREATE TABLE $TABLE($ID INTEGER PRIMARY KEY, $FIRST_NAME TEXT, $LAST_NAME TEXT)");
-    print("Created tables");
+    await db
+        .execute("CREATE TABLE $TABLE($ID INTEGER PRIMARY KEY, $NAME TEXT)");
   }
 
-  // Retrieving employees from Employee Tables
   Future<List<Employee>> getEmployees() async {
     var dbClient = await db;
-    List<Map> maps =
-        await dbClient.query(TABLE, columns: [ID, FIRST_NAME, LAST_NAME]);
+    List<Map> maps = await dbClient.query(TABLE, columns: [ID, NAME]);
     // List<Map> list = await dbClient.rawQuery('SELECT * FROM Employee');
     List<Employee> employees = [];
     if (maps.length > 0) {
