@@ -14,14 +14,13 @@ class MyForm extends StatefulWidget {
 }
 
 class _MyFormState extends State<MyForm> {
-  String name;
-  String age;
-  String mobileNo;
+  String firstName;
+  String lastName;
 
   validate() {
     if (widget.formKey.currentState.validate()) {
       widget.formKey.currentState.save();
-      widget.saveToDB(name, age, mobileNo);
+      widget.saveToDB(firstName, lastName);
     }
   }
 
@@ -30,7 +29,7 @@ class _MyFormState extends State<MyForm> {
     return new Form(
       key: widget.formKey,
       child: new Padding(
-        padding: new EdgeInsets.all(28.0),
+        padding: new EdgeInsets.all(5.0),
         child: new Column(
             mainAxisAlignment: MainAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
@@ -39,21 +38,14 @@ class _MyFormState extends State<MyForm> {
               new TextFormField(
                 keyboardType: TextInputType.text,
                 decoration: new InputDecoration(labelText: 'First Name'),
-                validator: (val) => val.length == 0 ? "Enter FirstName" : null,
-                onSaved: (val) => name = val,
+                validator: (val) => val.length == 0 ? "Enter First Name" : null,
+                onSaved: (val) => firstName = val,
               ),
               new TextFormField(
                 keyboardType: TextInputType.text,
-                decoration: new InputDecoration(labelText: 'Age'),
-                validator: (val) => val.length == 0 ? "Enter Age" : null,
-                onSaved: (val) => this.age = val,
-              ),
-              new TextFormField(
-                keyboardType: TextInputType.text,
-                decoration: new InputDecoration(labelText: 'Mobile Number'),
-                validator: (val) =>
-                    val.length == 0 ? "Enter mobile number" : null,
-                onSaved: (val) => this.mobileNo = val,
+                decoration: new InputDecoration(labelText: 'Last Name'),
+                validator: (val) => val.length == 0 ? "Enter Last Name" : null,
+                onSaved: (val) => this.lastName = val,
               ),
               new Container(
                 margin: const EdgeInsets.only(top: 10.0),

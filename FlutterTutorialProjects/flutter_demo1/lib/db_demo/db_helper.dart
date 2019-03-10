@@ -7,60 +7,76 @@ import 'employee.dart';
 
 class DBHelper {
   static Database _db;
+  static const String ID = 'id';
+  static const String FIRST_NAME = 'firstname';
+  static const String LAST_NAME = 'lastname';
+  static const String TABLE = 'Employee';
+  static const String DB_NAME = "employee6.db";
 
   Future<Database> get db async {
-    if (_db != null) return _db;
+    if (_db != null) {
+      return _db;
+    }
     _db = await initDb();
     return _db;
   }
 
-  //Creating a database with name test.db in your directory
   initDb() async {
     io.Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, "test.db");
-    var theDb = await openDatabase(path, version: 1, onCreate: _onCreate);
-    return theDb;
+    String path = join(documentsDirectory.path, DB_NAME);
+    var db = await openDatabase(path, version: 1, onCreate: _onCreate);
+    return db;
   }
 
-  // Creating a table name Employee with fields
   void _onCreate(Database db, int version) async {
-    // When creating the db, create the table
     await db.execute(
-        "CREATE TABLE Employee(id INTEGER PRIMARY KEY, name TEXT, age TEXT, mobileno TEXT)");
+        "CREATE TABLE $TABLE($ID INTEGER PRIMARY KEY, $FIRST_NAME TEXT, $LAST_NAME TEXT)");
     print("Created tables");
   }
 
   // Retrieving employees from Employee Tables
   Future<List<Employee>> getEmployees() async {
     var dbClient = await db;
-    List<Map> list = await dbClient.rawQuery('SELECT * FROM Employee');
+    List<Map> maps =
+        await dbClient.query(TABLE, columns: [ID, FIRST_NAME, LAST_NAME]);
+    // List<Map> list = await dbClient.rawQuery('SELECT * FROM Employee');
     List<Employee> employees = [];
-    for (int i = 0; i < list.length; i++) {
-      employees.add(
-          new Employee(list[i]["name"], list[i]["age"], list[i]["mobileno"]));
+    if (maps.length > 0) {
+      for (int i = 0; i < maps.length; i++) {
+        employees.add(Employee.fromMap(maps[i]));
+      }
     }
-    print(employees.length);
     return employees;
   }
 
-  void saveEmployee(Employee person) async {
+  Future<Employee> save(Employee employee) async {
     var dbClient = await db;
-    await dbClient.transaction((txn) async {
-      var query = 'INSERT INTO Employee (name, age, mobileno) VALUES (' +
-          '\'' +
-          person.name +
-          '\'' +
-          ',' +
-          '\'' +
-          person.age +
-          '\'' +
-          ',' +
-          '\'' +
-          person.mobileNo +
-          '\'' +
-          ")";
-      print("Query : " + query);
-      return await txn.rawInsert(query);
-    });
+    employee.id = await dbClient.insert(TABLE, employee.toMap());
+    return employee;
+    // await dbClient.transaction((txn) async {
+    //   var query = "INSERT INTO Employee (firstname, lastname) VALUES ('" +
+    //       firstName +
+    //       "', '" +
+    //       lastName +
+    //       "')";
+    //   print("Query : " + query);
+    //return await txn.rawInsert(query);
+    //});
+  }
+
+  Future<int> delete(int id) async {
+    var dbClient = await db;
+    return await dbClient.delete(TABLE, where: '$ID = ?', whereArgs: [id]);
+  }
+
+  Future<int> update(Employee employee) async {
+    var dbClient = await db;
+    return await dbClient.update(TABLE, employee.toMap(),
+        where: '$ID = ?', whereArgs: [employee.id]);
+  }
+
+  Future close() async {
+    var dbClient = await db;
+    dbClient.close();
   }
 }
