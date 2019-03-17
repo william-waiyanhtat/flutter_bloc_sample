@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'db_demo/db_page.dart';
+import 'package:flutter_demo1/sqlite/db_page.dart';
 
 void main() {
   runApp(

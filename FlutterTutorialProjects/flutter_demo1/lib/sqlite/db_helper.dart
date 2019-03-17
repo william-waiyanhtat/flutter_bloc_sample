@@ -10,7 +10,7 @@ class DBHelper {
   static const String ID = 'id';
   static const String NAME = 'name';
   static const String TABLE = 'Employee';
-  static const String DB_NAME = "employee7.db";
+  static const String DB_NAME = 'employee1.db';
 
   Future<Database> get db async {
     if (_db != null) {
@@ -27,15 +27,27 @@ class DBHelper {
     return db;
   }
 
-  void _onCreate(Database db, int version) async {
+  _onCreate(Database db, int version) async {
     await db
-        .execute("CREATE TABLE $TABLE($ID INTEGER PRIMARY KEY, $NAME TEXT)");
+        .execute("CREATE TABLE $TABLE ($ID INTEGER PRIMARY KEY, $NAME TEXT)");
+  }
+
+  Future<Employee> save(Employee employee) async {
+    var dbClient = await db;
+    employee.id = await dbClient.insert(TABLE, employee.toMap());
+    return employee;
+    /*
+    await dbClient.transaction((txn) async {
+      var query = "INSERT INTO $TABLE ($NAME) VALUES ('" + employee.name + "')";
+      return await txn.rawInsert(query);
+    });
+    */
   }
 
   Future<List<Employee>> getEmployees() async {
     var dbClient = await db;
     List<Map> maps = await dbClient.query(TABLE, columns: [ID, NAME]);
-    // List<Map> list = await dbClient.rawQuery('SELECT * FROM Employee');
+    //List<Map> maps = await dbClient.rawQuery("SELECT * FROM $TABLE");
     List<Employee> employees = [];
     if (maps.length > 0) {
       for (int i = 0; i < maps.length; i++) {
@@ -43,21 +55,6 @@ class DBHelper {
       }
     }
     return employees;
-  }
-
-  Future<Employee> save(Employee employee) async {
-    var dbClient = await db;
-    employee.id = await dbClient.insert(TABLE, employee.toMap());
-    return employee;
-    // await dbClient.transaction((txn) async {
-    //   var query = "INSERT INTO Employee (firstname, lastname) VALUES ('" +
-    //       firstName +
-    //       "', '" +
-    //       lastName +
-    //       "')";
-    //   print("Query : " + query);
-    //return await txn.rawInsert(query);
-    //});
   }
 
   Future<int> delete(int id) async {
