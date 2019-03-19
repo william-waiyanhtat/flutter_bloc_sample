@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_demo1/sqlite/db_page.dart';
+import 'widgets/webview/webview_demo.dart';
+import 'widgets/webview/web2.dart';
 
 void main() {
   runApp(
@@ -13,7 +14,7 @@ class HomeApp extends StatelessWidget {
     return new MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Demo',
-      home: new DBTestPage(),
+      home: new WebviewDemo(),
     );
   }
 }
