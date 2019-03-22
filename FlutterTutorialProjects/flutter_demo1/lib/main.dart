@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'widgets/webview/webview_demo.dart';
+import 'widgets/webview/webview2.dart';
 import 'widgets/webview/web2.dart';
 
 void main() {
