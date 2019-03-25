@@ -59,6 +59,112 @@ class _WebviewDemoState extends State<WebviewDemo> {
   }
 }
 
+enum MenuOptions {
+  showUserAgent,
+  listCookies,
+  clearCookies,
+  addToCache,
+  listCache,
+  clearCache,
+  navigationDelegate
+}
+
+class SampleMenu extends StatelessWidget {
+  SampleMenu(this.controller);
+  final Future<WebViewController> controller;
+  final CookieManager cookieManager = CookieManager();
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: controller,
+      builder:
+          (BuildContext context, AsyncSnapshot<WebViewController> controller) {
+        return PopupMenuButton<MenuOptions>(
+          onSelected: (MenuOptions value) {
+            switch (value) {
+              case MenuOptions.showUserAgent:
+                _onShowUserAgent(controller.data, context);
+                break;
+              case MenuOptions.listCookies:
+                _onListCookies(controller.data, context);
+                break;
+              case MenuOptions.clearCookies:
+                onClearCookies(context);
+                break;
+              case MenuOptions.addToCache:
+                _onAddToCache(controller.data, context);
+                break;
+              case MenuOptions.clearCache:
+                _onShowUserAgent(controller.data, context);
+                break;
+              case MenuOptions.navigationDelegate:
+                _onShowUserAgent(controller.data, context);
+                break;
+              default:
+            }
+          },
+        );
+      },
+    );
+  }
+
+  _onListCookies(WebViewController controller, BuildContext context) async {
+    final String cookies =
+        await controller.evaluateJavascript('document.cookie');
+    Scaffold.of(context).showSnackBar(SnackBar(
+      content: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[const Text('Cookies'), _getCookies(cookies)],
+      ),
+    ));
+  }
+
+  Widget _getCookies(String cookies) {
+    if (null == cookies || cookies.isEmpty) {
+      return Container();
+    }
+    final List<String> cookieList = cookies.split(';');
+    final Iterable<Text> cookieWidgets =
+        cookieList.map((String cookie) => Text(cookie));
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      mainAxisSize: MainAxisSize.min,
+      children: cookieWidgets.toList(),
+    );
+  }
+
+  void onClearCookies(BuildContext context) async {
+    final bool hadCookies = await cookieManager.clearCookies();
+    String message = 'No Cookies now';
+    if (!hadCookies) {
+      message = 'There are no cookies';
+    }
+    Scaffold.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+      ),
+    );
+  }
+
+  void _onAddToCache(WebViewController controller, BuildContext context) async {
+    await controller.evaluateJavascript(
+        'caches.open(test_cahes_entry); localStorage["test_localStorage] = "dummy_entry"');
+    Scaffold.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Added a test entry to cahe'),
+      ),
+    );
+  }
+
+  void _onShowUserAgent(
+      WebViewController controller, BuildContext context) async {
+    controller.evaluateJavascript(
+        'Toaster.postMessage("User Agent: " + navigator.userAgent);');
+  }
+}
+
 class NavigationControls extends StatelessWidget {
   const NavigationControls(this._webViewControllerFuture);
 
@@ -120,18 +226,11 @@ class NavigationControls extends StatelessWidget {
                   ? null
                   : () {
                       controller.reload();
-                      _onShowUserAgent(controller, context);
                     },
             )
           ],
         );
       },
     );
-  }
-
-  void _onShowUserAgent(
-      WebViewController controller, BuildContext context) async {
-    controller.evaluateJavascript(
-        'Toaster.postMessage("User Agent: " + navigator.userAgent);');
   }
 }
