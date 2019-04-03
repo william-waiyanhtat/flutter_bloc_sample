@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'widgets/webview/webview2.dart';
-import 'widgets/webview/web2.dart';
+import 'tips/tip3.dart';
 
 void main() {
   runApp(
@@ -14,7 +13,7 @@ class HomeApp extends StatelessWidget {
     return new MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Demo',
-      home: new WebviewDemo(),
+      home: new Tip3(),
     );
   }
 }
