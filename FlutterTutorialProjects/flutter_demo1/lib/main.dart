@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'widgets/Stepper/stepper.dart';
+import 'widgets/bottom_navigation_drawer/BottomnavigationDrawer.dart';
 
 void main() {
   runApp(
@@ -13,7 +13,7 @@ class HomeApp extends StatelessWidget {
     return new MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Demo',
-      home: new StepperDemo(),
+      home: new BottomNavigationDemo(),
     );
   }
 }
