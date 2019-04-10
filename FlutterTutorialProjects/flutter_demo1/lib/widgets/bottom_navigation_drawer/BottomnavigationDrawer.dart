@@ -6,7 +6,7 @@ import 'tabs/ThirdTab.dart';
 class BottomNavigationDemo extends StatefulWidget {
   BottomNavigationDemo() : super();
 
-  final String title = "Stepper Demo";
+  final String title = "Bottom Tabs Demo";
 
   @override
   BottomNavigationDemoState createState() => BottomNavigationDemoState();
@@ -38,7 +38,7 @@ class BottomNavigationDemoState extends State<BottomNavigationDemo>
       // Appbar
       appBar: AppBar(
         // Title
-        title: Text("Simple Material App"),
+        title: Text("Bottom Tabs Demo"),
       ),
       // Body
       body: new TabBarView(

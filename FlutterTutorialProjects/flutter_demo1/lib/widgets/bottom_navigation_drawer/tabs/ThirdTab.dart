@@ -8,7 +8,6 @@ class ThirdTab extends StatelessWidget {
       body: new Container(
         child: new Center(
           child: new Column(
-            // center the children
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               new Icon(
@@ -17,7 +16,7 @@ class ThirdTab extends StatelessWidget {
                 color: Colors.white,
               ),
               new Text(
-                "First Tab",
+                "Third Tab",
                 style: new TextStyle(color: Colors.white),
               )
             ],
