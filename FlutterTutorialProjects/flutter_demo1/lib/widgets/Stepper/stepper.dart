@@ -23,13 +23,12 @@ class StepperDemoState extends State<StepperDemo> {
     Step(
       title: Text("Step 2"),
       content: Text("World!"),
-      // You can change the style of the step icon i.e number, editing, etc.
-      state: StepState.editing,
       isActive: true,
     ),
     Step(
       title: Text("Step 3"),
       content: Text("Hello World!"),
+      state: StepState.complete,
       isActive: true,
     ),
   ];
