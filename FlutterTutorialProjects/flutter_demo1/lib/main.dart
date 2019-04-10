@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'tips/tip3.dart';
+import 'tips/tip4.dart';
 
 void main() {
   runApp(
@@ -13,7 +13,7 @@ class HomeApp extends StatelessWidget {
     return new MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Demo',
-      home: new Tip3(),
+      home: new FlutterTips(),
     );
   }
 }
