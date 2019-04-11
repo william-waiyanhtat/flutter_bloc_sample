@@ -3,23 +3,22 @@ import 'package:flutter/material.dart';
 class FirstTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      backgroundColor: Colors.red,
-      body: new Container(
-        child: new Center(
-          child: new Column(
-            // center the children
+    return Scaffold(
+      backgroundColor: Colors.green,
+      body: Container(
+        child: Center(
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              new Icon(
+              Icon(
                 Icons.favorite,
-                size: 160.0,
+                size: 200.0,
                 color: Colors.white,
               ),
-              new Text(
-                "First Tab",
-                style: new TextStyle(color: Colors.white),
-              )
+              Text(
+                'First Tab',
+                style: TextStyle(color: Colors.white),
+              ),
             ],
           ),
         ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'widgets/bottom_navigation_drawer/BottomnavigationDrawer.dart';
+import 'widgets/BottomNavigation/BottomNavigation.dart';
 
 void main() {
   runApp(
