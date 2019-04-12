@@ -17,7 +17,23 @@ class CustomFontDemoState extends State<CustomFontDemo> {
       appBar: AppBar(
         title: Text("Custom Font Demo"),
       ),
-      body: Container(),
+      body: Container(
+        child: Center(
+          child: Text(
+            "Hello Flutter",
+            style: getCustomFontStyle(),
+          ),
+        ),
+      ),
+    );
+  }
+
+  TextStyle getCustomFontStyle() {
+    return const TextStyle(
+      color: Colors.blueAccent,
+      fontFamily: 'Roboto',
+      fontWeight: FontWeight.w400,
+      fontSize: 55.0,
     );
   }
 }
