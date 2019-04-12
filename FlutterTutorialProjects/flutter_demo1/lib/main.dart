@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'widgets/CustomFonts/CustomFontDemo.dart';
+import 'others/GradientDemo/GradientDemo.dart';
 
 void main() {
   runApp(
@@ -13,7 +13,7 @@ class HomeApp extends StatelessWidget {
     return new MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Demo',
-      home: new CustomFontDemo(),
+      home: new GradientDemo(),
     );
   }
 }
