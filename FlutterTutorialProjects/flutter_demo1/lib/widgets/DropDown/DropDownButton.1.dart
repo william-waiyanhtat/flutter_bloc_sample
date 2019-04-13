@@ -9,12 +9,28 @@ class DropDown extends StatefulWidget {
   DropDownState createState() => DropDownState();
 }
 
+class Company {
+  int id;
+  String name;
+
+  Company(this.id, this.name);
+
+  static List<Company> getCompanies() {
+    return <Company>[
+      Company(1, 'Apple'),
+      Company(2, 'Google'),
+      Company(1, 'Samsung'),
+      Company(1, 'Sony'),
+      Company(1, 'LG'),
+    ];
+  }
+}
+
 class DropDownState extends State<DropDown> {
   //
-  List _companies = ["Apple", "Google", "Sony", "Samsung", "LG"];
-
-  List<DropdownMenuItem<String>> _dropDownMenuItems;
-  String _selectedCompany;
+  List<Company> _companies = Company.getCompanies();
+  List<DropdownMenuItem<Company>> _dropDownMenuItems;
+  Company _selectedCompany;
 
   @override
   void initState() {
@@ -23,17 +39,18 @@ class DropDownState extends State<DropDown> {
     super.initState();
   }
 
-  List<DropdownMenuItem<String>> buildDropDownMenuItems(List companies) {
-    List<DropdownMenuItem<String>> items = new List();
-    for (String company in _companies) {
-      items.add(new DropdownMenuItem(value: company, child: new Text(company)));
+  List<DropdownMenuItem<Company>> buildDropDownMenuItems(List companies) {
+    List<DropdownMenuItem<Company>> items = new List();
+    for (Company company in _companies) {
+      items.add(
+          new DropdownMenuItem(value: company, child: new Text(company.name)));
     }
     return items;
   }
 
-  void changedDropDownItem(String selectedFruit) {
+  void changedDropDownItem(Company selectedCompany) {
     setState(() {
-      _selectedCompany = selectedFruit;
+      _selectedCompany = selectedCompany;
     });
   }
 
@@ -51,7 +68,7 @@ class DropDownState extends State<DropDown> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                new Text("Select a company "),
+                new Text("Select a company"),
                 SizedBox(
                   height: 20,
                 ),
@@ -63,7 +80,7 @@ class DropDownState extends State<DropDown> {
                 SizedBox(
                   height: 20,
                 ),
-                Text('Selected: $_selectedCompany'),
+                Text('Selected: ${_selectedCompany.name}'),
               ],
             ),
           ),
