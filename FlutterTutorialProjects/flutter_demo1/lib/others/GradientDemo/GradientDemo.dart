@@ -17,17 +17,15 @@ class _GradientDemoState extends State<GradientDemo> {
         title: Text(widget.title),
       ),
       body: new Container(
-        // Center the content
-        child: new Center(
-          // Add Text
-          child: new Text(
-            "Hello World!",
-            style: new TextStyle(color: Colors.white),
+        child: Center(
+          child: Text(
+            "Hello Flutter",
+            style: TextStyle(
+              color: Colors.white,
+            ),
           ),
         ),
-        // Set background
-        decoration: new BoxDecoration(
-          // Add Gradient
+        decoration: BoxDecoration(
           gradient: getCustomGradient(),
         ),
       ),
@@ -35,12 +33,12 @@ class _GradientDemoState extends State<GradientDemo> {
   }
 
   LinearGradient getCustomGradient() {
-    // Define a Linear Gradient
-    return new LinearGradient(
-        colors: [Colors.pink, Colors.blueAccent],
-        begin: const FractionalOffset(0.0, 0.0),
-        end: const FractionalOffset(0.6, 0.0),
-        stops: [0.0, 0.6],
-        tileMode: TileMode.clamp);
+    return LinearGradient(
+      colors: [Colors.pink, Colors.blueAccent],
+      begin: const FractionalOffset(0.0, 0.0),
+      end: const FractionalOffset(0.8, 0.0),
+      stops: [0.0, 0.6],
+      tileMode: TileMode.clamp,
+    );
   }
 }

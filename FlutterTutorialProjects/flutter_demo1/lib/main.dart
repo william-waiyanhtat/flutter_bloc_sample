@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'others/GradientDemo/GradientDemo.dart';
+import 'widgets/CustomFonts/CustomFontDemo.dart';
+import 'widgets/DropDown/DropDownButton.dart';
 
 void main() {
   runApp(
@@ -13,7 +15,7 @@ class HomeApp extends StatelessWidget {
     return new MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Demo',
-      home: new GradientDemo(),
+      home: new DropDown(),
     );
   }
 }
