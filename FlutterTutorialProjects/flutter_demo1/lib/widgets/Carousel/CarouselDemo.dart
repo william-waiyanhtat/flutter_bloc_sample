@@ -15,10 +15,10 @@ class CarouselDemoState extends State<CarouselDemo> {
   CarouselSlider carouselSlider;
   int _current = 0;
   List imgList = [
-    'https://images.unsplash.com/photo-1502943693086-33b5b1cfdf2f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=668&q=80',
-    'https://images.unsplash.com/photo-1502943693086-33b5b1cfdf2f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=668&q=80',
-    'https://images.unsplash.com/photo-1502943693086-33b5b1cfdf2f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=668&q=80',
-    'https://images.unsplash.com/photo-1502943693086-33b5b1cfdf2f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=668&q=80',
+    'https://images.unsplash.com/photo-1502117859338-fd9daa518a9a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60',
+    'https://images.unsplash.com/photo-1554321586-92083ba0a115?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60',
+    'https://images.unsplash.com/photo-1536679545597-c2e5e1946495?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60',
+    'https://images.unsplash.com/photo-1543922596-b3bbaba80649?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60',
     'https://images.unsplash.com/photo-1502943693086-33b5b1cfdf2f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=668&q=80'
   ];
 
@@ -39,10 +39,9 @@ class CarouselDemoState extends State<CarouselDemo> {
       ),
       body: Container(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            SizedBox(
-              height: 20,
-            ),
             carouselSlider = CarouselSlider(
               height: 400.0,
               viewportFraction: 0.7,
@@ -56,7 +55,6 @@ class CarouselDemoState extends State<CarouselDemo> {
               pauseAutoPlayOnTouch: Duration(seconds: 10),
               enlargeCenterPage: true,
               onPageChanged: (index) {
-                print("Page: $index");
                 setState(() {
                   _current = index;
                 });
@@ -67,9 +65,12 @@ class CarouselDemoState extends State<CarouselDemo> {
                   builder: (BuildContext context) {
                     return Container(
                       width: MediaQuery.of(context).size.width,
-                      margin: EdgeInsets.symmetric(horizontal: 5.0),
-                      decoration: BoxDecoration(color: Colors.white),
-                      child: Image.network(imgUrl),
+                      margin: EdgeInsets.symmetric(horizontal: 10.0),
+                      decoration: BoxDecoration(color: Colors.green),
+                      child: Image.network(
+                        imgUrl,
+                        fit: BoxFit.fill,
+                      ),
                     );
                   },
                 );
@@ -84,13 +85,14 @@ class CarouselDemoState extends State<CarouselDemo> {
                 imgList,
                 (index, url) {
                   return Container(
-                    width: 8.0,
-                    height: 8.0,
+                    width: 10.0,
+                    height: 10.0,
                     margin:
                         EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: _current == index ? Colors.grey : Colors.green,
+                      color:
+                          _current == index ? Colors.redAccent : Colors.green,
                     ),
                   );
                 },
@@ -99,20 +101,18 @@ class CarouselDemoState extends State<CarouselDemo> {
             SizedBox(
               height: 20,
             ),
-            Expanded(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  OutlineButton(
-                    onPressed: goToPrevious,
-                    child: Text("<"),
-                  ),
-                  OutlineButton(
-                    onPressed: goToNext,
-                    child: Text(">"),
-                  )
-                ],
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                OutlineButton(
+                  onPressed: goToPrevious,
+                  child: Text("<"),
+                ),
+                OutlineButton(
+                  onPressed: goToNext,
+                  child: Text(">"),
+                )
+              ],
             ),
           ],
         ),
