@@ -14,23 +14,21 @@ class AutoCompleteDemo extends StatefulWidget {
 }
 
 class _AutoCompleteDemoState extends State<AutoCompleteDemo> {
-
   static List<User> players = new List<User>();
   AutoCompleteTextField searchTextField;
   GlobalKey<AutoCompleteTextFieldState<User>> key = new GlobalKey();
   bool loading = true;
 
   void getUsers() async {
-
     try {
       final response =
           await http.get("https://jsonplaceholder.typicode.com/users");
       if (response.statusCode == 200) {
-       players = loadPlayers(response.body);
-       print('Users : ${players.length}');
-       setState(() {
-                loading = false;
-              });
+        players = loadPlayers(response.body);
+        print('Users : ${players.length}');
+        setState(() {
+          loading = false;
+        });
       } else {
         print("Error getting users");
       }
@@ -42,22 +40,22 @@ class _AutoCompleteDemoState extends State<AutoCompleteDemo> {
     return parsed.map<User>((json) => User.fromJson(json)).toList();
   }
 
-  Widget row(User user){
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Text(
-            user.name,
-            style: TextStyle(fontSize: 16.0),
-          ),
-          SizedBox(
-             width: 10.0,
-          ),
-          Text(
-            user.email,
-          ),
-        ],
-      );
+  Widget row(User user) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Text(
+          user.name,
+          style: TextStyle(fontSize: 16.0),
+        ),
+        SizedBox(
+          width: 10.0,
+        ),
+        Text(
+          user.email,
+        ),
+      ],
+    );
   }
 
   @override
@@ -75,34 +73,39 @@ class _AutoCompleteDemoState extends State<AutoCompleteDemo> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          loading ? CircularProgressIndicator() :
-          searchTextField = AutoCompleteTextField<User>(
-            key: key,
-            clearOnSubmit: false,
-            suggestions: players,
-            style: new TextStyle(color: Colors.black, fontSize: 16.0),
-            decoration: new InputDecoration(
-                suffixIcon: Container(
-                  width: 85.0,
-                  height: 60.0,
+          loading
+              ? CircularProgressIndicator()
+              : searchTextField = AutoCompleteTextField<User>(
+                  key: key,
+                  clearOnSubmit: false,
+                  suggestions: players,
+                  style: new TextStyle(color: Colors.black, fontSize: 16.0),
+                  decoration: new InputDecoration(
+                    suffixIcon: Container(
+                      width: 85.0,
+                      height: 60.0,
+                    ),
+                    contentPadding: EdgeInsets.fromLTRB(10.0, 30.0, 10.0, 20.0),
+                    hintText: 'Search Name',
+                    hintStyle: TextStyle(color: Colors.black),
+                  ),
+                  itemFilter: (item, query) {
+                    return item.name
+                        .toLowerCase()
+                        .startsWith(query.toLowerCase());
+                  },
+                  itemSorter: (a, b) {
+                    return a.name.compareTo(b.name);
+                  },
+                  itemSubmitted: (item) {
+                    print(searchTextField.textField.controller.text);
+                    setState(() =>
+                        searchTextField.textField.controller.text = item.name);
+                  },
+                  itemBuilder: (context, item) {
+                    return row(item);
+                  },
                 ),
-                contentPadding: EdgeInsets.fromLTRB(10.0, 30.0, 10.0, 20.0),
-                hintText: 'Search Name',
-                hintStyle: TextStyle(color: Colors.black),),
-            itemFilter: (item, query) {
-              return item.name.toLowerCase().startsWith(query.toLowerCase());
-            },
-            itemSorter: (a, b) {
-              return a.name.compareTo(b.name);
-            },
-            itemSubmitted: (item) {
-              setState(
-                  () => searchTextField.textField.controller.text = item.name);
-            },
-            itemBuilder: (context, item) {
-              return row(item);
-            },
-          ),
         ],
       ),
     );

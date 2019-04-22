@@ -32,6 +32,7 @@ class CarouselDemoState extends State<CarouselDemo> {
 
   @override
   Widget build(BuildContext context) {
+    print("Index : $_current");
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -43,29 +44,29 @@ class CarouselDemoState extends State<CarouselDemo> {
           children: <Widget>[
             carouselSlider = CarouselSlider(
               height: 400.0,
+              viewportFraction: 0.7,
               initialPage: 0,
-              enlargeCenterPage: true,
-              autoPlay: true,
-              reverse: false,
               enableInfiniteScroll: true,
+              reverse: false,
+              autoPlay: true,
+              autoPlayCurve: Curves.easeIn,
               autoPlayInterval: Duration(seconds: 2),
-              autoPlayAnimationDuration: Duration(milliseconds: 2000),
+              autoPlayAnimationDuration: Duration(milliseconds: 800),
               pauseAutoPlayOnTouch: Duration(seconds: 10),
-              scrollDirection: Axis.horizontal,
+              enlargeCenterPage: true,
               onPageChanged: (index) {
                 setState(() {
                   _current = index;
                 });
               },
+              scrollDirection: Axis.horizontal,
               items: imgList.map((imgUrl) {
                 return Builder(
                   builder: (BuildContext context) {
                     return Container(
                       width: MediaQuery.of(context).size.width,
                       margin: EdgeInsets.symmetric(horizontal: 10.0),
-                      decoration: BoxDecoration(
-                        color: Colors.green,
-                      ),
+                      decoration: BoxDecoration(color: Colors.green),
                       child: Image.network(
                         imgUrl,
                         fit: BoxFit.fill,
@@ -80,20 +81,25 @@ class CarouselDemoState extends State<CarouselDemo> {
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: map<Widget>(imgList, (index, url) {
-                return Container(
-                  width: 10.0,
-                  height: 10.0,
-                  margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: _current == index ? Colors.redAccent : Colors.green,
-                  ),
-                );
-              }),
+              children: map<Widget>(
+                imgList,
+                (index, url) {
+                  return Container(
+                    width: 10.0,
+                    height: 10.0,
+                    margin:
+                        EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color:
+                          _current == index ? Colors.redAccent : Colors.green,
+                    ),
+                  );
+                },
+              ),
             ),
             SizedBox(
-              height: 20.0,
+              height: 20,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -105,7 +111,7 @@ class CarouselDemoState extends State<CarouselDemo> {
                 OutlineButton(
                   onPressed: goToNext,
                   child: Text(">"),
-                ),
+                )
               ],
             ),
           ],
@@ -114,13 +120,13 @@ class CarouselDemoState extends State<CarouselDemo> {
     );
   }
 
-  goToPrevious() {
-    carouselSlider.previousPage(
-        duration: Duration(milliseconds: 300), curve: Curves.ease);
-  }
-
   goToNext() {
     carouselSlider.nextPage(
         duration: Duration(milliseconds: 300), curve: Curves.decelerate);
+  }
+
+  goToPrevious() {
+    carouselSlider.previousPage(
+        duration: Duration(milliseconds: 300), curve: Curves.ease);
   }
 }
