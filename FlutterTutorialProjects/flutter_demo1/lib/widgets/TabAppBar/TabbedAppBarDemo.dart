@@ -5,13 +5,13 @@ class TabbedAppBarDemo extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: DefaultTabController(
-        length: directionsChoice.length,
+        length: choices.length,
         child: Scaffold(
           appBar: AppBar(
             title: const Text('Tabbed AppBar'),
             bottom: TabBar(
               isScrollable: true,
-              tabs: directionsChoice.map<Widget>((DirectionChoice choice) {
+              tabs: choices.map<Widget>((Choice choice) {
                 return Tab(
                   text: choice.title,
                   icon: Icon(choice.icon),
@@ -20,10 +20,12 @@ class TabbedAppBarDemo extends StatelessWidget {
             ),
           ),
           body: TabBarView(
-            children: directionsChoice.map<Widget>((DirectionChoice choice) {
+            children: choices.map((Choice choice) {
               return Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: DirectionChoicePage(choice: choice),
+                padding: const EdgeInsets.all(20.0),
+                child: ChoicePage(
+                  choice: choice,
+                ),
               );
             }).toList(),
           ),
@@ -33,24 +35,24 @@ class TabbedAppBarDemo extends StatelessWidget {
   }
 }
 
-class DirectionChoice {
+class Choice {
   final String title;
   final IconData icon;
-  const DirectionChoice({this.title, this.icon});
+  const Choice({this.title, this.icon});
 }
 
-const List<DirectionChoice> directionsChoice = <DirectionChoice>[
-  DirectionChoice(title: 'CAR', icon: Icons.directions_car),
-  DirectionChoice(title: 'BICYCLE', icon: Icons.directions_bike),
-  DirectionChoice(title: 'BUS', icon: Icons.directions_bus),
-  DirectionChoice(title: 'TRAIN', icon: Icons.directions_railway),
-  DirectionChoice(title: 'WALK', icon: Icons.directions_walk),
+const List<Choice> choices = <Choice>[
+  Choice(title: 'CAR', icon: Icons.directions_car),
+  Choice(title: 'BICYCLE', icon: Icons.directions_bike),
+  Choice(title: 'BUS', icon: Icons.directions_bus),
+  Choice(title: 'TRAIN', icon: Icons.directions_railway),
+  Choice(title: 'WALK', icon: Icons.directions_walk),
+  Choice(title: 'BOAT', icon: Icons.directions_boat),
 ];
 
-class DirectionChoicePage extends StatelessWidget {
-  const DirectionChoicePage({Key key, this.choice}) : super(key: key);
-
-  final DirectionChoice choice;
+class ChoicePage extends StatelessWidget {
+  const ChoicePage({Key key, this.choice}) : super(key: key);
+  final Choice choice;
 
   @override
   Widget build(BuildContext context) {
@@ -62,8 +64,15 @@ class DirectionChoicePage extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Icon(choice.icon, size: 128.0, color: textStyle.color),
-            Text(choice.title, style: textStyle),
+            Icon(
+              choice.icon,
+              size: 150.0,
+              color: textStyle.color,
+            ),
+            Text(
+              choice.title,
+              style: textStyle,
+            ),
           ],
         ),
       ),
