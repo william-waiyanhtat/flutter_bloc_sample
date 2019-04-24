@@ -6,6 +6,8 @@ import 'widgets/BottomNavigation/BottomNavigation.dart';
 import 'widgets/Stepper/stepper.dart';
 import 'widgets/Carousel/CarouselDemo.dart';
 import 'textfield/auto_complete.dart';
+import 'widgets/List/AnimatedList.dart';
+import 'widgets/TabAppBar/TabbedAppBarDemo.dart';
 
 void main() {
   runApp(
@@ -19,7 +21,7 @@ class HomeApp extends StatelessWidget {
     return new MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Demo',
-      home: new CarouselDemo(),
+      home: new TabbedAppBarDemo(),
     );
   }
 }
