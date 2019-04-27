@@ -7,38 +7,53 @@ import 'package:image_picker/image_picker.dart';
 class UploadImageDemo extends StatefulWidget {
   UploadImageDemo() : super();
 
-  final String title = "Bottom Navigation Demo";
+  final String title = "Upload Image Demo";
 
   @override
   UploadImageDemoState createState() => UploadImageDemoState();
 }
 
 class UploadImageDemoState extends State<UploadImageDemo> {
-  final String phpEndPoint = 'http://localhost/flutter_test/upload_image.php';
+  //
+  static final String phpEndPoint =
+      'http://localhost/flutter_test/upload_image.php';
   Future<File> file;
   String base64Image;
-  AsyncSnapshot<File> tmpFile;
+  File tmpFile;
+  String status = '';
+  String errMessage = 'Error Uploading Image';
 
-  void _choose() {
+  void chooseImage() {
     setState(() {
       //    file = await ImagePicker.pickImage(source: ImageSource.camera);
       file = ImagePicker.pickImage(source: ImageSource.gallery);
     });
   }
 
-  void _upload() {
-    if (tmpFile == null) {
+  void startUpload() {
+    setStatus('Uploading image...');
+    if (null == tmpFile) {
+      setStatus(errMessage);
       return;
     }
-    String fileName = tmpFile.data.path.split("/").last;
+    String fileName = tmpFile.path.split("/").last;
+    upload(fileName);
+  }
 
+  void upload(String fileName) {
     http.post(phpEndPoint, body: {
       "image": base64Image,
       "name": fileName,
     }).then((res) {
-      print(res.body);
+      setStatus(res.statusCode == 200 ? res.body : errMessage);
     }).catchError((err) {
-      print(err);
+      setStatus(err);
+    });
+  }
+
+  void setStatus(String message) {
+    setState(() {
+      status = message;
     });
   }
 
@@ -47,15 +62,16 @@ class UploadImageDemoState extends State<UploadImageDemo> {
       future: file,
       builder: (BuildContext context, AsyncSnapshot<File> snapshot) {
         if (snapshot.connectionState == ConnectionState.done &&
-            snapshot.data != null) {
-          tmpFile = snapshot;
+            null != snapshot.data) {
+          tmpFile = snapshot.data;
           base64Image = base64Encode(snapshot.data.readAsBytesSync());
-          return Image.file(
-            snapshot.data,
-            width: 300,
-            height: 300,
+          return Flexible(
+            child: Image.file(
+              snapshot.data,
+              fit: BoxFit.fill,
+            ),
           );
-        } else if (snapshot.error != null) {
+        } else if (null != snapshot.error) {
           return const Text(
             'Error Picking Image',
             textAlign: TextAlign.center,
@@ -74,25 +90,39 @@ class UploadImageDemoState extends State<UploadImageDemo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomPadding: true,
       appBar: AppBar(
         title: Text("Upload Image Demo"),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          RaisedButton(
-            onPressed: _choose,
-            child: Text('Choose Image'),
-          ),
-          showImage(),
-          SizedBox(width: 10.0),
-          RaisedButton(
-            onPressed: _upload,
-            child: Text('Upload Image'),
-          )
-        ],
+      body: Container(
+        padding: EdgeInsets.all(30.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            OutlineButton(
+              onPressed: chooseImage,
+              child: Text('Choose Image'),
+            ),
+            SizedBox(height: 20.0),
+            showImage(),
+            SizedBox(height: 20.0),
+            OutlineButton(
+              onPressed: startUpload,
+              child: Text('Upload Image'),
+            ),
+            SizedBox(height: 20.0),
+            Text(
+              status,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.green,
+                fontWeight: FontWeight.w500,
+                fontSize: 20.0,
+              ),
+            ),
+            SizedBox(height: 20.0),
+          ],
+        ),
       ),
     );
   }
