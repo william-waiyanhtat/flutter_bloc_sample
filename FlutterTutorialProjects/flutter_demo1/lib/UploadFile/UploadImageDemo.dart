@@ -15,45 +15,45 @@ class UploadImageDemo extends StatefulWidget {
 
 class UploadImageDemoState extends State<UploadImageDemo> {
   //
-  static final String phpEndPoint =
+  static final String uploadEndPoint =
       'http://localhost/flutter_test/upload_image.php';
   Future<File> file;
+  String status = '';
   String base64Image;
   File tmpFile;
-  String status = '';
   String errMessage = 'Error Uploading Image';
 
-  void chooseImage() {
+  chooseImage() {
     setState(() {
-      //    file = await ImagePicker.pickImage(source: ImageSource.camera);
       file = ImagePicker.pickImage(source: ImageSource.gallery);
+    });
+    setStatus('');
+  }
+
+  setStatus(String message) {
+    setState(() {
+      status = message;
     });
   }
 
-  void startUpload() {
-    setStatus('Uploading image...');
+  startUpload() {
+    setStatus('Uploading Image...');
     if (null == tmpFile) {
       setStatus(errMessage);
       return;
     }
-    String fileName = tmpFile.path.split("/").last;
+    String fileName = tmpFile.path.split('/').last;
     upload(fileName);
   }
 
-  void upload(String fileName) {
-    http.post(phpEndPoint, body: {
+  upload(String fileName) {
+    http.post(uploadEndPoint, body: {
       "image": base64Image,
       "name": fileName,
-    }).then((res) {
-      setStatus(res.statusCode == 200 ? res.body : errMessage);
-    }).catchError((err) {
-      setStatus(err);
-    });
-  }
-
-  void setStatus(String message) {
-    setState(() {
-      status = message;
+    }).then((result) {
+      setStatus(result.statusCode == 200 ? result.body : errMessage);
+    }).catchError((error) {
+      setStatus(error);
     });
   }
 
@@ -86,11 +86,9 @@ class UploadImageDemoState extends State<UploadImageDemo> {
     );
   }
 
-  //
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomPadding: true,
       appBar: AppBar(
         title: Text("Upload Image Demo"),
       ),
@@ -103,14 +101,20 @@ class UploadImageDemoState extends State<UploadImageDemo> {
               onPressed: chooseImage,
               child: Text('Choose Image'),
             ),
-            SizedBox(height: 20.0),
+            SizedBox(
+              height: 20.0,
+            ),
             showImage(),
-            SizedBox(height: 20.0),
+            SizedBox(
+              height: 20.0,
+            ),
             OutlineButton(
               onPressed: startUpload,
               child: Text('Upload Image'),
             ),
-            SizedBox(height: 20.0),
+            SizedBox(
+              height: 20.0,
+            ),
             Text(
               status,
               textAlign: TextAlign.center,
@@ -120,7 +124,9 @@ class UploadImageDemoState extends State<UploadImageDemo> {
                 fontSize: 20.0,
               ),
             ),
-            SizedBox(height: 20.0),
+            SizedBox(
+              height: 20.0,
+            ),
           ],
         ),
       ),
