@@ -6,7 +6,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 class MapsDemo extends StatefulWidget {
   MapsDemo() : super();
 
-  final String title = "Stepper Demo";
+  final String title = "Maps Demo";
 
   @override
   MapsDemoState createState() => MapsDemoState();
@@ -18,16 +18,11 @@ class MapsDemoState extends State<MapsDemo> {
 
   static const LatLng _center = const LatLng(45.521563, -122.677433);
 
-  static final CameraPosition _kLake = CameraPosition(
+  static final CameraPosition position1 = CameraPosition(
     bearing: 192.8334901395799,
     target: LatLng(45.531563, -122.677433),
     tilt: 59.440717697143555,
     zoom: 11.0,
-  );
-
-  static final CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(37.42796133580664, -122.085749655962),
-    zoom: 14.4746,
   );
 
   final Set<Marker> _markers = {};
@@ -36,9 +31,9 @@ class MapsDemoState extends State<MapsDemo> {
 
   MapType _currentMapType = MapType.normal;
 
-  Future<void> _goToTheLake() async {
+  Future<void> goToPosition1() async {
     final GoogleMapController controller = await _controller.future;
-    controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
+    controller.animateCamera(CameraUpdate.newCameraPosition(position1));
   }
 
   void _onMapTypeButtonPressed() {
@@ -77,8 +72,8 @@ class MapsDemoState extends State<MapsDemo> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text('Maps Sample App'),
-          backgroundColor: Colors.green[700],
+          title: Text(widget.title),
+          backgroundColor: Colors.blue,
         ),
         body: Stack(
           children: <Widget>[
@@ -101,21 +96,21 @@ class MapsDemoState extends State<MapsDemo> {
                     FloatingActionButton(
                       onPressed: _onMapTypeButtonPressed,
                       materialTapTargetSize: MaterialTapTargetSize.padded,
-                      backgroundColor: Colors.green,
+                      backgroundColor: Colors.blue,
                       child: const Icon(Icons.map, size: 36.0),
                     ),
                     SizedBox(height: 16.0),
                     FloatingActionButton(
-                      onPressed: _goToTheLake,
+                      onPressed: goToPosition1,
                       materialTapTargetSize: MaterialTapTargetSize.padded,
-                      backgroundColor: Colors.green,
+                      backgroundColor: Colors.blue,
                       child: const Icon(Icons.add, size: 36.0),
                     ),
                     SizedBox(height: 16.0),
                     FloatingActionButton(
                       onPressed: _onAddMarkerButtonPressed,
                       materialTapTargetSize: MaterialTapTargetSize.padded,
-                      backgroundColor: Colors.green,
+                      backgroundColor: Colors.blue,
                       child: const Icon(Icons.add_location, size: 36.0),
                     ),
                   ],
