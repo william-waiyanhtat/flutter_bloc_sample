@@ -9,6 +9,9 @@ import 'textfield/auto_complete.dart';
 import 'widgets/List/AnimatedList.dart';
 import 'widgets/TabAppBar/TabbedAppBarDemo.dart';
 import 'UploadFile/UploadImageDemo.dart';
+import 'widgets/data_table/data_table.dart';
+import 'others/other/textfield_change.dart';
+import 'widgets/BottomNavigation/BottomNavigation.dart';
 
 void main() {
   runApp(
@@ -22,7 +25,7 @@ class HomeApp extends StatelessWidget {
     return new MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Demo',
-      home: new UploadImageDemo(),
+      home: new BottomNavigationDemo(),
     );
   }
 }

@@ -6,7 +6,7 @@ import 'package:flutter_demo1/widgets/BottomNavigation/Tabs/ThirdTab.dart';
 class BottomNavigationDemo extends StatefulWidget {
   BottomNavigationDemo() : super();
 
-  final String title = "Bottom Navigation Demo";
+  final String title = "Bottom Navigation";
 
   @override
   BottomNavigationDemoState createState() => BottomNavigationDemoState();
@@ -34,7 +34,7 @@ class BottomNavigationDemoState extends State<BottomNavigationDemo>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Bottom Navigation Demo"),
+        title: Text("Bottom Navigation"),
       ),
       body: TabBarView(
         children: <Widget>[

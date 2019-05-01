@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class TFChange extends StatefulWidget {
-  final String title = "TextField Demo";
+  final String title = "TextField Text Listener Demo";
 
   @override
   _TFChangeChange createState() => _TFChangeChange();
@@ -32,18 +32,23 @@ class _TFChangeChange extends State<TFChange> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
+      body: Container(
+        padding: EdgeInsets.all(20.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             TextField(
+              decoration: InputDecoration(
+                labelText: "Name",
+                hintText: "Enter name",
+              ),
               onChanged: (text) {
                 print("Text $text");
               },
             ),
-            TextField(
-              controller: myController,
-            )
+            // TextField(
+            //   controller: myController,
+            // )
           ],
         ),
       ),
