@@ -9,6 +9,7 @@ import 'textfield/auto_complete.dart';
 import 'widgets/List/AnimatedList.dart';
 import 'widgets/TabAppBar/TabbedAppBarDemo.dart';
 import 'UploadFile/UploadImageDemo.dart';
+import 'widgets/Maps/Maps.dart';
 
 void main() {
   runApp(
@@ -22,7 +23,7 @@ class HomeApp extends StatelessWidget {
     return new MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Demo',
-      home: new UploadImageDemo(),
+      home: new MapsDemo(),
     );
   }
 }
