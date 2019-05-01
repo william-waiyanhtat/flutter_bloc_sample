@@ -19,16 +19,27 @@ class MapsDemoState extends State<MapsDemo> {
   static const LatLng _center = const LatLng(45.521563, -122.677433);
 
   static final CameraPosition _kLake = CameraPosition(
-      bearing: 192.8334901395799,
-      target: LatLng(37.43296265331129, -122.08832357078792),
-      tilt: 59.440717697143555,
-      zoom: 19.151926040649414);
+    bearing: 192.8334901395799,
+    target: LatLng(45.531563, -122.677433),
+    tilt: 59.440717697143555,
+    zoom: 11.0,
+  );
+
+  static final CameraPosition _kGooglePlex = CameraPosition(
+    target: LatLng(37.42796133580664, -122.085749655962),
+    zoom: 14.4746,
+  );
 
   final Set<Marker> _markers = {};
 
   LatLng _lastMapPosition = _center;
 
   MapType _currentMapType = MapType.normal;
+
+  Future<void> _goToTheLake() async {
+    final GoogleMapController controller = await _controller.future;
+    controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
+  }
 
   void _onMapTypeButtonPressed() {
     setState(() {
@@ -54,7 +65,7 @@ class MapsDemoState extends State<MapsDemo> {
   }
 
   void _onCameraMove(CameraPosition position) {
-    _lastMapPosition = _kLake.target; //.target;
+    _lastMapPosition = position.target;
   }
 
   void _onMapCreated(GoogleMapController controller) {
@@ -92,6 +103,13 @@ class MapsDemoState extends State<MapsDemo> {
                       materialTapTargetSize: MaterialTapTargetSize.padded,
                       backgroundColor: Colors.green,
                       child: const Icon(Icons.map, size: 36.0),
+                    ),
+                    SizedBox(height: 16.0),
+                    FloatingActionButton(
+                      onPressed: _goToTheLake,
+                      materialTapTargetSize: MaterialTapTargetSize.padded,
+                      backgroundColor: Colors.green,
+                      child: const Icon(Icons.add, size: 36.0),
                     ),
                     SizedBox(height: 16.0),
                     FloatingActionButton(
