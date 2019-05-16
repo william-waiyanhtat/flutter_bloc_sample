@@ -44,7 +44,7 @@ class Tip5State extends State<Tip5> {
         title: Text(widget.title),
       ),
       body: WillPopScope(
-        onWillPop: () => _onBackPressed,
+        onWillPop: _onBackPressed,
         child: Container(),
       ),
     );
