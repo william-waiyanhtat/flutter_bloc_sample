@@ -1,7 +1,6 @@
 package com.example.flutterdemo1;
 
 import android.os.Bundle;
-import android.support.multidex.MultiDex;
 
 import java.util.Map;
 
@@ -16,7 +15,7 @@ public class MainActivity extends FlutterActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        MultiDex.install(this);
+       // MultiDex.install(this);
         super.onCreate(savedInstanceState);
         GeneratedPluginRegistrant.registerWith(this);
 

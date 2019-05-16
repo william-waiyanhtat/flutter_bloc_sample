@@ -10,6 +10,8 @@ import 'widgets/List/AnimatedList.dart';
 import 'widgets/TabAppBar/TabbedAppBarDemo.dart';
 import 'UploadFile/UploadImageDemo.dart';
 import 'widgets/Maps/Maps.dart';
+import 'widgets/Video/VideoDemo.dart';
+import 'tips/Tip5.dart';
 
 void main() {
   runApp(
@@ -23,7 +25,7 @@ class HomeApp extends StatelessWidget {
     return new MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Demo',
-      home: new MapsDemo(),
+      home: new Tip5(),
     );
   }
 }
