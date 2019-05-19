@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_demo1/widgets/webview/webview2.dart';
 import 'others/GradientDemo/GradientDemo.dart';
 import 'widgets/CustomFonts/CustomFontDemo.dart';
 import 'widgets/DropDown/DropDownButton.dart';
@@ -25,7 +26,7 @@ class HomeApp extends StatelessWidget {
     return new MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Demo',
-      home: new Tip5(),
+      home: new WebviewDemo(),
     );
   }
 }

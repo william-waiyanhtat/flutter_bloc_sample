@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class Tip5 extends StatefulWidget {
   Tip5() : super();
 
-  final String title = "Tip5 Demo";
+  final String title = "Back Button Demo";
 
   @override
   Tip5State createState() => Tip5State();
@@ -11,30 +11,30 @@ class Tip5 extends StatefulWidget {
 
 class Tip5State extends State<Tip5> {
   //
+
   Future<bool> _onBackPressed() {
     return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: new Text("Are you sure to exit?"),
-          content: new Text("You are going to exit the application"),
-          actions: <Widget>[
-            new FlatButton(
-              child: new Text("NO"),
-              onPressed: () {
-                Navigator.of(context).pop(false);
-              },
-            ),
-            new FlatButton(
-              child: new Text("YES"),
-              onPressed: () {
-                Navigator.of(context).pop(true);
-              },
-            ),
-          ],
-        );
-      },
-    );
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Are you sure?'),
+            content: Text('You are going to exit the application!!'),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('NO'),
+                onPressed: () {
+                  Navigator.of(context).pop(false);
+                },
+              ),
+              FlatButton(
+                child: Text('YES'),
+                onPressed: () {
+                  Navigator.of(context).pop(true);
+                },
+              ),
+            ],
+          );
+        });
   }
 
   @override
