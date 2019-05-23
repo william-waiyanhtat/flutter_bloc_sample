@@ -14,6 +14,7 @@ import 'widgets/Maps/Maps.dart';
 import 'widgets/Video/VideoDemo.dart';
 import 'tips/Tip5.dart';
 import 'widgets/webview/webview_demo.dart';
+import 'widgets/List/BooksList.dart';
 
 void main() {
   runApp(
@@ -27,7 +28,7 @@ class HomeApp extends StatelessWidget {
     return new MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Demo',
-      home: new WebViewTest(),
+      home: new BooksList(),
     );
   }
 }
