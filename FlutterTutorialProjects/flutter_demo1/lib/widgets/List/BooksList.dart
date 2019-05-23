@@ -30,12 +30,20 @@ class Debouncer {
 }
 
 class BooksListState extends State<BooksList> {
+  //
   final _debouncer = Debouncer(milliseconds: 500);
   List<User> users = List();
+  List<User> filtereredUsers = List();
 
   @override
   void initState() {
     super.initState();
+    Services.getPhotos().then((usersFromServer) {
+      setState(() {
+        users = usersFromServer;
+        filtereredUsers = users;
+      });
+    });
   }
 
   @override
@@ -53,10 +61,9 @@ class BooksListState extends State<BooksList> {
             ),
             onChanged: (string) {
               _debouncer.run(() => {
-                    Services.getPhotos().then((usersFromServer) {
-                      setState(() {
-                        users = usersFromServer;
-                      });
+                    setState(() {
+                      filtereredUsers =
+                          users.where((u) => u.name.contains(string)).toList();
                     })
                   });
             },
@@ -64,14 +71,14 @@ class BooksListState extends State<BooksList> {
           new Expanded(
             child: new ListView.builder(
               padding: new EdgeInsets.all(8.0),
-              itemCount: users.length,
+              itemCount: filtereredUsers.length,
               itemBuilder: (BuildContext context, int index) {
                 return new Card(
                   child: new Padding(
                     padding: new EdgeInsets.all(10.0),
                     child: new Row(
                       children: <Widget>[
-                        new Text(users[index].name, maxLines: 2),
+                        new Text(filtereredUsers[index].name, maxLines: 2),
                       ],
                     ),
                   ),
