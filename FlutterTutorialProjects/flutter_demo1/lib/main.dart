@@ -13,6 +13,7 @@ import 'UploadFile/UploadImageDemo.dart';
 import 'widgets/Maps/Maps.dart';
 import 'widgets/Video/VideoDemo.dart';
 import 'tips/Tip5.dart';
+import 'widgets/webview/webview_demo.dart';
 
 void main() {
   runApp(
@@ -26,7 +27,7 @@ class HomeApp extends StatelessWidget {
     return new MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Demo',
-      home: new VideoDemo(),
+      home: new WebViewTest(),
     );
   }
 }
