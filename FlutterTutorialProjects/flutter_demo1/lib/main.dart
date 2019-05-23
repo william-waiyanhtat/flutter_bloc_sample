@@ -26,7 +26,7 @@ class HomeApp extends StatelessWidget {
     return new MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Demo',
-      home: new WebviewDemo(),
+      home: new VideoDemo(),
     );
   }
 }
