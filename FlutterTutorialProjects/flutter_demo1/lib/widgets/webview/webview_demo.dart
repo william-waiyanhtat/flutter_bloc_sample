@@ -13,6 +13,7 @@ class WebViewTest extends StatefulWidget {
 class _WebViewTestState extends State<WebViewTest> {
   //
   WebViewController _controller;
+  String filePath = 'files/test.html';
 
   @override
   Widget build(BuildContext context) {
@@ -36,8 +37,8 @@ class _WebViewTestState extends State<WebViewTest> {
   }
 
   _loadHtmlFromAssets() async {
-    String fileText = await rootBundle.loadString('files/test.html');
-    _controller.loadUrl(Uri.dataFromString(fileText,
+    String fileHtml = await rootBundle.loadString(filePath);
+    _controller.loadUrl(Uri.dataFromString(fileHtml,
             mimeType: 'text/html', encoding: Encoding.getByName('utf-8'))
         .toString());
   }
