@@ -58,7 +58,7 @@ class _WebviewDemoState extends State<WebviewDemo> {
       body: Builder(
         builder: (BuildContext context) {
           return WebView(
-            initialUrl: 'http://flutter.dev',
+            initialUrl: 'https://flutter.dev',
             javascriptMode: JavascriptMode.unrestricted,
             onWebViewCreated: (WebViewController webViewController) {
               _controller.complete(webViewController);

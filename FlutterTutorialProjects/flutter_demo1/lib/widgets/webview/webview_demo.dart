@@ -17,12 +17,19 @@ class _WebViewTestState extends State<WebViewTest> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Help')),
+      appBar: AppBar(title: Text('Webview Demo')),
       body: WebView(
         initialUrl: '',
+        javascriptMode: JavascriptMode.unrestricted,
         onWebViewCreated: (WebViewController webViewController) {
           _controller = webViewController;
           _loadHtmlFromAssets();
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.add),
+        onPressed: () {
+          _controller.evaluateJavascript('add(10, 10)');
         },
       ),
     );

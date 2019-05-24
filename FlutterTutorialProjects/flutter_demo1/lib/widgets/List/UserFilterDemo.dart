@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 import 'user.dart';
 import 'services.dart';
 
-class BooksList extends StatefulWidget {
-  BooksList() : super();
+class UserFilterDemo extends StatefulWidget {
+  UserFilterDemo() : super();
 
   final String title = "User List Demo";
 
   @override
-  BooksListState createState() => BooksListState();
+  UserFilterDemoState createState() => UserFilterDemoState();
 }
 
 class Debouncer {
@@ -24,12 +24,11 @@ class Debouncer {
     if (_timer != null) {
       _timer.cancel();
     }
-
     _timer = Timer(Duration(milliseconds: milliseconds), action);
   }
 }
 
-class BooksListState extends State<BooksList> {
+class UserFilterDemoState extends State<UserFilterDemo> {
   //
   final _debouncer = Debouncer(milliseconds: 500);
   List<User> users = List();
