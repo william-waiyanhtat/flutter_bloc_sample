@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_demo1/widgets/Video/VideoPlayerDemo.dart';
 import 'package:flutter_demo1/widgets/webview/WebViewLocal.dart';
 import 'package:flutter_demo1/widgets/webview/webview2.dart';
 import 'others/GradientDemo/GradientDemo.dart';
@@ -29,7 +30,7 @@ class HomeApp extends StatelessWidget {
     return new MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Demo',
-      home: new WebViewTest(),
+      home: new VideoPlayerDemo(),
     );
   }
 }

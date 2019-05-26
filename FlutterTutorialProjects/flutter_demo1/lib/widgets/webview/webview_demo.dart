@@ -12,7 +12,7 @@ class WebViewTest extends StatefulWidget {
 
 class _WebViewTestState extends State<WebViewTest> {
   //
-  WebViewController _controller;
+  WebViewController _webViewController;
   String filePath = 'files/test.html';
 
   @override
@@ -23,22 +23,22 @@ class _WebViewTestState extends State<WebViewTest> {
         initialUrl: '',
         javascriptMode: JavascriptMode.unrestricted,
         onWebViewCreated: (WebViewController webViewController) {
-          _controller = webViewController;
+          _webViewController = webViewController;
           _loadHtmlFromAssets();
         },
       ),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
         onPressed: () {
-          _controller.evaluateJavascript('add(10, 10)');
+          _webViewController.evaluateJavascript('add(10, 10)');
         },
       ),
     );
   }
 
   _loadHtmlFromAssets() async {
-    String fileHtml = await rootBundle.loadString(filePath);
-    _controller.loadUrl(Uri.dataFromString(fileHtml,
+    String fileHtmlContents = await rootBundle.loadString(filePath);
+    _webViewController.loadUrl(Uri.dataFromString(fileHtmlContents,
             mimeType: 'text/html', encoding: Encoding.getByName('utf-8'))
         .toString());
   }
