@@ -29,8 +29,8 @@ class HomeApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return new MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Demo',
-      home: new VideoPlayerDemo(),
+      title: 'Flutter Tutorials',
+      home: new VideoDemo(),
     );
   }
 }

@@ -17,7 +17,7 @@ class VideoPlayerDemoState extends State<VideoPlayerDemo> {
   void initState() {
     super.initState();
     _controller = VideoPlayerController.network(
-        'https://www.youtube.com/watch?v=F19CDDfXKko')
+        'https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4')
       ..initialize().then((_) {
         // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
         setState(() {});
