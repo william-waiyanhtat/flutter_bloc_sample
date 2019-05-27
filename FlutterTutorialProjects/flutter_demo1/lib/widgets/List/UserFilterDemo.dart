@@ -14,7 +14,7 @@ class UserFilterDemoState extends State<UserFilterDemo> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Users List'),
+        title: Text(widget.title),
       ),
       body: Container(),
     );
