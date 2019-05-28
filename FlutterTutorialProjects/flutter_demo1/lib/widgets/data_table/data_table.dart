@@ -80,6 +80,11 @@ class DataTableDemoState extends State<DataTableDemo> {
               numeric: false,
               onSort: (i, b) {},
               tooltip: "This is the last name"),
+          DataColumn(
+              label: Text("mmm NAME"),
+              numeric: false,
+              onSort: (i, b) {},
+              tooltip: "This is the last name"),
         ],
         rows: users
             .map(
@@ -97,6 +102,9 @@ class DataTableDemoState extends State<DataTableDemo> {
                       ),
                       DataCell(
                         Text(user.lastName),
+                      ),
+                      DataCell(
+                        Text(user.toString()),
                       ),
                     ],
                   ),

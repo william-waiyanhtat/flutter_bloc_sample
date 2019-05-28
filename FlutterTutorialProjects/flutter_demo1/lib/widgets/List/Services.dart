@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'user.dart';
+import 'User.dart';
 
 class Services {
-  static const String url = "https://jsonplaceholder.typicode.com/users";
+  static const String url = 'https://jsonplaceholder.typicode.com/users';
 
-  static Future<List<User>> getPhotos() async {
+  static Future<List<User>> getUsers() async {
     try {
       final response = await http.get(url);
       if (response.statusCode == 200) {
