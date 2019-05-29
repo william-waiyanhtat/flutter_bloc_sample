@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'widgets/data_table/data_table.dart';
+import 'tips/AppStateDemo.dart';
 
 void main() {
   runApp(
@@ -13,7 +13,7 @@ class HomeApp extends StatelessWidget {
     return new MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Tutorials',
-      home: new DataTableDemo(),
+      home: new AppStateDemo(),
     );
   }
 }
