@@ -76,12 +76,14 @@ class DataTableDemoState extends State<DataTableDemo> {
               },
               tooltip: "This is the first name"),
           DataColumn(
-              label: Text("LAST NAME"),
+              label: Text(
+                "LAST NAME",
+              ),
               numeric: false,
               onSort: (i, b) {},
               tooltip: "This is the last name"),
           DataColumn(
-              label: Text("mmm NAME"),
+              label: Text("L NAME"),
               numeric: false,
               onSort: (i, b) {},
               tooltip: "This is the last name"),
@@ -104,7 +106,7 @@ class DataTableDemoState extends State<DataTableDemo> {
                         Text(user.lastName),
                       ),
                       DataCell(
-                        Text(user.toString()),
+                        Text(user.lastName),
                       ),
                     ],
                   ),

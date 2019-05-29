@@ -6,7 +6,7 @@ import 'Services.dart';
 class UserFilterDemo extends StatefulWidget {
   UserFilterDemo() : super();
 
-  final String title = "User List Demo";
+  final String title = "Filter List Demo";
 
   @override
   UserFilterDemoState createState() => UserFilterDemoState();
