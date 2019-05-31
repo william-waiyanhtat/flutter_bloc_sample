@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'tips/AppStateDemo.dart';
+import 'widgets/Video/VideoDemo.dart';
 
 void main() {
   runApp(
