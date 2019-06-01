@@ -30,6 +30,7 @@ dependencies:
   google_maps_flutter: ^0.5.11
   video_player: ^0.10.1
   image_picker: ^0.6.0+3
+  archive: ^2.0.8
   
 dev_dependencies:
   flutter_test:
