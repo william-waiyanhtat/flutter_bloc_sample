@@ -18,7 +18,7 @@ class DownloadAssetsDemoState extends State<DownloadAssetsDemo> {
   String _dir;
   List<String> _images, _tempImages;
   String _status = "Download assetsr";
-  String zipPath = 'http://coderzheaven.com/test/images.zip';
+  String zipPath = 'http://coderzheaven.com/youtube_flutter/images.zip';
   String localZipFileName = 'images.zip';
 
   Future<void> _downloadAssets() async {
