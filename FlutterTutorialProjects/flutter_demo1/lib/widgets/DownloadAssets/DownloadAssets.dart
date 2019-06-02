@@ -7,7 +7,7 @@ import 'package:path_provider/path_provider.dart';
 class DownloadAssetsDemo extends StatefulWidget {
   DownloadAssetsDemo() : super();
 
-  final String title = "Download Assets Demo";
+  final String title = "Download Zip Demo";
 
   @override
   DownloadAssetsDemoState createState() => DownloadAssetsDemoState();
@@ -15,25 +15,47 @@ class DownloadAssetsDemo extends StatefulWidget {
 
 class DownloadAssetsDemoState extends State<DownloadAssetsDemo> {
   //
+  bool _downloading;
   String _dir;
   List<String> _images, _tempImages;
-  String _status = "Download assetsr";
-  String zipPath = 'http://coderzheaven.com/youtube_flutter/images.zip';
-  String localZipFileName = 'images.zip';
+  String _zipPath = 'http://coderzheaven.com/youtube_flutter/images.zip';
+  String _localZipFileName = 'images.zip';
+
+  @override
+  void initState() {
+    super.initState();
+    _images = List();
+    _tempImages = List();
+    _downloading = false;
+    initDir();
+  }
+
+  initDir() async {
+    if (null == _dir) {
+      _dir = (await getApplicationDocumentsDirectory()).path;
+    }
+  }
 
   Future<void> _downloadAssets() async {
     setState(() {
-      _status = 'Downloading assets...';
+      _downloading = true;
     });
 
     _images.clear();
     _tempImages.clear();
 
-    var zippedFile = await _downloadFile(zipPath, localZipFileName);
+    var zippedFile = await _downloadFile(_zipPath, _localZipFileName);
+    await unarhiveAndSave(zippedFile);
 
+    setState(() {
+      _images.addAll(_tempImages);
+      _downloading = false;
+    });
+  }
+
+  unarhiveAndSave(var zippedFile) async {
     var bytes = zippedFile.readAsBytesSync();
     var archive = ZipDecoder().decodeBytes(bytes);
-
     for (var file in archive) {
       var filename = '$_dir/${file.name}';
       if (file.isFile) {
@@ -44,11 +66,6 @@ class DownloadAssetsDemoState extends State<DownloadAssetsDemo> {
         await outFile.writeAsBytes(file.content);
       }
     }
-
-    setState(() {
-      _images.addAll(_tempImages);
-      _status = 'Download Success';
-    });
   }
 
   Future<File> _downloadFile(String url, String filename) async {
@@ -57,26 +74,39 @@ class DownloadAssetsDemoState extends State<DownloadAssetsDemo> {
     return file.writeAsBytes(req.bodyBytes);
   }
 
-  @override
-  void initState() {
-    super.initState();
-    _images = List();
-    _tempImages = List();
-    initDir();
+  buildList() {
+    return Expanded(
+      child: ListView.builder(
+        itemCount: _images.length,
+        itemBuilder: (BuildContext context, int index) {
+          return Image.file(
+            File(_images[index]),
+            fit: BoxFit.fitWidth,
+          );
+        },
+      ),
+    );
   }
 
-  initDir() async {
-    if (null == _dir) {
-      _dir = (await getApplicationDocumentsDirectory()).path;
-    }
+  progress() {
+    return new Container(
+      width: 25,
+      height: 25,
+      padding: EdgeInsets.fromLTRB(0, 20.0, 10.0, 20.0),
+      child: new CircularProgressIndicator(
+        strokeWidth: 3.0,
+        valueColor: new AlwaysStoppedAnimation<Color>(Colors.white),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_status),
+        title: Text(widget.title),
         actions: <Widget>[
+          _downloading ? progress() : Container(),
           IconButton(
             icon: Icon(Icons.file_download),
             onPressed: () {
@@ -87,19 +117,8 @@ class DownloadAssetsDemoState extends State<DownloadAssetsDemo> {
       ),
       body: Container(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Expanded(
-              child: ListView.builder(
-                itemCount: _images.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Image.file(
-                    File(_images[index]),
-                    fit: BoxFit.fitWidth,
-                  );
-                },
-              ),
-            ),
+            buildList(),
           ],
         ),
       ),
