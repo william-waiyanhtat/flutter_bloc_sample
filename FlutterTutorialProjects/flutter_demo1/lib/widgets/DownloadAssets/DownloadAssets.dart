@@ -7,7 +7,7 @@ import 'package:path_provider/path_provider.dart';
 class DownloadAssetsDemo extends StatefulWidget {
   DownloadAssetsDemo() : super();
 
-  final String title = "Download Zip Demo";
+  final String title = "Download & Extract ZIP Demo";
 
   @override
   DownloadAssetsDemoState createState() => DownloadAssetsDemoState();
@@ -27,16 +27,22 @@ class DownloadAssetsDemoState extends State<DownloadAssetsDemo> {
     _images = List();
     _tempImages = List();
     _downloading = false;
-    initDir();
+    _initDir();
   }
 
-  initDir() async {
+  _initDir() async {
     if (null == _dir) {
       _dir = (await getApplicationDocumentsDirectory()).path;
     }
   }
 
-  Future<void> _downloadAssets() async {
+  Future<File> _downloadFile(String url, String fileName) async {
+    var req = await http.Client().get(Uri.parse(url));
+    var file = File('$_dir/$fileName');
+    return file.writeAsBytes(req.bodyBytes);
+  }
+
+  Future<void> _downloadZip() async {
     setState(() {
       _downloading = true;
     });
@@ -45,7 +51,7 @@ class DownloadAssetsDemoState extends State<DownloadAssetsDemo> {
     _tempImages.clear();
 
     var zippedFile = await _downloadFile(_zipPath, _localZipFileName);
-    await unarhiveAndSave(zippedFile);
+    await unarchiveAndSave(zippedFile);
 
     setState(() {
       _images.addAll(_tempImages);
@@ -53,25 +59,19 @@ class DownloadAssetsDemoState extends State<DownloadAssetsDemo> {
     });
   }
 
-  unarhiveAndSave(var zippedFile) async {
+  unarchiveAndSave(var zippedFile) async {
     var bytes = zippedFile.readAsBytesSync();
     var archive = ZipDecoder().decodeBytes(bytes);
     for (var file in archive) {
-      var filename = '$_dir/${file.name}';
+      var fileName = '$_dir/${file.name}';
       if (file.isFile) {
-        var outFile = File(filename);
-        print("file " + outFile.path);
+        var outFile = File(fileName);
+        //print('File:: ' + outFile.path);
         _tempImages.add(outFile.path);
         outFile = await outFile.create(recursive: true);
         await outFile.writeAsBytes(file.content);
       }
     }
-  }
-
-  Future<File> _downloadFile(String url, String filename) async {
-    var req = await http.Client().get(Uri.parse(url));
-    var file = File('$_dir/$filename');
-    return file.writeAsBytes(req.bodyBytes);
   }
 
   buildList() {
@@ -89,13 +89,13 @@ class DownloadAssetsDemoState extends State<DownloadAssetsDemo> {
   }
 
   progress() {
-    return new Container(
+    return Container(
       width: 25,
       height: 25,
-      padding: EdgeInsets.fromLTRB(0, 20.0, 10.0, 20.0),
-      child: new CircularProgressIndicator(
+      padding: EdgeInsets.fromLTRB(0.0, 20.0, 10.0, 20.0),
+      child: CircularProgressIndicator(
         strokeWidth: 3.0,
-        valueColor: new AlwaysStoppedAnimation<Color>(Colors.white),
+        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
       ),
     );
   }
@@ -110,9 +110,9 @@ class DownloadAssetsDemoState extends State<DownloadAssetsDemo> {
           IconButton(
             icon: Icon(Icons.file_download),
             onPressed: () {
-              _downloadAssets();
+              _downloadZip();
             },
-          )
+          ),
         ],
       ),
       body: Container(
