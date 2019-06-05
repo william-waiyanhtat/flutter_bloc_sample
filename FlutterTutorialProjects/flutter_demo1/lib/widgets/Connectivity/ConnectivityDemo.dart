@@ -56,6 +56,7 @@ class ConnectivityDemoState extends State<ConnectivityDemo> {
 
   @override
   Widget build(BuildContext context) {
+    var connectionStatus = Provider.of<ConnectivityResult>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -66,6 +67,10 @@ class ConnectivityDemoState extends State<ConnectivityDemo> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Text(_networkStatus),
+            SizedBox(
+              height: 20,
+            ),
+            Text('$connectionStatus'),
             SizedBox(
               height: 20,
             ),
@@ -108,5 +113,18 @@ class NetworkSensitive extends StatelessWidget {
       opacity: 0.1,
       child: child,
     );
+  }
+}
+
+class ConnectivityService {
+  // Create our public controller
+  StreamController<ConnectivityResult> connectionStatusController =
+      StreamController<ConnectivityResult>();
+
+  ConnectivityService() {
+    // Subscribe to the connectivity Chanaged Steam
+    Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+      connectionStatusController.add(result);
+    });
   }
 }
