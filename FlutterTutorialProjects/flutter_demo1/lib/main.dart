@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'tips/AppStateDemo.dart';
-import 'widgets/Video/VideoDemo.dart';
-import 'widgets/DownloadAssets/DownloadAssets.dart';
+import 'widgets/Connectivity/ConnectivityDemo.dart';
 
 void main() {
   runApp(
@@ -15,7 +13,7 @@ class HomeApp extends StatelessWidget {
     return new MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Tutorials',
-      home: new DownloadAssetsDemo(),
+      home: new ConnectivityDemo(),
     );
   }
 }
