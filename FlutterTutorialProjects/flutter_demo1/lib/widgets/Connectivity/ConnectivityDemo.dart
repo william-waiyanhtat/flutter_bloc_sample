@@ -23,9 +23,10 @@ class ConnectivityDemoState extends State<ConnectivityDemo> {
   @override
   void initState() {
     super.initState();
-    subscription =
-        connectivity.onConnectivityChanged.listen((ConnectivityResult result) {
+    subscription = connectivity.onConnectivityChanged
+        .listen((ConnectivityResult connectivityResult) {
       print("Connection Changed");
+      showStatus(connectivityResult);
     });
   }
 
@@ -36,22 +37,30 @@ class ConnectivityDemoState extends State<ConnectivityDemo> {
   }
 
   void check() async {
-    String status = '';
     var connectivityResult = await (connectivity.checkConnectivity());
-    switch (connectivityResult) {
-      case ConnectivityResult.mobile:
-        status = 'Mobile';
-        break;
-      case ConnectivityResult.wifi:
-        status = 'Wifi';
-        break;
-      case ConnectivityResult.none:
-        status = 'None';
-        break;
-    }
+    showStatus(connectivityResult);
+  }
+
+  void showStatus(ConnectivityResult connectivityResult) {
+    String status = getNetworkStatus(connectivityResult);
     setState(() {
       _networkStatus = 'Connected to $status';
     });
+  }
+
+  String getNetworkStatus(ConnectivityResult connectivityResult) {
+    switch (connectivityResult) {
+      case ConnectivityResult.mobile:
+        return 'Mobile';
+        break;
+      case ConnectivityResult.wifi:
+        return 'Wifi';
+        break;
+      case ConnectivityResult.none:
+        return 'None';
+        break;
+    }
+    return '';
   }
 
   @override
@@ -87,42 +96,11 @@ class ConnectivityDemoState extends State<ConnectivityDemo> {
   }
 }
 
-class NetworkSensitive extends StatelessWidget {
-  final Widget child;
-  final double opacity;
-
-  NetworkSensitive({
-    this.child,
-    this.opacity = 0.5,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    // Get our connection status from the provider
-    var connectionStatus = Provider.of<ConnectivityResult>(context);
-    if (connectionStatus == ConnectivityResult.wifi) {
-      return child;
-    }
-    if (connectionStatus == ConnectivityResult.mobile) {
-      return Opacity(
-        opacity: opacity,
-        child: child,
-      );
-    }
-    return Opacity(
-      opacity: 0.1,
-      child: child,
-    );
-  }
-}
-
 class ConnectivityService {
-  // Create our public controller
   StreamController<ConnectivityResult> connectionStatusController =
       StreamController<ConnectivityResult>();
 
   ConnectivityService() {
-    // Subscribe to the connectivity Chanaged Steam
     Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
       connectionStatusController.add(result);
     });
