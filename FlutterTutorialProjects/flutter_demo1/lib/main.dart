@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'widgets/Connectivity/ConnectivityDemo.dart';
 import 'package:provider/provider.dart';
 import 'package:connectivity/connectivity.dart';
+import 'widgets/Connectivity/ConnectivityService.dart';
+import 'widgets/Connectivity/ConnectivityDemo.dart';
 
 void main() {
   runApp(

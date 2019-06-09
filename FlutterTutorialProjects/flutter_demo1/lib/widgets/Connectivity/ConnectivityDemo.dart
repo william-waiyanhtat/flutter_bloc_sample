@@ -16,28 +16,47 @@ class ConnectivityDemo extends StatefulWidget {
 
 class ConnectivityDemoState extends State<ConnectivityDemo> {
   //
-  String _networkStatus = '';
+  String _networkStatus1 = '';
+  String _networkStatus2 = '';
+  String _networkStatus3 = '';
   Connectivity connectivity = Connectivity();
   StreamSubscription<ConnectivityResult> subscription;
 
   @override
   void initState() {
     super.initState();
-    subscription =
-        connectivity.onConnectivityChanged.listen((ConnectivityResult result) {
-      print("Connection Changed");
+    _checkConnectivity2();
+  }
+
+  void _checkConnectivity1() async {
+    var connectivityResult = await (connectivity.checkConnectivity());
+    var conn = getConnectionValue(connectivityResult);
+    setState(() {
+      _networkStatus1 = "Check Connection :: " + conn;
     });
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    subscription.cancel();
+  void _checkConnectivity2() async {
+    subscription =
+        connectivity.onConnectivityChanged.listen((ConnectivityResult result) {
+      print("Subscription Connection Changed");
+      var conn = getConnectionValue(result);
+      setState(() {
+        _networkStatus2 = "<Subscription> :: " + conn;
+      });
+    });
   }
 
-  void check() async {
+  void _checkConnectivity3() async {
+    var connectivityResult = Provider.of<ConnectivityResult>(context);
+    var conn = getConnectionValue(connectivityResult);
+    setState(() {
+      _networkStatus3 = "<Provider> :: " + conn;
+    });
+  }
+
+  String getConnectionValue(var connectivityResult) {
     String status = '';
-    var connectivityResult = await (connectivity.checkConnectivity());
     switch (connectivityResult) {
       case ConnectivityResult.mobile:
         status = 'Mobile';
@@ -49,14 +68,12 @@ class ConnectivityDemoState extends State<ConnectivityDemo> {
         status = 'None';
         break;
     }
-    setState(() {
-      _networkStatus = 'Connected to $status';
-    });
+    return 'Connected to $status';
   }
 
   @override
   Widget build(BuildContext context) {
-    var connectionStatus = Provider.of<ConnectivityResult>(context);
+    _checkConnectivity3();
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -66,18 +83,22 @@ class ConnectivityDemoState extends State<ConnectivityDemo> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Text(_networkStatus),
+            Text(_networkStatus1),
             SizedBox(
               height: 20,
             ),
-            Text('$connectionStatus'),
+            Text(_networkStatus2),
+            SizedBox(
+              height: 20,
+            ),
+            Text(_networkStatus3),
             SizedBox(
               height: 20,
             ),
             OutlineButton(
               child: Text("Check Connection"),
               onPressed: () {
-                check();
+                _checkConnectivity1();
               },
             ),
           ],
@@ -85,46 +106,10 @@ class ConnectivityDemoState extends State<ConnectivityDemo> {
       ),
     );
   }
-}
-
-class NetworkSensitive extends StatelessWidget {
-  final Widget child;
-  final double opacity;
-
-  NetworkSensitive({
-    this.child,
-    this.opacity = 0.5,
-  });
 
   @override
-  Widget build(BuildContext context) {
-    // Get our connection status from the provider
-    var connectionStatus = Provider.of<ConnectivityResult>(context);
-    if (connectionStatus == ConnectivityResult.wifi) {
-      return child;
-    }
-    if (connectionStatus == ConnectivityResult.mobile) {
-      return Opacity(
-        opacity: opacity,
-        child: child,
-      );
-    }
-    return Opacity(
-      opacity: 0.1,
-      child: child,
-    );
-  }
-}
-
-class ConnectivityService {
-  // Create our public controller
-  StreamController<ConnectivityResult> connectionStatusController =
-      StreamController<ConnectivityResult>();
-
-  ConnectivityService() {
-    // Subscribe to the connectivity Chanaged Steam
-    Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
-      connectionStatusController.add(result);
-    });
+  void dispose() {
+    super.dispose();
+    subscription.cancel();
   }
 }
