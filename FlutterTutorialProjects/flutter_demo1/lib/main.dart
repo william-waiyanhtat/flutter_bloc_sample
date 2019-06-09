@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:connectivity/connectivity.dart';
-import 'widgets/Connectivity/ConnectivityService.dart';
+import 'package:flutter/material.dart';
 import 'widgets/Connectivity/ConnectivityDemo.dart';
+import 'widgets/Connectivity/ConnectivityService.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(
@@ -10,12 +10,13 @@ void main() {
   );
 }
 
+// Wrap main widget inside the StreamProvider
 class HomeApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamProvider<ConnectivityResult>(
       builder: (context) => ConnectivityService().connectionStatusController,
-      child: new MaterialApp(
+      child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Flutter Tutorials',
         home: new ConnectivityDemo(),
