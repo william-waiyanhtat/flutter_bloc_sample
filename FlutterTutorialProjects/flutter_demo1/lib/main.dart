@@ -1,8 +1,6 @@
-import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'widgets/Connectivity/ConnectivityDemo.dart';
-import 'widgets/Connectivity/ConnectivityService.dart';
-import 'package:provider/provider.dart';
+import 'UploadFile/UploadMultipleImage.dart';
 
 void main() {
   runApp(
@@ -10,6 +8,7 @@ void main() {
   );
 }
 
+/*
 // Wrap main widget inside the StreamProvider
 class HomeApp extends StatelessWidget {
   @override
@@ -21,6 +20,18 @@ class HomeApp extends StatelessWidget {
         title: 'Flutter Tutorials',
         home: new ConnectivityDemo(),
       ),
+    );
+  }
+}
+*/
+
+class HomeApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Flutter Tutorials',
+      home: new UploadMultipleImageDemo(),
     );
   }
 }

@@ -1,162 +1,203 @@
-// import 'package:flutter/material.dart';
-// import 'dart:io';
-// import 'dart:convert';
-// import 'package:http/http.dart' as http;
-// import 'package:multi_image_picker/multi_image_picker.dart';
+import 'package:flutter/material.dart';
+import 'dart:io';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:file_picker/file_picker.dart';
 
-// class UploadMultipleImageDemo extends StatefulWidget {
-//   UploadMultipleImageDemo() : super();
+import 'package:flutter/services.dart';
 
-//   final String title = "Upload Image Demo";
+class UploadMultipleImageDemo extends StatefulWidget {
+  UploadMultipleImageDemo() : super();
 
-//   @override
-//   UploadMultipleImageDemoState createState() => UploadMultipleImageDemoState();
-// }
+  final String title = "Upload Image Demo";
 
-// class UploadMultipleImageDemoState extends State<UploadMultipleImageDemo> {
-//   //
-//   static final String uploadEndPoint =
-//       'http://localhost/flutter_test/upload_image.php';
-//   Future<File> file;
-//   String status = '';
-//   String base64Image;
-//   File tmpFile;
-//   String errMessage = 'Error Uploading Image';
+  @override
+  UploadMultipleImageDemoState createState() => UploadMultipleImageDemoState();
+}
 
-//   _getImageList() async {
-//     var resultList = await MultiImagePicker.pickImages(
-//       maxImages: 10,
-//       enableCamera: false,
-//     );
+class UploadMultipleImageDemoState extends State<UploadMultipleImageDemo> {
+  //
 
-//     // The data selected here comes back in the list
-//     print(resultList);
-//     for (var imageFile in resultList) {
-//       print("Image : ${imageFile.name}");
-//       postImage(imageFile).then((downloadUrl) {
-//         // Get the download URL
-//         print(downloadUrl.toString());
-//       }).catchError((err) {
-//         print(err);
-//       });
-//     }
-//   }
+  String _fileName;
+  String _path;
+  Map<String, String> _paths;
+  String _extension;
+  bool _multiPick = false;
+  bool _hasValidMime = false;
+  FileType _pickingType;
+  TextEditingController _controller = new TextEditingController();
 
-//   Future<dynamic> postImage(Asset imageFile) async {}
+  @override
+  void initState() {
+    super.initState();
+    _controller.addListener(() => _extension = _controller.text);
+  }
 
-//   setStatus(String message) {
-//     setState(() {
-//       status = message;
-//     });
-//   }
+  void _openFileExplorer() async {
+    if (_pickingType != FileType.CUSTOM || _hasValidMime) {
+      try {
+        if (_multiPick) {
+          _path = null;
+          _paths = await FilePicker.getMultiFilePath(
+              type: _pickingType, fileExtension: _extension);
+        } else {
+          _paths = null;
+          _path = await FilePicker.getFilePath(
+              type: _pickingType, fileExtension: _extension);
+          final StorageReference storageRef =
+              FirebaseStorage.instance.ref().child(_path);
+          final StorageUploadTask uploadTask = storageRef.putFile(
+            File(_path),
+            StorageMetadata(
+              contentType: 'image/jpeg',
+            ),
+          );
+        }
+      } on PlatformException catch (e) {
+        print("Unsupported operation" + e.toString());
+      }
+      if (!mounted) return;
 
-//   startUpload() {
-//     setStatus('Uploading Image...');
-//     if (null == tmpFile) {
-//       setStatus(errMessage);
-//       return;
-//     }
-//     String fileName = tmpFile.path.split('/').last;
-//     upload(fileName);
-//   }
+      setState(() {
+        _fileName = _path != null
+            ? _path.split('/').last
+            : _paths != null ? _paths.keys.toString() : '...';
+      });
+    }
+  }
 
-//   uploadFile() async {
-//     var postUri = Uri.parse("<pathToFile>");
-//     var request = new http.MultipartRequest("POST", postUri);
-//     request.fields['user'] = 'blah';
-//     request.files.add(new http.MultipartFile.fromBytes('file',
-//     await File.fromUri("<path/to/file").readAsBytes(), contentType: new MediaType('image', 'jpeg')))
+  @override
+  Widget build(BuildContext context) {
+    return new MaterialApp(
+      home: new Scaffold(
+        appBar: new AppBar(
+          title: const Text('File Picker example app'),
+        ),
+        body: new Center(
+            child: new Padding(
+          padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+          child: new SingleChildScrollView(
+            child: new Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                new Padding(
+                  padding: const EdgeInsets.only(top: 20.0),
+                  child: new DropdownButton(
+                      hint: new Text('LOAD PATH FROM'),
+                      value: _pickingType,
+                      items: <DropdownMenuItem>[
+                        new DropdownMenuItem(
+                          child: new Text('FROM AUDIO'),
+                          value: FileType.AUDIO,
+                        ),
+                        new DropdownMenuItem(
+                          child: new Text('FROM IMAGE'),
+                          value: FileType.IMAGE,
+                        ),
+                        new DropdownMenuItem(
+                          child: new Text('FROM VIDEO'),
+                          value: FileType.VIDEO,
+                        ),
+                        new DropdownMenuItem(
+                          child: new Text('FROM ANY'),
+                          value: FileType.ANY,
+                        ),
+                        new DropdownMenuItem(
+                          child: new Text('CUSTOM FORMAT'),
+                          value: FileType.CUSTOM,
+                        ),
+                      ],
+                      onChanged: (value) => setState(() {
+                            _pickingType = value;
+                            if (_pickingType != FileType.CUSTOM) {
+                              _controller.text = _extension = '';
+                            }
+                          })),
+                ),
+                ConstrainedBox(
+                  constraints: BoxConstraints.tightFor(width: 100.0),
+                  child: _pickingType == FileType.CUSTOM
+                      ? new TextFormField(
+                          maxLength: 15,
+                          autovalidate: true,
+                          controller: _controller,
+                          decoration:
+                              InputDecoration(labelText: 'File extension'),
+                          keyboardType: TextInputType.text,
+                          textCapitalization: TextCapitalization.none,
+                          validator: (value) {
+                            RegExp reg = new RegExp(r'[^a-zA-Z0-9]');
+                            if (reg.hasMatch(value)) {
+                              _hasValidMime = false;
+                              return 'Invalid format';
+                            }
+                            _hasValidMime = true;
+                          },
+                        )
+                      : new Container(),
+                ),
+                new ConstrainedBox(
+                  constraints: BoxConstraints.tightFor(width: 200.0),
+                  child: new SwitchListTile.adaptive(
+                    title: new Text('Pick multiple files',
+                        textAlign: TextAlign.right),
+                    onChanged: (bool value) =>
+                        setState(() => _multiPick = value),
+                    value: _multiPick,
+                  ),
+                ),
+                new Padding(
+                  padding: const EdgeInsets.only(top: 50.0, bottom: 20.0),
+                  child: new RaisedButton(
+                    onPressed: () => _openFileExplorer(),
+                    child: new Text("Open file picker"),
+                  ),
+                ),
+                new Builder(
+                  builder: (BuildContext context) => new Container(
+                        padding: const EdgeInsets.only(bottom: 30.0),
+                        height: MediaQuery.of(context).size.height * 0.50,
+                        child: new Scrollbar(
+                          child: _path != null || _paths != null
+                              ? new ListView.separated(
+                                  itemCount: _paths != null && _paths.isNotEmpty
+                                      ? _paths.length
+                                      : 1,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    final bool isMultiPath =
+                                        _paths != null && _paths.isNotEmpty;
+                                    final String name = 'File $index: ' +
+                                        (isMultiPath
+                                            ? _paths.keys.toList()[index]
+                                            : _fileName ?? '...');
+                                    final path = isMultiPath
+                                        ? _paths.values
+                                            .toList()[index]
+                                            .toString()
+                                        : _path;
 
-//     request.send().then((response) {
-//       if (response.statusCode == 200) print("Uploaded!");
-//     });
-//   }
-
-//   upload(String fileName) {
-
-//     http.post(uploadEndPoint, body: {
-//       "image": base64Image,
-//       "name": fileName,
-//     }).then((result) {
-//       setStatus(result.statusCode == 200 ? result.body : errMessage);
-//     }).catchError((error) {
-//       setStatus(error);
-//     });
-//   }
-
-//   Widget showImage() {
-//     return FutureBuilder<File>(
-//       future: file,
-//       builder: (BuildContext context, AsyncSnapshot<File> snapshot) {
-//         if (snapshot.connectionState == ConnectionState.done &&
-//             null != snapshot.data) {
-//           tmpFile = snapshot.data;
-//           base64Image = base64Encode(snapshot.data.readAsBytesSync());
-//           return Flexible(
-//             child: Image.file(
-//               snapshot.data,
-//               fit: BoxFit.fill,
-//             ),
-//           );
-//         } else if (null != snapshot.error) {
-//           return const Text(
-//             'Error Picking Image',
-//             textAlign: TextAlign.center,
-//           );
-//         } else {
-//           return const Text(
-//             'No Image Selected',
-//             textAlign: TextAlign.center,
-//           );
-//         }
-//       },
-//     );
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text("Upload Image Demo"),
-//       ),
-//       body: Container(
-//         padding: EdgeInsets.all(30.0),
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.stretch,
-//           children: <Widget>[
-//             OutlineButton(
-//               onPressed: _getImageList,
-//               child: Text('Choose Image'),
-//             ),
-//             SizedBox(
-//               height: 20.0,
-//             ),
-//             showImage(),
-//             SizedBox(
-//               height: 20.0,
-//             ),
-//             OutlineButton(
-//               onPressed: startUpload,
-//               child: Text('Upload Image'),
-//             ),
-//             SizedBox(
-//               height: 20.0,
-//             ),
-//             Text(
-//               status,
-//               textAlign: TextAlign.center,
-//               style: TextStyle(
-//                 color: Colors.green,
-//                 fontWeight: FontWeight.w500,
-//                 fontSize: 20.0,
-//               ),
-//             ),
-//             SizedBox(
-//               height: 20.0,
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
+                                    return new ListTile(
+                                      title: new Text(
+                                        name,
+                                      ),
+                                      subtitle: new Text(path),
+                                    );
+                                  },
+                                  separatorBuilder:
+                                      (BuildContext context, int index) =>
+                                          new Divider(),
+                                )
+                              : new Container(),
+                        ),
+                      ),
+                ),
+              ],
+            ),
+          ),
+        )),
+      ),
+    );
+  }
+}
