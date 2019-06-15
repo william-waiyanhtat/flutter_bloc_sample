@@ -9,7 +9,7 @@ import 'package:http/http.dart' as http;
 class UploadMultipleImageDemo extends StatefulWidget {
   UploadMultipleImageDemo() : super();
 
-  final String title = 'Firebase File Upload';
+  final String title = 'Firebase File Upload & Download';
 
   @override
   UploadMultipleImageDemoState createState() => UploadMultipleImageDemoState();
@@ -17,23 +17,21 @@ class UploadMultipleImageDemo extends StatefulWidget {
 
 class UploadMultipleImageDemoState extends State<UploadMultipleImageDemo> {
   //
-  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   String _path;
   Map<String, String> _paths;
   String _extension;
-  bool _multiPick = false;
   FileType _pickType;
+  bool _multiPick = false;
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   List<StorageUploadTask> _tasks = <StorageUploadTask>[];
 
   void _openFileExplorer() async {
     try {
-      print(_multiPick);
+      _path = null;
       if (_multiPick) {
-        _path = null;
         _paths = await FilePicker.getMultiFilePath(
             type: _pickType, fileExtension: _extension);
       } else {
-        _path = null;
         _path = await FilePicker.getFilePath(
             type: _pickType, fileExtension: _extension);
       }
