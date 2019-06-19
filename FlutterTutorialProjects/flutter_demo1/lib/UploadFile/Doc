@@ -30,7 +30,7 @@ Let's start...
     [/java]
 
 
-Add DropDown
+<strong><font color="purple" size="5">Add DropDown</font></strong>
 
 Lets add a DropDown in the UI to select multiple fiel types.
 
@@ -67,14 +67,14 @@ Lets add a DropDown in the UI to select multiple fiel types.
 [/java]
 
 
-Open the File explorer
+<strong><font color="purple" size="5">Open the File explorer</font></strong>
 
 Lets open the Device's File explorer and get the Files.
 We will also check if the disk is mounted.
 
 [java]
 
-// Necessary varaiables 
+// Necessary variables 
 
 String _path;
 Map<String, String> _paths;
