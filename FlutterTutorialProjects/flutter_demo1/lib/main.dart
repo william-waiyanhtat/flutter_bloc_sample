@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'widgets/Connectivity/ConnectivityDemo.dart';
-import 'UploadFile/UploadMultipleImage.dart';
+import 'widgets/List/SwipeDeleteDemo.dart';
 
 void main() {
   runApp(
@@ -31,7 +30,7 @@ class HomeApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Tutorials',
-      home: new UploadMultipleImageDemo(),
+      home: new SwipeDeleteDemo(),
     );
   }
 }

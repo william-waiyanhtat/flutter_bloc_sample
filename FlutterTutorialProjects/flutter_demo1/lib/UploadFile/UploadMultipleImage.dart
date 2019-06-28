@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:file_picker/file_picker.dart';
-
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 
@@ -25,7 +24,7 @@ class UploadMultipleImageDemoState extends State<UploadMultipleImageDemo> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   List<StorageUploadTask> _tasks = <StorageUploadTask>[];
 
-  void openFileExplorer() async {
+  openFileExplorer() async {
     try {
       _path = null;
       if (_multiPick) {
@@ -37,9 +36,11 @@ class UploadMultipleImageDemoState extends State<UploadMultipleImageDemo> {
       }
       uploadToFirebase();
     } on PlatformException catch (e) {
-      print("Unsupported operation" + e.toString());
+      print('Unsupported Operation ' + e.toString());
     }
-    if (!mounted) return;
+    if (!mounted) {
+      return;
+    }
   }
 
   uploadToFirebase() {
@@ -54,101 +55,19 @@ class UploadMultipleImageDemoState extends State<UploadMultipleImageDemo> {
 
   upload(fileName, filePath) {
     _extension = fileName.toString().split('.').last;
-    StorageReference storageRef =
+    StorageReference storageReference =
         FirebaseStorage.instance.ref().child(fileName);
-    final StorageUploadTask uploadTask = storageRef.putFile(
-      File(filePath),
-      StorageMetadata(
-        contentType: '$_pickType/$_extension',
-      ),
-    );
+    final StorageUploadTask uploadTask = storageReference.putFile(
+        File(filePath),
+        StorageMetadata(
+          contentType: '$_pickType/$_extension',
+        ));
     setState(() {
       _tasks.add(uploadTask);
     });
   }
 
-  dropDown() {
-    return DropdownButton(
-      hint: new Text('Select'),
-      value: _pickType,
-      items: <DropdownMenuItem>[
-        new DropdownMenuItem(
-          child: new Text('Audio'),
-          value: FileType.AUDIO,
-        ),
-        new DropdownMenuItem(
-          child: new Text('Image'),
-          value: FileType.IMAGE,
-        ),
-        new DropdownMenuItem(
-          child: new Text('Video'),
-          value: FileType.VIDEO,
-        ),
-        new DropdownMenuItem(
-          child: new Text('Any'),
-          value: FileType.ANY,
-        ),
-      ],
-      onChanged: (value) => setState(() {
-            _pickType = value;
-          }),
-    );
-  }
-
-  String _bytesTransferred(StorageTaskSnapshot snapshot) {
-    return '${snapshot.bytesTransferred}/${snapshot.totalByteCount}';
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final List<Widget> children = <Widget>[];
-    _tasks.forEach((StorageUploadTask task) {
-      final Widget tile = UploadTaskListTile(
-        task: task,
-        onDismissed: () => setState(() => _tasks.remove(task)),
-        onDownload: () => downloadFile(task.lastSnapshot.ref),
-      );
-      children.add(tile);
-    });
-
-    return new MaterialApp(
-      home: new Scaffold(
-        key: _scaffoldKey,
-        appBar: new AppBar(
-          title: Text(widget.title),
-        ),
-        body: new Container(
-          padding: EdgeInsets.all(20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              dropDown(),
-              SwitchListTile.adaptive(
-                title: Text('Pick multiple files', textAlign: TextAlign.left),
-                onChanged: (bool value) => setState(() => _multiPick = value),
-                value: _multiPick,
-              ),
-              OutlineButton(
-                onPressed: () => openFileExplorer(),
-                child: new Text("Open file picker"),
-              ),
-              SizedBox(
-                height: 20.0,
-              ),
-              Flexible(
-                child: ListView(
-                  children: children,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Future<void> downloadFile(StorageReference ref) async {
+  downloadFile(StorageReference ref) async {
     final String url = await ref.getDownloadURL();
     final http.Response downloadData = await http.get(url);
     final Directory systemTempDir = Directory.systemTemp;
@@ -163,15 +82,104 @@ class UploadMultipleImageDemoState extends State<UploadMultipleImageDemo> {
     final String name = await ref.getName();
     final String path = await ref.getPath();
     print(
-      'Success!\nDownloaded $name \nUrl: $url'
-      '\npath: $path \nBytes Count :: $byteCount',
+        'Success\nDownloaded $name\nUrl: $url\nPath: $path\nBytes Count: $byteCount');
+    _scaffoldKey.currentState.showSnackBar(SnackBar(
+      backgroundColor: Colors.white,
+      content: Image.memory(
+        bodyBytes,
+        fit: BoxFit.fill,
+      ),
+    ));
+  }
+
+  dropDown() {
+    return DropdownButton(
+      hint: Text('Select'),
+      value: _pickType,
+      items: <DropdownMenuItem>[
+        DropdownMenuItem(
+          child: Text('Audio'),
+          value: FileType.AUDIO,
+        ),
+        DropdownMenuItem(
+          child: Text('Image'),
+          value: FileType.IMAGE,
+        ),
+        DropdownMenuItem(
+          child: Text('Video'),
+          value: FileType.VIDEO,
+        ),
+        DropdownMenuItem(
+          child: Text('Any'),
+          value: FileType.ANY,
+        ),
+      ],
+      onChanged: (value) {
+        setState(() {
+          _pickType = value;
+        });
+      },
     );
-    _scaffoldKey.currentState.showSnackBar(
-      SnackBar(
-        backgroundColor: Colors.white,
-        content: Image.memory(
-          bodyBytes,
-          fit: BoxFit.fill,
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final List<Widget> children = <Widget>[];
+    _tasks.forEach((StorageUploadTask task) {
+      final Widget tile = UploadTaskListTile(
+        task: task,
+        onDismissed: () {
+          setState(() {
+            _tasks.remove(task);
+          });
+        },
+        onDownload: () {
+          downloadFile(task.lastSnapshot.ref);
+        },
+      );
+      children.add(tile);
+    });
+    return new MaterialApp(
+      home: new Scaffold(
+        key: _scaffoldKey,
+        appBar: new AppBar(
+          title: Text(widget.title),
+        ),
+        body: new Container(
+          padding: EdgeInsets.all(20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              dropDown(),
+              SwitchListTile.adaptive(
+                title: Text(
+                  'Pick Multiple Images',
+                  textAlign: TextAlign.left,
+                ),
+                onChanged: (bool value) {
+                  setState(() {
+                    _multiPick = value;
+                  });
+                },
+                value: _multiPick,
+              ),
+              OutlineButton(
+                child: Text('Open File Explorer'),
+                onPressed: () {
+                  openFileExplorer();
+                },
+              ),
+              SizedBox(
+                height: 20.0,
+              ),
+              Flexible(
+                child: ListView(
+                  children: children,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -193,9 +201,9 @@ class UploadTaskListTile extends StatelessWidget {
       if (task.isSuccessful) {
         result = 'Complete';
       } else if (task.isCanceled) {
-        result = 'Canceled';
+        result = 'Cancelled';
       } else {
-        result = 'Failed ERROR: ${task.lastSnapshot.error}';
+        result = 'Failed Error ${task.lastSnapshot.error}';
       }
     } else if (task.isInProgress) {
       result = 'Uploading';
@@ -205,7 +213,7 @@ class UploadTaskListTile extends StatelessWidget {
     return result;
   }
 
-  String _bytesTransferred(StorageTaskSnapshot snapshot) {
+  String bytesTransferred(StorageTaskSnapshot snapshot) {
     return '${snapshot.bytesTransferred}/${snapshot.totalByteCount}';
   }
 
@@ -219,7 +227,7 @@ class UploadTaskListTile extends StatelessWidget {
         if (asyncSnapshot.hasData) {
           final StorageTaskEvent event = asyncSnapshot.data;
           final StorageTaskSnapshot snapshot = event.snapshot;
-          subtitle = Text('$status: ${_bytesTransferred(snapshot)} bytes sent');
+          subtitle = Text('$status: ${bytesTransferred(snapshot)} bytes sent');
         } else {
           subtitle = const Text('Starting...');
         }
@@ -257,7 +265,7 @@ class UploadTaskListTile extends StatelessWidget {
                   offstage: !(task.isComplete && task.isSuccessful),
                   child: IconButton(
                     icon: const Icon(Icons.file_download),
-                    onPressed: onDownload,
+                    onPressed: () => onDownload(),
                   ),
                 ),
               ],
