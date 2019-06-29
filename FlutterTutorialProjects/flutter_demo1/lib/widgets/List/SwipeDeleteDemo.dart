@@ -5,23 +5,26 @@ import 'package:flutter/material.dart';
 class SwipeDeleteDemo extends StatefulWidget {
   SwipeDeleteDemo() : super();
 
-  final String title = "Filter List Demo";
+  final String title = "Refresh/Swipe Delete Demo";
 
   @override
   SwipeDeleteDemoState createState() => SwipeDeleteDemoState();
 }
 
 class SwipeDeleteDemoState extends State<SwipeDeleteDemo> {
-  int lastCount = 0;
   GlobalKey<RefreshIndicatorState> refreshKey =
       GlobalKey<RefreshIndicatorState>();
 
-  List<String> items = List();
+  List<String> items;
 
   @override
   void initState() {
     super.initState();
-    lastCount = items.length;
+    addItems();
+  }
+
+  addItems() {
+    items = List();
     items.add("Google");
     items.add("Apple");
     items.add("Samsung");
@@ -29,16 +32,75 @@ class SwipeDeleteDemoState extends State<SwipeDeleteDemo> {
     items.add("LG");
   }
 
-  Future<void> refreshList() async {
-    refreshKey.currentState?.show(atTop: true);
-    await Future.delayed(Duration(seconds: 1));
+  showProgress(bool show) {
+    refreshKey.currentState?.show(atTop: show);
+  }
+
+  addRandomCompany() {
     Random r = new Random();
     int nextCount = r.nextInt(100);
     setState(() {
-      items.add("Compnay $nextCount");
+      items.add("Company $nextCount");
     });
-    refreshKey.currentState?.show(atTop: false);
+  }
+
+  undoDelete(index, item) {
+    setState(() {
+      items.insert(index, item);
+    });
+  }
+
+  Widget refreshBg() {
+    return Container(
+      alignment: Alignment.centerRight,
+      padding: EdgeInsets.only(right: 20.0),
+      color: Colors.red,
+      child: const Icon(
+        Icons.delete,
+        color: Colors.white,
+      ),
+    );
+  }
+
+  Future<void> refreshList() async {
+    showProgress(true);
+    await Future.delayed(Duration(seconds: 1));
+    addRandomCompany();
+    showProgress(false);
     return null;
+  }
+
+  Widget list() {
+    return ListView.builder(
+      padding: EdgeInsets.all(20.0),
+      itemCount: items.length,
+      itemBuilder: (BuildContext context, int index) {
+        return Dismissible(
+          key: Key(items[index]), //UniqueKey().toString()
+          onDismissed: (direction) {
+            var item = items[index];
+            Scaffold.of(context).showSnackBar(SnackBar(
+              content: Text('$item deleted'),
+              action: SnackBarAction(
+                label: "UNDO",
+                onPressed: () {
+                  undoDelete(index, item);
+                },
+              ),
+            ));
+            setState(() {
+              items.removeAt(index);
+            });
+          },
+          background: refreshBg(),
+          child: Card(
+            child: ListTile(
+              title: Text(items[index]),
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -47,43 +109,12 @@ class SwipeDeleteDemoState extends State<SwipeDeleteDemo> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Column(
-        children: <Widget>[
-          Expanded(
-            child: RefreshIndicator(
-              key: refreshKey,
-              onRefresh: () async {
-                await refreshList();
-              },
-              child: ListView.builder(
-                padding: EdgeInsets.all(20.0),
-                itemCount: items.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Dismissible(
-                    key: Key(UniqueKey().toString()),
-                    onDismissed: (direction) {
-                      setState(() {
-                        items.removeAt(index);
-                      });
-                      Scaffold.of(context).showSnackBar(SnackBar(
-                        content: Text(
-                            'Item at index $index deleted \nDirection: $direction'),
-                      ));
-                    },
-                    background: Container(
-                      color: Colors.red,
-                    ),
-                    child: Card(
-                      child: ListTile(
-                        title: Text(items[index]),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ),
-        ],
+      body: RefreshIndicator(
+        key: refreshKey,
+        onRefresh: () async {
+          await refreshList();
+        },
+        child: list(),
       ),
     );
   }
