@@ -50,6 +50,26 @@ class SwipeDeleteDemoState extends State<SwipeDeleteDemo> {
     });
   }
 
+  showSnackBar(context, item, index) {
+    Scaffold.of(context).showSnackBar(SnackBar(
+      content: Text('$item deleted'),
+      action: SnackBarAction(
+        label: "UNDO",
+        onPressed: () {
+          undoDelete(index, item);
+        },
+      ),
+    ));
+  }
+
+  Future<void> refreshList() async {
+    showProgress(true);
+    await Future.delayed(Duration(seconds: 1));
+    addRandomCompany();
+    showProgress(false);
+    return null;
+  }
+
   Widget refreshBg() {
     return Container(
       alignment: Alignment.centerRight,
@@ -62,32 +82,16 @@ class SwipeDeleteDemoState extends State<SwipeDeleteDemo> {
     );
   }
 
-  Future<void> refreshList() async {
-    showProgress(true);
-    await Future.delayed(Duration(seconds: 1));
-    addRandomCompany();
-    showProgress(false);
-    return null;
-  }
-
   Widget list() {
     return ListView.builder(
       padding: EdgeInsets.all(20.0),
       itemCount: items.length,
       itemBuilder: (BuildContext context, int index) {
         return Dismissible(
-          key: Key(items[index]), //UniqueKey().toString()
+          key: Key(items[index]), // UniqueKey().toString()
           onDismissed: (direction) {
             var item = items[index];
-            Scaffold.of(context).showSnackBar(SnackBar(
-              content: Text('$item deleted'),
-              action: SnackBarAction(
-                label: "UNDO",
-                onPressed: () {
-                  undoDelete(index, item);
-                },
-              ),
-            ));
+            showSnackBar(context, item, index);
             setState(() {
               items.removeAt(index);
             });
