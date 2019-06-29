@@ -12,24 +12,26 @@ class SwipeDeleteDemo extends StatefulWidget {
 }
 
 class SwipeDeleteDemoState extends State<SwipeDeleteDemo> {
-  GlobalKey<RefreshIndicatorState> refreshKey =
-      GlobalKey<RefreshIndicatorState>();
-
-  List<String> items;
+  //
+  GlobalKey<RefreshIndicatorState> refreshKey;
+  List<String> companies;
+  Random r;
 
   @override
   void initState() {
     super.initState();
+    refreshKey = GlobalKey<RefreshIndicatorState>();
+    companies = List();
+    r = new Random();
     addItems();
   }
 
   addItems() {
-    items = List();
-    items.add("Google");
-    items.add("Apple");
-    items.add("Samsung");
-    items.add("Sony");
-    items.add("LG");
+    companies.add("Google");
+    companies.add("Apple");
+    companies.add("Samsung");
+    companies.add("Sony");
+    companies.add("LG");
   }
 
   showProgress(bool show) {
@@ -37,16 +39,21 @@ class SwipeDeleteDemoState extends State<SwipeDeleteDemo> {
   }
 
   addRandomCompany() {
-    Random r = new Random();
     int nextCount = r.nextInt(100);
     setState(() {
-      items.add("Company $nextCount");
+      companies.add("Company $nextCount");
     });
   }
 
-  undoDelete(index, item) {
+  removeCompany(index) {
     setState(() {
-      items.insert(index, item);
+      companies.removeAt(index);
+    });
+  }
+
+  undoDelete(index, company) {
+    setState(() {
+      companies.insert(index, company);
     });
   }
 
@@ -82,27 +89,29 @@ class SwipeDeleteDemoState extends State<SwipeDeleteDemo> {
     );
   }
 
+  Widget row(context, index) {
+    return Dismissible(
+      key: Key(companies[index]), // UniqueKey().toString()
+      onDismissed: (direction) {
+        var item = companies[index];
+        showSnackBar(context, item, index);
+        removeCompany(index);
+      },
+      background: refreshBg(),
+      child: Card(
+        child: ListTile(
+          title: Text(companies[index]),
+        ),
+      ),
+    );
+  }
+
   Widget list() {
     return ListView.builder(
       padding: EdgeInsets.all(20.0),
-      itemCount: items.length,
+      itemCount: companies.length,
       itemBuilder: (BuildContext context, int index) {
-        return Dismissible(
-          key: Key(items[index]), // UniqueKey().toString()
-          onDismissed: (direction) {
-            var item = items[index];
-            showSnackBar(context, item, index);
-            setState(() {
-              items.removeAt(index);
-            });
-          },
-          background: refreshBg(),
-          child: Card(
-            child: ListTile(
-              title: Text(items[index]),
-            ),
-          ),
-        );
+        return row(context, index);
       },
     );
   }
