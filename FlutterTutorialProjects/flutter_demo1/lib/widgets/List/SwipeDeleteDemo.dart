@@ -1,6 +1,5 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
+import 'dart:math';
 
 class SwipeDeleteDemo extends StatefulWidget {
   SwipeDeleteDemo() : super();
@@ -13,29 +12,25 @@ class SwipeDeleteDemo extends StatefulWidget {
 
 class SwipeDeleteDemoState extends State<SwipeDeleteDemo> {
   //
-  GlobalKey<RefreshIndicatorState> refreshKey;
   List<String> companies;
+  GlobalKey<RefreshIndicatorState> refreshKey;
   Random r;
 
   @override
   void initState() {
     super.initState();
     refreshKey = GlobalKey<RefreshIndicatorState>();
+    r = Random();
     companies = List();
-    r = new Random();
-    addItems();
+    addCompanies();
   }
 
-  addItems() {
+  addCompanies() {
     companies.add("Google");
     companies.add("Apple");
     companies.add("Samsung");
     companies.add("Sony");
     companies.add("LG");
-  }
-
-  showProgress(bool show) {
-    refreshKey.currentState?.show(atTop: show);
   }
 
   addRandomCompany() {
@@ -57,24 +52,22 @@ class SwipeDeleteDemoState extends State<SwipeDeleteDemo> {
     });
   }
 
-  showSnackBar(context, item, index) {
+  Future<Null> refreshList() async {
+    await Future.delayed(Duration(seconds: 10));
+    addRandomCompany();
+    return null;
+  }
+
+  showSnackBar(context, company, index) {
     Scaffold.of(context).showSnackBar(SnackBar(
-      content: Text('$item deleted'),
+      content: Text('$company deleted'),
       action: SnackBarAction(
         label: "UNDO",
         onPressed: () {
-          undoDelete(index, item);
+          undoDelete(index, company);
         },
       ),
     ));
-  }
-
-  Future<void> refreshList() async {
-    showProgress(true);
-    await Future.delayed(Duration(seconds: 1));
-    addRandomCompany();
-    showProgress(false);
-    return null;
   }
 
   Widget refreshBg() {
@@ -89,12 +82,22 @@ class SwipeDeleteDemoState extends State<SwipeDeleteDemo> {
     );
   }
 
+  Widget list() {
+    return ListView.builder(
+      padding: EdgeInsets.all(20.0),
+      itemCount: companies.length,
+      itemBuilder: (BuildContext context, int index) {
+        return row(context, index);
+      },
+    );
+  }
+
   Widget row(context, index) {
     return Dismissible(
       key: Key(companies[index]), // UniqueKey().toString()
       onDismissed: (direction) {
-        var item = companies[index];
-        showSnackBar(context, item, index);
+        var company = companies[index];
+        showSnackBar(context, company, index);
         removeCompany(index);
       },
       background: refreshBg(),
@@ -103,16 +106,6 @@ class SwipeDeleteDemoState extends State<SwipeDeleteDemo> {
           title: Text(companies[index]),
         ),
       ),
-    );
-  }
-
-  Widget list() {
-    return ListView.builder(
-      padding: EdgeInsets.all(20.0),
-      itemCount: companies.length,
-      itemBuilder: (BuildContext context, int index) {
-        return row(context, index);
-      },
     );
   }
 
