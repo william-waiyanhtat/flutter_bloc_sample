@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'widgets/List/SwipeDeleteDemo.dart';
+import 'tips/Tip7.dart';
 
 void main() {
   runApp(
@@ -30,7 +30,7 @@ class HomeApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Tutorials',
-      home: new SwipeDeleteDemo(),
+      home: new Tip7(),
     );
   }
 }
