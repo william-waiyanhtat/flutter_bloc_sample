@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/animation.dart';
+import 'package:animator/animator.dart';
 
 class AnimatedLogo extends AnimatedWidget {
   AnimatedLogo({Key key, Animation<double> animation})
@@ -28,45 +29,85 @@ class Tip7 extends StatefulWidget {
   Tip7State createState() => Tip7State();
 }
 
-// #docregion print-state
 class Tip7State extends State<Tip7> with SingleTickerProviderStateMixin {
+  //
   Animation<double> animation;
   AnimationController controller;
+  String fadeImgUrl =
+      'https://images.freeimages.com/images/large-previews/322/indian-heads-1391201.jpg';
+  String cacheImgUrl =
+      'https://images.freeimages.com/images/large-previews/7e9/ladybird-1367182.jpg';
+
+  final img = FlutterLogo(
+    size: 100,
+  );
 
   @override
   void initState() {
     super.initState();
+    initAnimation();
+  }
+
+  Widget toolTipWidget() {
+    return Tooltip(
+      message: "This is a tooltip",
+      child: new Text("Long press to see Tooltip"),
+    );
+  }
+
+  Widget fadeImage() {
+    return FadeInImage.assetNetwork(
+      placeholder: 'images/loading.gif',
+      image: fadeImgUrl,
+    );
+  }
+
+  Widget cacheImage() {
+    return CachedNetworkImage(
+      placeholder: (context, url) => CircularProgressIndicator(),
+      imageUrl: cacheImgUrl,
+    );
+  }
+
+  Widget animatorOpacity() {
+    return Animator(
+      // repeats: 5,
+      cycles: 2 * 5,
+      builder: (anim) => Opacity(
+            opacity: anim.value,
+            child: img,
+          ),
+    );
+  }
+
+  Widget animatorFadeIn() {
+    return Animator(
+      duration: Duration(seconds: 3),
+      curve: Curves.elasticOut,
+      // repeats: 5,
+      cycles: 0,
+      builder: (anim) => FadeTransition(
+            opacity: anim,
+            child: img,
+          ),
+    );
+  }
+
+  initAnimation() {
     controller =
         AnimationController(duration: const Duration(seconds: 2), vsync: this);
     animation = Tween<double>(begin: 0, end: 300).animate(controller)
-      // #enddocregion print-state
       ..addStatusListener((status) {
-        if (status == AnimationStatus.completed) {
+        if (AnimationStatus.completed == status) {
           controller.reverse();
-        } else if (status == AnimationStatus.dismissed) {
+        } else if (AnimationStatus.dismissed == status) {
           controller.forward();
         }
       })
-      // #docregion print-state
       ..addStatusListener((state) => print('$state'));
     controller.forward();
   }
-  // #enddocregion print-state
 
-  @override
-  Widget build(BuildContext context) => AnimatedLogo(animation: animation);
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
-  // #docregion print-state
-}
-
-/*
-class Tip7State extends State<Tip7> {
-  //
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,48 +116,16 @@ class Tip7State extends State<Tip7> {
       ),
       body: Container(
         padding: EdgeInsets.all(20.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Stack(
-              children: <Widget>[
-                AnimatedPositioned(
-                  child: Container(
-                    width: 100,
-                    height: 100,
-                    color: Colors.red,
-                  ),
-                  duration: Duration(
-                    seconds: 5,
-                  ),
-                  curve: Curves.bounceIn,
-                )
-              ],
-            ),
-            // Tooltip(
-            //   message: "Hello World",
-            //   child: new Text("This is a tooltip"),
-            // ),
-            // FadeInImage.assetNetwork(
-            //   placeholder: 'images/loading.gif',
-            //   image:
-            //       'https://images.freeimages.com/images/large-previews/322/indian-heads-1391201.jpg',
-            // ),
-            // SizedBox(
-            //   height: 20.0,
-            // ),
-            // CachedNetworkImage(
-            //   placeholder: (context, url) => Center(
-            //         child: CircularProgressIndicator(),
-            //       ),
-            //   imageUrl:
-            //       'https://images.freeimages.com/images/large-previews/7e9/ladybird-1367182.jpg',
-            // )
-          ],
+        child: Center(
+          child: animatorFadeIn(),
         ),
       ),
     );
   }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
 }
-*/

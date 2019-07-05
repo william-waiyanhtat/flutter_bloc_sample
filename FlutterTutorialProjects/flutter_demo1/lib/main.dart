@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'tips/Tip7.dart';
+import 'widgets/animation/AnimationDemo.dart';
 
 void main() {
   runApp(
@@ -30,7 +30,7 @@ class HomeApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Tutorials',
-      home: new Tip7(),
+      home: new AnimationDemo(),
     );
   }
 }
