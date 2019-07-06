@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/animation.dart';
 import 'package:animator/animator.dart';
 import 'dart:math';
 
@@ -12,8 +11,7 @@ class AnimationDemo extends StatefulWidget {
   AnimationDemoState createState() => AnimationDemoState();
 }
 
-class AnimationDemoState extends State<AnimationDemo>
-    with SingleTickerProviderStateMixin {
+class AnimationDemoState extends State<AnimationDemo> {
   //
   final logo = FlutterLogo(
     size: 100,
