@@ -6,7 +6,7 @@ import 'dart:math';
 class AnimationDemo extends StatefulWidget {
   AnimationDemo() : super();
 
-  final String title = "Flutter Tips";
+  final String title = "Flutter Animation";
 
   @override
   AnimationDemoState createState() => AnimationDemoState();
