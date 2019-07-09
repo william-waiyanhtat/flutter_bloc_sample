@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'widgets/List/ExpansionList/ExpansionTileDemo.dart';
+import 'package:flutter_demo1/widgets/Stepper/SplashDemo.dart';
 
 void main() {
   runApp(
@@ -30,7 +30,7 @@ class HomeApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Tutorials',
-      home: new ExpansionTileDemo(),
+      home: new SplashDemo(),
     );
   }
 }
