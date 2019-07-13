@@ -6,7 +6,7 @@ class ExpansionTileDemo extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('ExpansionTile'),
+          title: const Text('Expansion List Demo'),
         ),
         body: ListView.builder(
           itemBuilder: (BuildContext context, int index) =>
