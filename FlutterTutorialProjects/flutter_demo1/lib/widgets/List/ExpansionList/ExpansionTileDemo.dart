@@ -6,26 +6,31 @@ class ExpansionTileDemo extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Expansion List Demo'),
+          title: const Text('Expansion List'),
         ),
         body: ListView.builder(
-          itemBuilder: (BuildContext context, int index) =>
-              EntryItem(data[index]),
           itemCount: data.length,
+          itemBuilder: (BuildContext context, int index) => EntryItem(
+                data[index],
+              ),
         ),
       ),
     );
   }
 }
 
-// One entry in the multilevel list displayed by this app.
+// Welcome to another flutter tutorial
+// In this video we will see how to create a multi-level Expansion List
+// First Let's create a class for each row in the Expansion List
+
 class Entry {
-  Entry(this.title, [this.children = const <Entry>[]]);
   final String title;
-  final List<Entry> children;
+  final List<Entry>
+      children; // Since this is an expansion list ...children can be another list of entries
+  Entry(this.title, [this.children = const <Entry>[]]);
 }
 
-// The entire multilevel list displayed by this app.
+// This is the entire multi-level list displayed by this app
 final List<Entry> data = <Entry>[
   Entry(
     'Chapter A',
@@ -42,13 +47,11 @@ final List<Entry> data = <Entry>[
       Entry('Section A2'),
     ],
   ),
-  Entry(
-    'Chapter B',
-    <Entry>[
-      Entry('Section B0'),
-      Entry('Section B1'),
-    ],
-  ),
+  // Second Row
+  Entry('Chapter B', <Entry>[
+    Entry('Section B0'),
+    Entry('Section B1'),
+  ]),
   Entry(
     'Chapter C',
     <Entry>[
@@ -62,20 +65,23 @@ final List<Entry> data = <Entry>[
           Entry('Item C2.2'),
           Entry('Item C2.3'),
         ],
-      ),
+      )
     ],
   ),
 ];
 
-// Displays one Entry. If the entry has children then it's displayed
-// with an ExpansionTile.
+// Create the Widget for the row
 class EntryItem extends StatelessWidget {
   const EntryItem(this.entry);
-
   final Entry entry;
 
+  // This function recursively creates the multi-level list rows.
   Widget _buildTiles(Entry root) {
-    if (root.children.isEmpty) return ListTile(title: Text(root.title));
+    if (root.children.isEmpty) {
+      return ListTile(
+        title: Text(root.title),
+      );
+    }
     return ExpansionTile(
       key: PageStorageKey<Entry>(root),
       title: Text(root.title),
