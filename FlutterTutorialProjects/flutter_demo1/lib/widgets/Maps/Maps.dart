@@ -2,6 +2,12 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import 'package:google_maps_webservice/places.dart';
+import 'package:flutter_google_places/flutter_google_places.dart';
+
+const kGoogleApiKey = "TOUR_API_KEY";
+GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: kGoogleApiKey);
+
 class MapsDemo extends StatefulWidget {
   MapsDemo() : super();
 
@@ -18,6 +24,9 @@ class MapsDemoState extends State<MapsDemo> {
   final Set<Marker> _markers = {};
   LatLng _lastMapPosition = _center;
   MapType _currentMapType = MapType.normal;
+  List<PlacesSearchResult> places = [];
+  bool isLoading = false;
+  String errorMessage;
 
   static final CameraPosition _position1 = CameraPosition(
     bearing: 192.833,
@@ -25,6 +34,37 @@ class MapsDemoState extends State<MapsDemo> {
     tilt: 59.440,
     zoom: 11.0,
   );
+
+  void getNearbyPlaces(LatLng center) async {
+    setState(() {
+      this.isLoading = true;
+      this.errorMessage = null;
+    });
+
+    final location = Location(center.latitude, center.longitude);
+    final result = await _places.searchNearbyWithRadius(location, 2500);
+    setState(() {
+      this.isLoading = false;
+      if (result.status == "OK") {
+        this.places = result.results;
+        result.results.forEach((f) {
+          final markerOptions = MarkerOptions(
+              position:
+                  LatLng(f.geometry.location.lat, f.geometry.location.lng),
+              infoWindowText: InfoWindowText("${f.name}", "${f.types?.first}"));
+          mapController.addMarker(markerOptions);
+        });
+      } else {
+        this.errorMessage = result.errorMessage;
+      }
+    });
+  }
+
+  void onError(PlacesAutocompleteResponse response) {
+    homeScaffoldKey.currentState.showSnackBar(
+      SnackBar(content: Text(response.errorMessage)),
+    );
+  }
 
   Future<void> _goToPosition1() async {
     final GoogleMapController controller = await _controller.future;
