@@ -29,6 +29,10 @@
 	</dict>
 	<key>NSAppleMusicUsageDescription</key>
 	<string>Explain why your app uses music</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Use GPS</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string></string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Explain why your app uses photo library</string>
 	<key>UIBackgroundModes</key>

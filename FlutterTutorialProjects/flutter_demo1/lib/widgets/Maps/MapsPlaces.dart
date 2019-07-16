@@ -73,6 +73,7 @@ class MapsPlacesDemoState extends State<MapsPlacesDemo> {
                     target: _center,
                     zoom: 11.0,
                   ),
+                  myLocationButtonEnabled: true,
                   // options: GoogleMapOptions(
                   //     myLocationEnabled: true,
                   //     cameraPosition:
@@ -95,7 +96,7 @@ class MapsPlacesDemoState extends State<MapsPlacesDemo> {
 
   void _onMapCreated(GoogleMapController controller) async {
     mapController = controller;
-    refresh();
+    //refresh();
   }
 
   Future<LatLng> getUserLocation() async {
