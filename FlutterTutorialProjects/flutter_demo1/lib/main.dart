@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_demo1/widgets/Maps/MapsPlaces.dart';
 import 'widgets/Maps/Maps.dart';
 
 void main() {
@@ -30,7 +31,7 @@ class HomeApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Tutorials',
-      home: new MapsDemo(),
+      home: new MapsPlacesDemo(),
     );
   }
 }
