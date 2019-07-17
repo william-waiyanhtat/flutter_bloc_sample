@@ -7,7 +7,7 @@ import 'package:location/location.dart' as LocationManager;
 import 'PlaceDetailWidget.dart';
 
 // https://medium.com/flutter-community/building-places-location-search-with-map-view-using-flutter-1-0-alfian-losari-66cacb3bcc24
-const kGoogleApiKey = "AIzaSyDTC3OgFXPH9qdRvfEBcOv6feRb19sykb8";
+const kGoogleApiKey = "AIzaSyAjazWMqgJ3kFORAV9iWzMUlppA4LOks1Q";
 GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: kGoogleApiKey);
 
 class MapsPlacesDemo extends StatefulWidget {
