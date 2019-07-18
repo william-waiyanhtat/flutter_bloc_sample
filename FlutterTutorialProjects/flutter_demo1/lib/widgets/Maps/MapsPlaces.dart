@@ -7,7 +7,7 @@ import 'package:location/location.dart' as LocationManager;
 import 'PlaceDetailWidget.dart';
 
 // https://medium.com/flutter-community/building-places-location-search-with-map-view-using-flutter-1-0-alfian-losari-66cacb3bcc24
-const kGoogleApiKey = "AIzaSyAjazWMqgJ3kFORAV9iWzMUlppA4LOks1Q";
+const kGoogleApiKey = "AIz-4TBsUvX4dj-p31oZf-0JU";
 GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: kGoogleApiKey);
 
 class MapsPlacesDemo extends StatefulWidget {
@@ -121,7 +121,7 @@ class MapsPlacesDemoState extends State<MapsPlacesDemo> {
     });
 
     final location = Location(center.latitude, center.longitude);
-    final result = await _places.searchNearbyWithRadius(location, 2500);
+    final result = await _places.searchNearbyWithRadius(location, 1000);
     setState(() {
       this.isLoading = false;
       if (result.status == "OK") {

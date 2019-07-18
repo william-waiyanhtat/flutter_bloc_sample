@@ -22,7 +22,7 @@
         }
     }];
 
-    [GMSServices provideAPIKey:@"AIzaSyD4KKvdZsrLisRVo893yGuZmzDB2mDAFeo"];
+    [GMSServices provideAPIKey:@"AIzaSyDfK4dQdfjRM-4TBsUvX4dj-p31oZf-0JU"];
     [GeneratedPluginRegistrant registerWithRegistry:self];
 
     
