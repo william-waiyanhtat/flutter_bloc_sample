@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'dart:async';
+import 'dart:io';
 
 class Tip7 extends StatefulWidget {
   Tip7() : super();
@@ -16,6 +18,26 @@ class Tip7State extends State<Tip7> with SingleTickerProviderStateMixin {
       'https://images.freeimages.com/images/large-previews/322/indian-heads-1391201.jpg';
   String cacheImgUrl =
       'https://images.freeimages.com/images/large-previews/7e9/ladybird-1367182.jpg';
+
+  void periodic() {
+    Timer.periodic(
+      Duration(seconds: 3),
+      (Timer time) {
+        print("time: ${time.tick}");
+      },
+    );
+  }
+
+  void getDevice() {
+    bool ios = Platform.isAndroid;
+    print('iOS1: $ios');
+    bool isIOS = Theme.of(context).platform == TargetPlatform.iOS;
+    print('iOS2: $isIOS');
+
+    // Do not explicitly initialize variables to null.
+    var test; //good
+    var test1 = null; // no need
+  }
 
   Widget toolTipWidget() {
     return Tooltip(
@@ -40,6 +62,8 @@ class Tip7State extends State<Tip7> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    getDevice();
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
