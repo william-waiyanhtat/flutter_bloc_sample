@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:io';
 
 class Tip7 extends StatefulWidget {
+  //
   Tip7() : super();
 
   final String title = "Flutter Tips";
@@ -21,9 +22,13 @@ class Tip7State extends State<Tip7> with SingleTickerProviderStateMixin {
 
   void periodic() {
     Timer.periodic(
-      Duration(seconds: 3),
+      Duration(seconds: 1),
       (Timer time) {
         print("time: ${time.tick}");
+        if (time.tick == 5) {
+          time.cancel();
+          print('Timer Cancelled');
+        }
       },
     );
   }
@@ -36,7 +41,20 @@ class Tip7State extends State<Tip7> with SingleTickerProviderStateMixin {
 
     // Do not explicitly initialize variables to null.
     var test; //good
-    var test1 = null; // no need
+    var test1 = null; // bad
+  }
+
+  Widget demoSafeArea() {
+    return Container(
+      color: Colors.green,
+      width: 80.0,
+      child: new Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          /*....*/
+        ],
+      ),
+    );
   }
 
   Widget toolTipWidget() {
@@ -60,18 +78,69 @@ class Tip7State extends State<Tip7> with SingleTickerProviderStateMixin {
     );
   }
 
+  Widget list() {
+    List<String> companies = [
+      'Google',
+      'Facebook',
+      'Apple',
+      'Google',
+      'Facebook',
+      'Apple',
+      'Google',
+      'Facebook',
+      'Apple',
+      'Google',
+      'Facebook',
+      'Apple',
+      'Google',
+      'Facebook',
+      'Apple',
+      'Google',
+      'Facebook',
+      'Apple',
+      'Google',
+      'Facebook',
+      'Apple',
+      'Google',
+      'Facebook',
+      'Apple',
+    ];
+    return Expanded(
+      child: ListView.builder(
+        itemCount: companies.length,
+        itemBuilder: (BuildContext context, int index) {
+          return Padding(
+            padding: EdgeInsets.all(20.0),
+            child: Text(
+              companies[index],
+              style: TextStyle(color: Colors.black),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    getDevice();
-
+    //getDevice();
+    periodic();
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
       ),
+      // body: Container(
+      //   padding: EdgeInsets.all(20.0),
+      //   child: Center(
+      //     child: list(),
+      //   ),
+      // ),
       body: Container(
         padding: EdgeInsets.all(20.0),
-        child: Center(
-          child: cacheImage(),
+        child: Column(
+          children: <Widget>[
+            list(),
+          ],
         ),
       ),
     );
