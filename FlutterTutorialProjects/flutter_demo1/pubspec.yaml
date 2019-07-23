@@ -39,10 +39,15 @@ dependencies:
   file_picker: ^1.1.1
   cached_network_image: ^1.0.0 
   animator: ^0.1.4  
+  json_annotation:
+
   
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  json_model:
+  build_runner: ^1.0.0
+  json_serializable: ^2.0.0
 
 
 # For information on the generic Dart part of this file, see the
