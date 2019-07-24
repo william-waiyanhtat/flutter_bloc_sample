@@ -1,3 +1,4 @@
-export 'name.dart' ; 
-export 'posts.dart' ; 
-export 'post.dart' ; 
+export 'company.dart' ; 
+export 'address.dart' ; 
+export 'user.dart' ; 
+export 'geo.dart' ; 
