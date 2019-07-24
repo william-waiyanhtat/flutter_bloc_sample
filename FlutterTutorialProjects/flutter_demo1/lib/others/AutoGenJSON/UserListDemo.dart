@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-import '../../models/user.dart';
 import 'Services.dart';
+import '../../models/users.dart';
 
 class UserListDemo extends StatefulWidget {
   UserListDemo() : super();
@@ -31,7 +31,7 @@ class UserListDemoState extends State<UserListDemo> {
   // https://jsonplaceholder.typicode.com/users
 
   final _debouncer = Debouncer(milliseconds: 500);
-  List<User> users = List();
+  Users users;
   bool searching;
   String title;
 
@@ -39,12 +39,86 @@ class UserListDemoState extends State<UserListDemo> {
   void initState() {
     super.initState();
     searching = false;
-    title = widget.title;
+    title = "Loading users...";
+    users = Users();
     Services.getUsers().then((usersFromServer) {
       setState(() {
         users = usersFromServer;
+        title = widget.title;
       });
     });
+  }
+
+  Widget list() {
+    return Expanded(
+      child: ListView.builder(
+        itemCount: users.users == null ? 0 : users.users.length,
+        itemBuilder: (BuildContext context, int index) {
+          return row(index);
+        },
+      ),
+    );
+  }
+
+  Widget searchTF() {
+    return TextField(
+      decoration: InputDecoration(
+        border: new OutlineInputBorder(
+          borderRadius: const BorderRadius.all(
+            const Radius.circular(5.0),
+          ),
+        ),
+        filled: true,
+        fillColor: Colors.white70,
+        contentPadding: EdgeInsets.all(15.0),
+        hintText: 'Filter by name or email',
+      ),
+      onChanged: (string) {
+        _debouncer.run(() {
+          setState(() {
+            title = "Searching...";
+          });
+          Services.getUsers().then((usersFromServer) {
+            searching = true;
+            setState(() {
+              users = Users.filterList(usersFromServer, string);
+              title = widget.title;
+            });
+          });
+        });
+      },
+    );
+  }
+
+  Widget row(int index) {
+    return Card(
+      child: Padding(
+        padding: EdgeInsets.all(10.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              users.users[index].name,
+              style: TextStyle(
+                fontSize: 16.0,
+                color: Colors.black,
+              ),
+            ),
+            SizedBox(
+              height: 5.0,
+            ),
+            Text(
+              users.users[index].email.toLowerCase(),
+              style: TextStyle(
+                fontSize: 14.0,
+                color: Colors.grey,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
@@ -53,72 +127,17 @@ class UserListDemoState extends State<UserListDemo> {
       appBar: AppBar(
         title: Text(title),
       ),
-      body: Column(
-        children: <Widget>[
-          TextField(
-            decoration: InputDecoration(
-              contentPadding: EdgeInsets.all(15.0),
-              hintText: 'Filter by name or email',
+      body: Container(
+        padding: EdgeInsets.all(10.0),
+        child: Column(
+          children: <Widget>[
+            searchTF(),
+            SizedBox(
+              height: 10.0,
             ),
-            onChanged: (string) {
-              _debouncer.run(() {
-                setState(() {
-                  title = "Searching...";
-                });
-                Services.getUsers().then((usersFromServer) {
-                  searching = true;
-                  setState(() {
-                    users = usersFromServer
-                        .where((u) => (u.name
-                                .toLowerCase()
-                                .contains(string.toLowerCase()) ||
-                            u.email
-                                .toLowerCase()
-                                .contains(string.toLowerCase())))
-                        .toList();
-                    title = widget.title;
-                  });
-                });
-              });
-            },
-          ),
-          Expanded(
-            child: ListView.builder(
-              padding: EdgeInsets.all(10.0),
-              itemCount: users.length,
-              itemBuilder: (BuildContext context, int index) {
-                return Card(
-                  child: Padding(
-                    padding: EdgeInsets.all(10.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          users[index].name,
-                          style: TextStyle(
-                            fontSize: 16.0,
-                            color: Colors.black,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 5.0,
-                        ),
-                        Text(
-                          users[index].email.toLowerCase(),
-                          style: TextStyle(
-                            fontSize: 14.0,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
+            list(),
+          ],
+        ),
       ),
     );
   }
