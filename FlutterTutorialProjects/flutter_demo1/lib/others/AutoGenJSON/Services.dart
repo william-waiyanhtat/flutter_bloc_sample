@@ -10,13 +10,13 @@ class Services {
     try {
       final response = await http.get(url);
       if (response.statusCode == 200) {
-        Users list = parseUsers(response.body);
-        return list;
+        return parseUsers(response.body);
       } else {
-        throw Exception("Error");
+        return Users();
       }
     } catch (e) {
-      throw Exception(e.toString());
+      print("Error: ${e.toString()}");
+      return Users();
     }
   }
 

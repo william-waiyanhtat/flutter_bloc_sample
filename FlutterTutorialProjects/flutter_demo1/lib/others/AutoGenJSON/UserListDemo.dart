@@ -28,8 +28,7 @@ class Debouncer {
 }
 
 class UserListDemoState extends State<UserListDemo> {
-  // https://jsonplaceholder.typicode.com/users
-
+  //
   final _debouncer = Debouncer(milliseconds: 500);
   Users users;
   bool searching;
