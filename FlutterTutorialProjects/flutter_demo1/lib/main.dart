@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'others/AutoGenJSON/UserListDemo.dart';
+import 'widgets/Grid2/GridViewDemo.dart';
 
 void main() {
   runApp(
@@ -30,7 +30,7 @@ class HomeApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Tutorials',
-      home: new UserListDemo(),
+      home: new GridViewDemo(),
     );
   }
 }
