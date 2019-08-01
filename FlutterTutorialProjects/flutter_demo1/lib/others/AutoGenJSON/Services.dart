@@ -9,13 +9,13 @@ class Services {
   static Future<Users> getUsers() async {
     try {
       final response = await http.get(url);
-      if (response.statusCode == 200) {
+      if (200 == response.statusCode) {
         return parseUsers(response.body);
       } else {
         return Users();
       }
     } catch (e) {
-      print("Error: ${e.toString()}");
+      print('Error ${e.toString()}');
       return Users();
     }
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'Services.dart';
+import '../../models/user.dart';
 import '../../models/users.dart';
 
 class UserListDemo extends StatefulWidget {
@@ -29,16 +30,14 @@ class Debouncer {
 
 class UserListDemoState extends State<UserListDemo> {
   //
-  final _debouncer = Debouncer(milliseconds: 500);
+  final debouncer = Debouncer(milliseconds: 1000);
   Users users;
-  bool searching;
   String title;
 
   @override
   void initState() {
     super.initState();
-    searching = false;
-    title = "Loading users...";
+    title = 'Loading users...';
     users = Users();
     Services.getUsers().then((usersFromServer) {
       setState(() {
@@ -56,36 +55,6 @@ class UserListDemoState extends State<UserListDemo> {
           return row(index);
         },
       ),
-    );
-  }
-
-  Widget searchTF() {
-    return TextField(
-      decoration: InputDecoration(
-        border: new OutlineInputBorder(
-          borderRadius: const BorderRadius.all(
-            const Radius.circular(5.0),
-          ),
-        ),
-        filled: true,
-        fillColor: Colors.white70,
-        contentPadding: EdgeInsets.all(15.0),
-        hintText: 'Filter by name or email',
-      ),
-      onChanged: (string) {
-        _debouncer.run(() {
-          setState(() {
-            title = "Searching...";
-          });
-          Services.getUsers().then((usersFromServer) {
-            searching = true;
-            setState(() {
-              users = Users.filterList(usersFromServer, string);
-              title = widget.title;
-            });
-          });
-        });
-      },
     );
   }
 
@@ -118,6 +87,48 @@ class UserListDemoState extends State<UserListDemo> {
         ),
       ),
     );
+  }
+
+  Widget searchTF() {
+    return TextField(
+      decoration: InputDecoration(
+        border: OutlineInputBorder(
+          borderRadius: const BorderRadius.all(
+            const Radius.circular(
+              5.0,
+            ),
+          ),
+        ),
+        filled: true,
+        fillColor: Colors.white60,
+        contentPadding: EdgeInsets.all(15.0),
+        hintText: 'Filter by name or email',
+      ),
+      onChanged: (string) {
+        debouncer.run(() {
+          setState(() {
+            title = 'Searching...';
+          });
+          Services.getUsers().then((usersFromServer) {
+            setState(() {
+              users = filterList(usersFromServer, string);
+              title = widget.title;
+            });
+          });
+        });
+      },
+    );
+  }
+
+  static Users filterList(Users users, String filterString) {
+    Users tempUsers = users;
+    List<User> _users = tempUsers.users
+        .where((u) =>
+            (u.name.toLowerCase().contains(filterString.toLowerCase())) ||
+            (u.email.toLowerCase().contains(filterString.toLowerCase())))
+        .toList();
+    users.users = _users;
+    return users;
   }
 
   @override
