@@ -5,6 +5,7 @@ import 'DetailsScreen.dart';
 import 'dart:async';
 import '../../models/album.dart';
 import '../../models/albums.dart';
+import 'db_helper.dart';
 
 class GridViewDemo extends StatefulWidget {
   GridViewDemo() : super();
@@ -17,6 +18,14 @@ class GridViewDemo extends StatefulWidget {
 
 class GridViewDemoState extends State<GridViewDemo> {
   //
+  int counter = 0;
+  static List<Album> albums;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   StreamController<int> streamController = new StreamController<int>();
 
   gridview(AsyncSnapshot<Albums> snapshot) {
@@ -61,6 +70,25 @@ class GridViewDemoState extends State<GridViewDemo> {
     );
   }
 
+  insert(Album album, DBHelper dbHelper) {
+    dbHelper.save(album).then(((val) {
+      print("111");
+      counter = counter + 1;
+      if (counter >= albums.length) {
+        print("Done");
+        dbHelper.getAlbums().then((albums1) {
+          print("Count: ${albums1.albums.length}");
+        });
+        return;
+      }
+      setState(() {
+        counter = counter;
+      });
+      Album a = albums[counter];
+      insert(a, dbHelper);
+    }));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,21 +105,33 @@ class GridViewDemoState extends State<GridViewDemo> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Flexible(
-            child: FutureBuilder<Albums>(
-              future: Services.getPhotos(),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return Text('Error ${snapshot.error}');
-                }
-                if (snapshot.hasData) {
-                  streamController.sink.add(snapshot.data.albums.length);
-                  return gridview(snapshot);
-                }
-                return circularProgress();
-              },
-            ),
+          OutlineButton(
+            child: Text('Get Photos'),
+            onPressed: () {
+              counter = 0;
+              Services.getPhotos().then((allAlbums) {
+                albums = allAlbums.albums;
+                DBHelper dbHelper = new DBHelper();
+                insert(albums[0], dbHelper);
+              });
+            },
           ),
+          Text("Inserted $counter"),
+          // Flexible(
+          //   child: FutureBuilder<Albums>(
+          //     future: Services.getPhotos(),
+          //     builder: (context, snapshot) {
+          //       if (snapshot.hasError) {
+          //         return Text('Error ${snapshot.error}');
+          //       }
+          //       if (snapshot.hasData) {
+          //         streamController.sink.add(snapshot.data.albums.length);
+          //         return gridview(snapshot);
+          //       }
+          //       return circularProgress();
+          //     },
+          //   ),
+          // ),
         ],
       ),
     );

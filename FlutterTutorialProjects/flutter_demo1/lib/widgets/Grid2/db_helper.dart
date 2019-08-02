@@ -9,11 +9,11 @@ import '../../models/albums.dart';
 class DBHelper {
   static Database _db;
   static const String TABLE = 'albums';
-  static const String ALBUM_ID = 'album_id';
+  static const String ALBUM_ID = 'albumId';
   static const String ID = 'id';
   static const String TITLE = 'title';
   static const String URL = 'url';
-  static const String THUMBNAIL_URL = 'thumbnail_url';
+  static const String THUMBNAIL_URL = 'thumbnailUrl';
   static const String DB_NAME = 'albums.db';
 
   Future<Database> get db async {
@@ -33,7 +33,7 @@ class DBHelper {
 
   _onCreate(Database db, int version) async {
     await db.execute(
-        "CREATE TABLE $TABLE ($ID INTEGER PRIMARY KEY, $TITLE TEXT, $URL TEXT, $THUMBNAIL_URL TEXT)");
+        "CREATE TABLE $TABLE ($ID INTEGER PRIMARY KEY, $ALBUM_ID TEXT, $TITLE TEXT, $URL TEXT, $THUMBNAIL_URL TEXT)");
   }
 
   Future<Album> save(Album album) async {
@@ -42,7 +42,7 @@ class DBHelper {
     return album;
   }
 
-  Future<Albums> getEmployees() async {
+  Future<Albums> getAlbums() async {
     var dbClient = await db;
     List<Map> maps = await dbClient.query(TABLE, columns: [ID, TITLE]);
     Albums allAlbums = Albums();
@@ -65,6 +65,12 @@ class DBHelper {
     var dbClient = await db;
     return await dbClient.update(TABLE, employee.toJson(),
         where: '$ID = ?', whereArgs: [employee.id]);
+  }
+
+  Future<void> truncateTable() async {
+    var dbClient = await db;
+    return await dbClient.delete(TABLE);
+    // dbClient.rawQuery("DELETE FROM $TABLE");
   }
 
   Future close() async {
