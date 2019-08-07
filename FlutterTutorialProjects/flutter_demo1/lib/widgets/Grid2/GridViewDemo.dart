@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'services.dart';
 import 'gridcell.dart';
 import 'DetailsScreen.dart';
-import 'dart:async';
 import '../../models/album.dart';
 import '../../models/albums.dart';
 import 'db_helper.dart';
@@ -19,14 +18,36 @@ class GridViewDemo extends StatefulWidget {
 class GridViewDemoState extends State<GridViewDemo> {
   //
   int counter = 0;
-  static List<Album> albums;
+  bool albumsLoaded;
+  double percent;
+  String title;
+  GlobalKey<ScaffoldState> _scaffoldKey;
+
+  static Albums albums;
+  DBHelper dbHelper;
 
   @override
   void initState() {
     super.initState();
+    percent = 0.0;
+    title = widget.title;
+    albumsLoaded = false;
+    dbHelper = new DBHelper();
+    _scaffoldKey = GlobalKey();
   }
 
-  StreamController<int> streamController = new StreamController<int>();
+  getPhotos() {
+    setState(() {
+      counter = 0;
+      albumsLoaded = false;
+    });
+    Services.getPhotos().then((allAlbums) {
+      albums = allAlbums;
+      dbHelper.truncateTable().then((val) {
+        insert(albums.albums[0], dbHelper);
+      });
+    });
+  }
 
   gridview(AsyncSnapshot<Albums> snapshot) {
     return Padding(
@@ -38,13 +59,8 @@ class GridViewDemoState extends State<GridViewDemo> {
         crossAxisSpacing: 4.0,
         children: snapshot.data.albums.map(
           (album) {
-            return GestureDetector(
-              child: GridTile(
-                child: AlbumCell(album),
-              ),
-              onTap: () {
-                goToDetailsPage(context, album);
-              },
+            return GridTile(
+              child: AlbumCell(album, update, delete),
             );
           },
         ).toList(),
@@ -64,82 +80,100 @@ class GridViewDemoState extends State<GridViewDemo> {
     );
   }
 
-  circularProgress() {
-    return Center(
-      child: const CircularProgressIndicator(),
-    );
+  update(Album album) {
+    print("Updating  ${album.id}");
+    dbHelper.update(album).then((updtVal) {
+      showSnackBar("Updated Album ID:${album.id}");
+      refresh();
+    });
+  }
+
+  delete(int id) {
+    print("Deleting  $id");
+    dbHelper.delete(id).then((delVal) {
+      print("Delted $delVal");
+      showSnackBar("Deleted Album ID:$id");
+      refresh();
+    });
+  }
+
+  refresh() {
+    dbHelper.getAlbums().then((allAlbums) {
+      setState(() {
+        albums = allAlbums;
+        counter = albums.albums.length;
+        title = '${widget.title} [$counter]';
+      });
+    });
   }
 
   insert(Album album, DBHelper dbHelper) {
     dbHelper.save(album).then(((val) {
-      print("111");
       counter = counter + 1;
-      if (counter >= albums.length) {
+      percent = ((counter / albums.albums.length) * 100) / 100;
+      if (counter >= albums.albums.length) {
         print("Done");
-        dbHelper.getAlbums().then((albums1) {
-          print("Count: ${albums1.albums.length}");
+        setState(() {
+          albumsLoaded = true;
+          percent = 0.0;
+          title = '${widget.title} [$counter]';
         });
         return;
       }
       setState(() {
-        counter = counter;
+        title = 'Inserting...$counter';
       });
-      Album a = albums[counter];
+      Album a = albums.albums[counter];
       insert(a, dbHelper);
     }));
+  }
+
+  showSnackBar(String message) {
+    _scaffoldKey.currentState.showSnackBar(SnackBar(
+      content: Text(message),
+    ));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
-          title: StreamBuilder(
-        initialData: 0,
-        stream: streamController.stream,
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          return Text('${widget.title} ${snapshot.data}');
-        },
-      )),
+        title: Text(title),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.file_download),
+            onPressed: () {
+              getPhotos();
+            },
+          ),
+        ],
+      ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          OutlineButton(
-            child: Text('Get Photos'),
-            onPressed: () {
-              counter = 0;
-              Services.getPhotos().then((allAlbums) {
-                albums = allAlbums.albums;
-                DBHelper dbHelper = new DBHelper();
-                insert(albums[0], dbHelper);
-              });
-            },
-          ),
-          Text("Inserted $counter"),
-          // Flexible(
-          //   child: FutureBuilder<Albums>(
-          //     future: Services.getPhotos(),
-          //     builder: (context, snapshot) {
-          //       if (snapshot.hasError) {
-          //         return Text('Error ${snapshot.error}');
-          //       }
-          //       if (snapshot.hasData) {
-          //         streamController.sink.add(snapshot.data.albums.length);
-          //         return gridview(snapshot);
-          //       }
-          //       return circularProgress();
-          //     },
-          //   ),
-          // ),
+          albumsLoaded
+              ? Flexible(
+                  child: FutureBuilder<Albums>(
+                    future: dbHelper.getAlbums(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        return Text('Error ${snapshot.error}');
+                      }
+                      if (snapshot.hasData) {
+                        return gridview(snapshot);
+                      }
+                      return Container();
+                    },
+                  ),
+                )
+              : LinearProgressIndicator(
+                  value: percent,
+                ),
         ],
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    streamController.close();
-    super.dispose();
   }
 }

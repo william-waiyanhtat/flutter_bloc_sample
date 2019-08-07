@@ -44,7 +44,8 @@ class DBHelper {
 
   Future<Albums> getAlbums() async {
     var dbClient = await db;
-    List<Map> maps = await dbClient.query(TABLE, columns: [ID, TITLE]);
+    List<Map> maps =
+        await dbClient.query(TABLE, columns: [ID, TITLE, URL, THUMBNAIL_URL]);
     Albums allAlbums = Albums();
     List<Album> albums = [];
     if (maps.length > 0) {
@@ -61,16 +62,15 @@ class DBHelper {
     return await dbClient.delete(TABLE, where: '$ID = ?', whereArgs: [id]);
   }
 
-  Future<int> update(Album employee) async {
+  Future<int> update(Album album) async {
     var dbClient = await db;
-    return await dbClient.update(TABLE, employee.toJson(),
-        where: '$ID = ?', whereArgs: [employee.id]);
+    return await dbClient
+        .update(TABLE, album.toJson(), where: '$ID = ?', whereArgs: [album.id]);
   }
 
   Future<void> truncateTable() async {
     var dbClient = await db;
     return await dbClient.delete(TABLE);
-    // dbClient.rawQuery("DELETE FROM $TABLE");
   }
 
   Future close() async {

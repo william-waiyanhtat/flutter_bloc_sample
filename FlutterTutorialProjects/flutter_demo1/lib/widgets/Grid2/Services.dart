@@ -20,6 +20,7 @@ class Services {
         return albums;
       } else {
         print("exce1");
+        return new Albums();
       }
     } catch (e) {
       print("exce");
