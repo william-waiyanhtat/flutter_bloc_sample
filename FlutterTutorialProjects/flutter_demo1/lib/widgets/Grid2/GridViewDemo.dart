@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'services.dart';
-import 'gridcell.dart';
-import 'DetailsScreen.dart';
+import 'Services.dart';
 import '../../models/album.dart';
 import '../../models/albums.dart';
-import 'db_helper.dart';
+import 'DBHelper.dart';
+import 'GridCell.dart';
 
 class GridViewDemo extends StatefulWidget {
   GridViewDemo() : super();
@@ -15,25 +14,69 @@ class GridViewDemo extends StatefulWidget {
   GridViewDemoState createState() => GridViewDemoState();
 }
 
+// Add two plugins
+// One for Http and other for getting the Device Directories
+// Go to pubspec.yaml file
+
+// Let me show the service url we are going to use
+// https://jsonplaceholder.typicode.com/photos
+// In this service we have 5000 records or albums
+// Let's create the model classes first.
+// For that we need some plugins..let me show those...
+
+// To Auto-generate Json Models, we need to create a folder named
+// 'jsons' in the root of the project. You can have different name as well,
+// in that case the folder name should be specified along with the command
+// in the terminal...
+
+// Let's create the folder first
+// Now copy the json you want to create model for...
+
+// We will run a command in the terminal to generate the model,
+// the generated models will be inside a folder named 'models' inside the 'lib' folder.
+// Let's see how to do it...
+// I am already having the 'models' folder which I created for other tutorials...
+
+// You can watch my other tutorial on generating json models by clicking the 'i' button above
+// or the link is provided in the description
+
+// Now we have the basic model
+// But we have a list of Albums, so create another model
+
+// Ok Now we have both models for this demo...
+
+// Now we will add the Sqflite library to create an offline database
+// Link to all libraries used is provided in the description below.
+// Let's write the basic CRUD operations for saving the albums in the Offline Database...
+
+// Now we will write the Service Class to get the Data from the service.
+// Add the Http Plugin...
+
+// We will use these Database functions now to do the DB operations
+
+// Now we will add a progressbar while inserting the album records
+
+// Seems like my system is running bit slow...Sorry for that
+
 class GridViewDemoState extends State<GridViewDemo> {
   //
-  int counter = 0;
-  bool albumsLoaded;
-  double percent;
-  String title;
-  GlobalKey<ScaffoldState> _scaffoldKey;
-
+  int counter;
   static Albums albums;
   DBHelper dbHelper;
+  bool albumsLoaded;
+  String title; // Title for the AppBar where we will show the progress...
+  double percent;
+  GlobalKey<ScaffoldState> scaffoldKey;
 
   @override
   void initState() {
     super.initState();
+    counter = 0;
     percent = 0.0;
     title = widget.title;
     albumsLoaded = false;
-    dbHelper = new DBHelper();
-    _scaffoldKey = GlobalKey();
+    scaffoldKey = GlobalKey();
+    dbHelper = DBHelper();
   }
 
   getPhotos() {
@@ -43,76 +86,25 @@ class GridViewDemoState extends State<GridViewDemo> {
     });
     Services.getPhotos().then((allAlbums) {
       albums = allAlbums;
+      // Now we got all the albums from the Service...
+      // We will insert each album one by one into the Database...
+      // On Each load, we will truncate the table
       dbHelper.truncateTable().then((val) {
-        insert(albums.albums[0], dbHelper);
+        // Write a recursive function to insert all the albums
+        insert(albums.albums[0]);
       });
     });
   }
 
-  gridview(AsyncSnapshot<Albums> snapshot) {
-    return Padding(
-      padding: EdgeInsets.all(5.0),
-      child: GridView.count(
-        crossAxisCount: 2,
-        childAspectRatio: 1.0,
-        mainAxisSpacing: 4.0,
-        crossAxisSpacing: 4.0,
-        children: snapshot.data.albums.map(
-          (album) {
-            return GridTile(
-              child: AlbumCell(album, update, delete),
-            );
-          },
-        ).toList(),
-      ),
-    );
-  }
-
-  goToDetailsPage(BuildContext context, Album album) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        fullscreenDialog: true,
-        builder: (BuildContext context) => GridDetails(
-          curAlbum: album,
-        ),
-      ),
-    );
-  }
-
-  update(Album album) {
-    print("Updating  ${album.id}");
-    dbHelper.update(album).then((updtVal) {
-      showSnackBar("Updated Album ID:${album.id}");
-      refresh();
-    });
-  }
-
-  delete(int id) {
-    print("Deleting  $id");
-    dbHelper.delete(id).then((delVal) {
-      print("Delted $delVal");
-      showSnackBar("Deleted Album ID:$id");
-      refresh();
-    });
-  }
-
-  refresh() {
-    dbHelper.getAlbums().then((allAlbums) {
-      setState(() {
-        albums = allAlbums;
-        counter = albums.albums.length;
-        title = '${widget.title} [$counter]';
-      });
-    });
-  }
-
-  insert(Album album, DBHelper dbHelper) {
-    dbHelper.save(album).then(((val) {
+  insert(Album album) {
+    dbHelper.save(album).then((val) {
       counter = counter + 1;
-      percent = ((counter / albums.albums.length) * 100) / 100;
+      // we are calculating the percent here on insert of each record
+      percent = ((counter / albums.albums.length) * 100) /
+          100; // percent from 0 to 1...
+      // terminate condition for this recursive function
       if (counter >= albums.albums.length) {
-        print("Done");
+        // when inserting is done
         setState(() {
           albumsLoaded = true;
           percent = 0.0;
@@ -124,22 +116,73 @@ class GridViewDemoState extends State<GridViewDemo> {
         title = 'Inserting...$counter';
       });
       Album a = albums.albums[counter];
-      insert(a, dbHelper);
-    }));
+      insert(a);
+    });
   }
 
+  gridview(AsyncSnapshot<Albums> snapshot) {
+    return Padding(
+      padding: EdgeInsets.all(5.0),
+      child: GridView.count(
+        crossAxisCount: 2,
+        childAspectRatio: 1.0,
+        mainAxisSpacing: 4.0,
+        crossAxisSpacing: 4.0,
+        children: snapshot.data.albums.map((album) {
+          return GridTile(
+            child: AlbumCell(album, update, delete),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  // Update Function
+  update(Album album) {
+    // We are updating the album title on each update
+    dbHelper.update(album).then((updtVal) {
+      showSnackBar('Updated ${album.id}');
+      refresh();
+    });
+  }
+
+  // Delete Function
+  delete(int id) {
+    dbHelper.delete(id).then((delVal) {
+      showSnackBar('Deleted $id');
+      refresh();
+    });
+  }
+
+  // Method to refresh the List after the DB Operations
+  refresh() {
+    dbHelper.getAlbums().then((allAlbums) {
+      setState(() {
+        albums = allAlbums;
+        counter = albums.albums.length;
+        title = '${widget.title} [$counter]'; // updating the title
+      });
+    });
+  }
+
+  // Show a Snackbar
   showSnackBar(String message) {
-    _scaffoldKey.currentState.showSnackBar(SnackBar(
+    scaffoldKey.currentState.showSnackBar(SnackBar(
       content: Text(message),
     ));
   }
 
+  // We will create a GridView to show the Data...
+  // Before that we will create the class from each Cell in the GridView
+  // Add a Gridview to the UI
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey,
+      key: scaffoldKey,
       appBar: AppBar(
         title: Text(title),
+        // Add action buttons in the AppBar
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.file_download),
@@ -165,6 +208,7 @@ class GridViewDemoState extends State<GridViewDemo> {
                       if (snapshot.hasData) {
                         return gridview(snapshot);
                       }
+                      // if still loading return an empty container
                       return Container();
                     },
                   ),

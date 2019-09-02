@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import '../../models/album.dart';
 
 class AlbumCell extends StatelessWidget {
+  // Pass the Update and Delete Function as Constructor Parameter
   const AlbumCell(this.album, this.updateFunction, this.deleteFunction);
+
   @required
   final Album album;
-  final Function deleteFunction;
   final Function updateFunction;
+  final Function deleteFunction;
 
   @override
   Widget build(BuildContext context) {
@@ -47,35 +49,22 @@ class AlbumCell extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.all(10.0),
                 child: Text(
-                  'ID: ${album.id}',
+                  '${album.id}', // show the Album id
                   maxLines: 1,
                   softWrap: true,
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.w500,
+                    fontSize: 20.0,
                     color: Colors.white,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
               ),
+              // Add two more buttons for Update and Delete
               Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  FlatButton(
-                    color: Colors.red,
-                    child: Text(
-                      'DELETE',
-                      style: TextStyle(
-                        fontSize: 14.0,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.white,
-                      ),
-                    ),
-                    onPressed: () {
-                      deleteFunction(album.id);
-                    },
-                  ),
                   FlatButton(
                     color: Colors.green,
                     child: Text(
@@ -91,6 +80,20 @@ class AlbumCell extends StatelessWidget {
                       updateFunction(album);
                     },
                   ),
+                  FlatButton(
+                    color: Colors.red,
+                    child: Text(
+                      'DELETE',
+                      style: TextStyle(
+                        fontSize: 14.0,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white,
+                      ),
+                    ),
+                    onPressed: () {
+                      deleteFunction(album.id);
+                    },
+                  )
                 ],
               ),
             ],

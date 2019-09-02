@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'db_helper.dart';
 import 'package:http/http.dart' as http;
 import '../../models/album.dart';
 import '../../models/albums.dart';
@@ -7,24 +6,24 @@ import '../../models/albums.dart';
 class Services {
   //
   static List<Album> albums;
-  static int counter = 0;
-  static const String url = "https://jsonplaceholder.typicode.com/photos";
+  static const String url = 'https://jsonplaceholder.typicode.com/photos';
 
   static Future<Albums> getPhotos() async {
-    counter = 0;
     try {
       final response = await http.get(url);
-      if (response.statusCode == 200) {
-        print("success");
+      if (200 == response.statusCode) {
         Albums albums = parsePhotos(response.body);
         return albums;
       } else {
-        print("exce1");
-        return new Albums();
+        Albums albums = new Albums();
+        albums.albums = [];
+        return albums; // we are returning empty album list
+        // Handle these as you want...
       }
     } catch (e) {
-      print("exce");
-      return new Albums();
+      Albums albums = new Albums();
+      albums.albums = [];
+      return albums;
     }
   }
 

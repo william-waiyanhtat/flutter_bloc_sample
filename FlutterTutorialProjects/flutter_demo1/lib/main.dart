@@ -1,5 +1,8 @@
+import 'dart:isolate';
+
 import 'package:flutter/material.dart';
 import 'widgets/Grid2/GridViewDemo.dart';
+import 'others/Isolates/IsolateDemo.dart';
 
 void main() {
   runApp(
@@ -30,7 +33,7 @@ class HomeApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Tutorials',
-      home: new GridViewDemo(),
+      home: new PerformancePage(),
     );
   }
 }
