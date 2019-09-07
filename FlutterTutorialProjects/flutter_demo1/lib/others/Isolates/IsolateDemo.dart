@@ -21,21 +21,10 @@ class _PerformancePageState extends State<PerformancePage> {
         child: Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            children: [
-              SmoothAnimationWidget(),
-              Container(
-                alignment: Alignment.bottomCenter,
-                padding: EdgeInsets.only(top: 150),
-                child: Column(
-                  children: [
-                    addButton1(),
-                    addButton2(),
-                    OutlineButton(
-                        child: const Text('Secondary Isolate'),
-                        onPressed: () {}),
-                  ],
-                ),
-              ),
+            children: <Widget>[
+              AnimationWidget(),
+              addButton1(),
+              addButton2(),
             ],
           ),
         ),
@@ -49,7 +38,7 @@ class _PerformancePageState extends State<PerformancePage> {
       builder: (context, snapshot) {
         return OutlineButton(
           child: const Text('Main Isolate'),
-          onPressed: createMainIsolateCallBack(context, snapshot),
+          onPressed: createMainIsolateCallback(context, snapshot),
         );
       },
     );
@@ -61,21 +50,20 @@ class _PerformancePageState extends State<PerformancePage> {
       builder: (context, snapshot) {
         return OutlineButton(
           child: const Text('Secondary Isolate'),
-          onPressed: createSecondaryIsolateCallBack(context, snapshot),
+          onPressed: createSecondaryIsolateCallback(context, snapshot),
         );
       },
     );
   }
 
-  VoidCallback createMainIsolateCallBack(
+  VoidCallback createMainIsolateCallback(
       BuildContext context, AsyncSnapshot snapshot) {
     if (snapshot.connectionState == ConnectionState.done) {
       return () {
         setState(() {
-          computeFuture = computeOnMainIsolate()
-            ..then((val) {
-              showSnackBar(context, 'Main Isolate Done. $val');
-            });
+          computeFuture = computeOnMainIsolate().then((val) {
+            showSnackBar(context, 'Main Isolate Done $val');
+          });
         });
       };
     } else {
@@ -83,43 +71,39 @@ class _PerformancePageState extends State<PerformancePage> {
     }
   }
 
-  VoidCallback createSecondaryIsolateCallBack(
+  VoidCallback createSecondaryIsolateCallback(
       BuildContext context, AsyncSnapshot snapshot) {
     if (snapshot.connectionState == ConnectionState.done) {
       return () {
         setState(() {
-          computeFuture = computeOnSecondaryIsolate()
-            ..then((val) {
-              showSnackBar(context, 'Secondary Isolate Done. $val');
-            });
+          computeFuture = computeOnSecondaryIsolate().then((val) {
+            showSnackBar(context, 'Secondary Isolate Done $val');
+          });
         });
       };
     } else {
       return null;
     }
   }
-}
 
-showSnackBar(context, message) {
-  Scaffold.of(context).showSnackBar(SnackBar(
-    content: Text(message),
-  ));
-}
+  Future<int> computeOnMainIsolate() async {
+    return await Future.delayed(Duration(milliseconds: 100), () => fib(40));
+  }
 
-Future<int> computeOnMainIsolate() async {
-  // The isolate will need a little time to disable the buttons before the performance hit.
-  return await Future.delayed(Duration(milliseconds: 100), () => fib(50));
-  // await Future(() => fib(45));
-}
+  Future<int> computeOnSecondaryIsolate() async {
+    return await compute(fib, 40);
+  }
 
-Future<int> computeOnSecondaryIsolate() async {
-  return await compute(fib, 50);
+  showSnackBar(context, message) {
+    Scaffold.of(context).showSnackBar(SnackBar(
+      content: Text(message),
+    ));
+  }
 }
 
 int fib(int n) {
   int number1 = n - 1;
   int number2 = n - 2;
-
   if (1 == n) {
     return 0;
   } else if (0 == n) {
@@ -129,49 +113,47 @@ int fib(int n) {
   }
 }
 
-class SmoothAnimationWidget extends StatefulWidget {
+class AnimationWidget extends StatefulWidget {
   @override
-  SmoothAnimationWidgetState createState() => SmoothAnimationWidgetState();
+  AnimationWidgetState createState() {
+    return AnimationWidgetState();
+  }
 }
 
-class SmoothAnimationWidgetState extends State<SmoothAnimationWidget>
+class AnimationWidgetState extends State<AnimationWidget>
     with TickerProviderStateMixin {
-  AnimationController _controller;
-  Animation<BorderRadius> borderRadius;
+  //
+  AnimationController _animationController;
+  Animation<BorderRadius> _borderRadius;
 
   @override
   void initState() {
     super.initState();
-
-    _controller =
+    _animationController =
         AnimationController(duration: const Duration(seconds: 1), vsync: this)
-          ..addStatusListener(
-            (status) {
-              if (status == AnimationStatus.completed) {
-                _controller.reverse();
-              } else if (status == AnimationStatus.dismissed) {
-                _controller.forward();
-              }
-            },
-          );
+          ..addStatusListener((status) {
+            if (status == AnimationStatus.completed) {
+              _animationController.reverse();
+            } else if (status == AnimationStatus.dismissed) {
+              _animationController.forward();
+            }
+          });
 
-    borderRadius = BorderRadiusTween(
+    _borderRadius = BorderRadiusTween(
       begin: BorderRadius.circular(100.0),
       end: BorderRadius.circular(0.0),
-    ).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: Curves.linear,
-      ),
-    );
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.linear,
+    ));
 
-    _controller.forward();
+    _animationController.forward();
   }
 
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      animation: borderRadius,
+      animation: _borderRadius,
       builder: (context, child) {
         return Center(
           child: Container(
@@ -186,7 +168,7 @@ class SmoothAnimationWidgetState extends State<SmoothAnimationWidget>
                 begin: Alignment.topLeft,
                 colors: [Colors.blueAccent, Colors.redAccent],
               ),
-              borderRadius: borderRadius.value,
+              borderRadius: _borderRadius.value,
             ),
           ),
         );
@@ -196,7 +178,7 @@ class SmoothAnimationWidgetState extends State<SmoothAnimationWidget>
 
   @override
   void dispose() {
-    _controller.dispose();
+    _animationController.dispose();
     super.dispose();
   }
 }
