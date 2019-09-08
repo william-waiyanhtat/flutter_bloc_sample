@@ -104,9 +104,9 @@ class _PerformancePageState extends State<PerformancePage> {
 int fib(int n) {
   int number1 = n - 1;
   int number2 = n - 2;
-  if (1 == n) {
+  if (0 == n) {
     return 0;
-  } else if (0 == n) {
+  } else if (1 == n) {
     return 1;
   } else {
     return (fib(number1) + fib(number2));

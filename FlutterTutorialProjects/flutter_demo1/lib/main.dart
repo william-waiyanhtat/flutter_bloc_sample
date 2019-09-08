@@ -1,8 +1,5 @@
-import 'dart:isolate';
-
 import 'package:flutter/material.dart';
-import 'widgets/Grid2/GridViewDemo.dart';
-import 'others/Isolates/IsolateDemo.dart';
+import 'others/Isolates/IsolateDemo2.dart';
 
 void main() {
   runApp(
