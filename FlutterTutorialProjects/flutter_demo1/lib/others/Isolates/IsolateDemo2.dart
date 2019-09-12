@@ -40,6 +40,27 @@ class _PerformancePageState extends State<PerformancePage> {
     });
   }
 
+  void _pause() {
+    if (null != _isolate) {
+      _paused ? _isolate.resume(capability) : capability = _isolate.pause();
+      setState(() {
+        _paused = !_paused;
+        _threadStatus = _paused ? 'Paused' : 'Resumed';
+      });
+    }
+  }
+
+  void _stop() {
+    if (null != _isolate) {
+      setState(() {
+        _running = false;
+      });
+      _receivePort.close();
+      _isolate.kill(priority: Isolate.immediate);
+      _isolate = null;
+    }
+  }
+
   static void _isolateHandler(ThreadParams threadParams) async {
     heavyOperation(threadParams);
   }
@@ -74,84 +95,64 @@ class _PerformancePageState extends State<PerformancePage> {
     });
   }
 
-  void _pause() {
-    if (null != _isolate) {
-      _paused ? _isolate.resume(capability) : capability = _isolate.pause();
-      setState(() {
-        _paused = !_paused;
-        _threadStatus = _paused ? 'Paused' : 'Resumed';
-      });
-    }
-  }
-
-  void _stop() {
-    if (null != _isolate) {
-      setState(() {
-        _running = false;
-      });
-      _receivePort.close();
-      _isolate.kill(priority: Isolate.immediate);
-      _isolate = null;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-        appBar: new AppBar(
-          title: new Text(widget.title),
+      appBar: new AppBar(
+        title: new Text(widget.title),
+      ),
+      body: new Container(
+        padding: EdgeInsets.all(20.0),
+        alignment: Alignment.center,
+        child: new Column(
+          children: <Widget>[
+            !_running
+                ? OutlineButton(
+                    child: Text('Start Isolate'),
+                    onPressed: () {
+                      _start();
+                    },
+                  )
+                : SizedBox(),
+            _running
+                ? OutlineButton(
+                    child: Text(_paused ? 'Resume' : 'Pause'),
+                    onPressed: () {
+                      _pause();
+                    },
+                  )
+                : SizedBox(),
+            _running
+                ? OutlineButton(
+                    child: Text('Stop Isolate'),
+                    onPressed: () {
+                      _stop();
+                    },
+                  )
+                : SizedBox(),
+            SizedBox(
+              height: 20.0,
+            ),
+            new Text(
+              _threadStatus,
+              style: TextStyle(
+                fontSize: 20.0,
+              ),
+            ),
+            SizedBox(
+              height: 20.0,
+            ),
+            new Text(
+              _message,
+              style: TextStyle(
+                fontSize: 40.0,
+                color: Colors.green,
+              ),
+            ),
+          ],
         ),
-        body: new Container(
-          padding: EdgeInsets.all(20.0),
-          alignment: Alignment.center,
-          child: new Column(
-            children: <Widget>[
-              !_running
-                  ? OutlineButton(
-                      child: Text('Start Isolate'),
-                      onPressed: () {
-                        _start();
-                      },
-                    )
-                  : SizedBox(),
-              _running
-                  ? OutlineButton(
-                      child: Text(_paused ? 'Resume' : 'Pause'),
-                      onPressed: () {
-                        _pause();
-                      },
-                    )
-                  : SizedBox(),
-              _running
-                  ? OutlineButton(
-                      child: Text('Stop Isolate'),
-                      onPressed: () {
-                        _stop();
-                      },
-                    )
-                  : SizedBox(),
-              SizedBox(
-                height: 20.0,
-              ),
-              new Text(
-                _threadStatus,
-                style: TextStyle(
-                  fontSize: 20.0,
-                ),
-              ),
-              SizedBox(
-                height: 20.0,
-              ),
-              new Text(
-                _message,
-                style: TextStyle(
-                  fontSize: 40.0,
-                  color: Colors.green,
-                ),
-              ),
-            ],
-          ),
-        ));
+      ),
+    );
   }
 }
 
