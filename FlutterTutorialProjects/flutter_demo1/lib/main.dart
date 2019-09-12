@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'others/Isolates/IsolateDemo2.dart';
+import 'others/Isolates/IsolateDemo3.dart';
 
 void main() {
   runApp(

@@ -1,8 +1,11 @@
+import 'dart:math';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'dart:isolate';
-import 'dart:async';
 
 class PerformancePage extends StatefulWidget {
+  final String title = "Isolates Demo";
+
   @override
   _PerformancePageState createState() => _PerformancePageState();
 }
@@ -11,41 +14,80 @@ class _PerformancePageState extends State<PerformancePage> {
   //
   Isolate _isolate;
   bool _running = false;
-  static int _counter = 0;
-  String notification = "";
+  bool _paused = false;
+  String _message = '';
+  String _threadStatus = '';
   ReceivePort _receivePort;
+  Capability capability;
 
   void _start() async {
-    _running = true;
+    if (_running) {
+      return;
+    }
+    setState(() {
+      _running = true;
+      _message = 'Starting...';
+      _threadStatus = 'Running...';
+    });
     _receivePort = ReceivePort();
-    ThreadParams threadParams = new ThreadParams(1, _receivePort.sendPort);
-    _isolate = await Isolate.spawn(_checkTimer, threadParams);
+    ThreadParams threadParams = new ThreadParams(10, _receivePort.sendPort);
+    _isolate = await Isolate.spawn(_isolateHandler, threadParams);
     _receivePort.listen(_handleMessage, onDone: () {
       print("done!");
+      setState(() {
+        _threadStatus = 'Stopped';
+      });
     });
   }
 
-  static void _checkTimer(ThreadParams threadParams) async {
-    Timer.periodic(new Duration(seconds: 1), (Timer t) {
-      _counter++;
-      String msg = 'notification ' + _counter.toString();
-      print('SEND: ' + msg);
-      threadParams.sendPort.send(msg);
+  static void _isolateHandler(ThreadParams threadParams) async {
+    heavyOperation(threadParams);
+  }
+
+  static void heavyOperation(ThreadParams threadParams) async {
+    int count = 10000;
+    while (true) {
+      int sum = 0;
+      for (int i = 0; i < count; i++) {
+        sum += await computeSum(1000);
+      }
+      count += 10;
+      threadParams.sendPort.send((sum * threadParams.val).toString());
+    }
+  }
+
+  static Future<int> computeSum(int num) {
+    Random random = Random();
+    return Future(() {
+      int sum = 0;
+      for (int i = 0; i < num; i++) {
+        sum += random.nextInt(100);
+      }
+      return sum;
     });
   }
 
   void _handleMessage(dynamic data) {
     print('RECEIVED: ' + data);
     setState(() {
-      notification = data;
+      _message = data;
     });
   }
 
+  void _pause() {
+    if (null != _isolate) {
+      _paused ? _isolate.resume(capability) : capability = _isolate.pause();
+      setState(() {
+        _paused = !_paused;
+        _threadStatus = _paused ? 'Paused' : 'Resumed';
+      });
+    }
+  }
+
   void _stop() {
-    if (_isolate != null) {
+    if (null != _isolate) {
       setState(() {
         _running = false;
-        notification = '';
       });
       _receivePort.close();
       _isolate.kill(priority: Isolate.immediate);
@@ -56,28 +98,60 @@ class _PerformancePageState extends State<PerformancePage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      appBar: new AppBar(
-        title: new Text("Isolates"),
-      ),
-      body: new Center(
-        child: new Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            OutlineButton(
-              child: Text('Send Message'),
-            ),
-            new Text(
-              notification,
-            ),
-          ],
+        appBar: new AppBar(
+          title: new Text(widget.title),
         ),
-      ),
-      floatingActionButton: new FloatingActionButton(
-        onPressed: _running ? _stop : _start,
-        tooltip: _running ? 'Timer stop' : 'Timer start',
-        child: _running ? new Icon(Icons.stop) : new Icon(Icons.play_arrow),
-      ),
-    );
+        body: new Container(
+          padding: EdgeInsets.all(20.0),
+          alignment: Alignment.center,
+          child: new Column(
+            children: <Widget>[
+              !_running
+                  ? OutlineButton(
+                      child: Text('Start Isolate'),
+                      onPressed: () {
+                        _start();
+                      },
+                    )
+                  : SizedBox(),
+              _running
+                  ? OutlineButton(
+                      child: Text(_paused ? 'Resume' : 'Pause'),
+                      onPressed: () {
+                        _pause();
+                      },
+                    )
+                  : SizedBox(),
+              _running
+                  ? OutlineButton(
+                      child: Text('Stop Isolate'),
+                      onPressed: () {
+                        _stop();
+                      },
+                    )
+                  : SizedBox(),
+              SizedBox(
+                height: 20.0,
+              ),
+              new Text(
+                _threadStatus,
+                style: TextStyle(
+                  fontSize: 20.0,
+                ),
+              ),
+              SizedBox(
+                height: 20.0,
+              ),
+              new Text(
+                _message,
+                style: TextStyle(
+                  fontSize: 40.0,
+                  color: Colors.green,
+                ),
+              ),
+            ],
+          ),
+        ));
   }
 }
 
