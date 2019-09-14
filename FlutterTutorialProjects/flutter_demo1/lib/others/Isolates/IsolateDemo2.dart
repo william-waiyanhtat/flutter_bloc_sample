@@ -89,7 +89,6 @@ class _PerformancePageState extends State<PerformancePage> {
   }
 
   void _handleMessage(dynamic data) {
-    print('RECEIVED: ' + data);
     setState(() {
       _message = data;
     });
