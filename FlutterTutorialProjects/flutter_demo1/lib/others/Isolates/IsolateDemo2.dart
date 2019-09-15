@@ -1,7 +1,7 @@
-import 'dart:math';
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'dart:isolate';
+import 'dart:math';
+import 'dart:async';
 
 class PerformancePage extends StatefulWidget {
   final String title = "Isolates Demo";
@@ -18,7 +18,7 @@ class _PerformancePageState extends State<PerformancePage> {
   String _message = '';
   String _threadStatus = '';
   ReceivePort _receivePort;
-  Capability capability;
+  Capability _capability;
 
   void _start() async {
     if (_running) {
@@ -30,10 +30,12 @@ class _PerformancePageState extends State<PerformancePage> {
       _threadStatus = 'Running...';
     });
     _receivePort = ReceivePort();
-    ThreadParams threadParams = new ThreadParams(10, _receivePort.sendPort);
-    _isolate = await Isolate.spawn(_isolateHandler, threadParams);
+    ThreadParams threadParams = ThreadParams(2000, _receivePort.sendPort);
+    _isolate = await Isolate.spawn(
+      _isolateHandler,
+      threadParams,
+    );
     _receivePort.listen(_handleMessage, onDone: () {
-      print("done!");
       setState(() {
         _threadStatus = 'Stopped';
       });
@@ -42,7 +44,7 @@ class _PerformancePageState extends State<PerformancePage> {
 
   void _pause() {
     if (null != _isolate) {
-      _paused ? _isolate.resume(capability) : capability = _isolate.pause();
+      _paused ? _isolate.resume(_capability) : _capability = _isolate.pause();
       setState(() {
         _paused = !_paused;
         _threadStatus = _paused ? 'Paused' : 'Resumed';
@@ -61,6 +63,12 @@ class _PerformancePageState extends State<PerformancePage> {
     }
   }
 
+  void _handleMessage(dynamic data) {
+    setState(() {
+      _message = data;
+    });
+  }
+
   static void _isolateHandler(ThreadParams threadParams) async {
     heavyOperation(threadParams);
   }
@@ -72,8 +80,8 @@ class _PerformancePageState extends State<PerformancePage> {
       for (int i = 0; i < count; i++) {
         sum += await computeSum(1000);
       }
-      count += 10;
-      threadParams.sendPort.send((sum * threadParams.val).toString());
+      count += threadParams.val;
+      threadParams.sendPort.send(sum.toString());
     }
   }
 
@@ -85,12 +93,6 @@ class _PerformancePageState extends State<PerformancePage> {
         sum += random.nextInt(100);
       }
       return sum;
-    });
-  }
-
-  void _handleMessage(dynamic data) {
-    setState(() {
-      _message = data;
     });
   }
 
@@ -115,7 +117,7 @@ class _PerformancePageState extends State<PerformancePage> {
                 : SizedBox(),
             _running
                 ? OutlineButton(
-                    child: Text(_paused ? 'Resume' : 'Pause'),
+                    child: Text(_paused ? 'Resume Isolate' : 'Pause Isolate'),
                     onPressed: () {
                       _pause();
                     },
@@ -132,7 +134,7 @@ class _PerformancePageState extends State<PerformancePage> {
             SizedBox(
               height: 20.0,
             ),
-            new Text(
+            Text(
               _threadStatus,
               style: TextStyle(
                 fontSize: 20.0,
@@ -141,10 +143,10 @@ class _PerformancePageState extends State<PerformancePage> {
             SizedBox(
               height: 20.0,
             ),
-            new Text(
+            Text(
               _message,
               style: TextStyle(
-                fontSize: 40.0,
+                fontSize: 20.0,
                 color: Colors.green,
               ),
             ),
