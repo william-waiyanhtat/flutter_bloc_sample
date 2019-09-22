@@ -5,7 +5,7 @@ import 'Employees.dart';
 class Services {
   static const ROOT = 'http://localhost/Employees/employee_actions.php';
   static const String _GET_ACTION = 'GET_ALL';
-  static const String _CREATE_ACTION = 'CREATE_TABLE';
+  static const String _CREATE_TABLE = 'CREATE_TABLE';
   static const String _ADD_EMP_ACTION = 'ADD_EMP';
   static const String _UPDATE_EMP_ACTION = 'UPDATE_EMP';
   static const String _DELETE_EMP_ACTIOn = 'DELETE_EMP';
@@ -20,7 +20,7 @@ class Services {
         List<Employee> list = parsePhotos(response.body);
         return list;
       } else {
-        throw Exception("Error");
+        throw List<Employee>();
       }
     } catch (e) {
       return List<Employee>();
@@ -32,33 +32,42 @@ class Services {
     return parsed.map<Employee>((json) => Employee.fromJson(json)).toList();
   }
 
-  // static Future<bool> createTable() async {
-  //   try {
-  //     final response = await http.get(_create_table_url);
-  //     print("createTable >> Response:: ${response.body}");
-  //     return 'success' == response.body;
-  //   } catch (e) {
-  //     return false;
-  //   }
-  // }
+  static Future<String> createTable() async {
+    try {
+      var map = new Map<String, dynamic>();
+      map["action"] = _CREATE_TABLE;
+      final response = await http.post(ROOT, body: map);
+      print("createTable >> Response:: ${response.body}");
+      return response.body;
+    } catch (e) {
+      return 'error';
+    }
+  }
 
-  // static Future<bool> addEmployee(String firstName, String lastName) async {
-  //   try {
-  //     final response = await http.get(_create_table_url);
-  //     print("addEmployee >> Response:: ${response.body}");
-  //     return 'success' == response.body;
-  //   } catch (e) {
-  //     return false;
-  //   }
-  // }
+  static Future<String> addEmployee(String firstName, String lastName) async {
+    try {
+      var map = new Map<String, dynamic>();
+      map["action"] = _ADD_EMP_ACTION;
+      map["first_name"] = firstName;
+      map["last_name"] = lastName;
+      final response = await http.post(ROOT, body: map);
+      print("addEmployee >> Response:: ${response.body}");
+      return response.body;
+    } catch (e) {
+      return 'error';
+    }
+  }
 
-  // static Future<bool> deleteEmployee(String empId) async {
-  //   try {
-  //     final response = await http.get(_delete_employee_url);
-  //     print("deleteEmployee >> Response:: ${response.body}");
-  //     return 'success' == response.body;
-  //   } catch (e) {
-  //     return false;
-  //   }
-  // }
+  static Future<String> deleteEmployee(String empId) async {
+    try {
+      var map = new Map<String, dynamic>();
+      map["action"] = _DELETE_EMP_ACTIOn;
+      map["emp_id"] = empId;
+      final response = await http.post(ROOT, body: map);
+      print("deleteEmployee >> Response:: ${response.body}");
+      return response.body;
+    } catch (e) {
+      return 'error';
+    }
+  }
 }

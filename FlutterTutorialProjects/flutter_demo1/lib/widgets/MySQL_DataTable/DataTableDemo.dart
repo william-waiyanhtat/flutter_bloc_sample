@@ -16,18 +16,42 @@ class DataTableDemoState extends State<DataTableDemo> {
   List<Employee> _selectedEmployees;
   bool sort;
   bool selected;
+  GlobalKey<ScaffoldState> scaffoldKey;
+  TextEditingController controller = TextEditingController();
+  String _firstName;
+  String _lastName;
 
   @override
   void initState() {
     sort = false;
     selected = false;
+    _firstName = '';
+    _lastName = '';
     _selectedEmployees = [];
     _employees = [];
+    scaffoldKey = GlobalKey();
     _getEmployees();
     super.initState();
   }
 
-  _addEmployee() {}
+  _createTable() {
+    Services.createTable().then((result) {
+      showSnackBar(context, result);
+    });
+  }
+
+  _addEmployee() {
+    if (_firstName.trim().isEmpty || _lastName.trim().isEmpty) {
+      return;
+    }
+    Services.addEmployee(_firstName, _lastName).then((result) {
+      if (result == 'success') {
+        _getEmployees();
+      }
+      showSnackBar(context, result);
+    });
+  }
+
   _getEmployees() {
     Services.getEmployees().then((employees) {
       setState(() {
@@ -35,6 +59,23 @@ class DataTableDemoState extends State<DataTableDemo> {
       });
       print("Length: ${employees.length}");
     });
+  }
+
+  _deleteEmployee() {
+    if (_selectedEmployees.isNotEmpty) {
+      List<Employee> temp = [];
+      temp.addAll(_selectedEmployees);
+      for (Employee employee in temp) {
+        Services.deleteEmployee(employee.id).then((result) {
+          if (result == 'success') {
+            setState(() {
+              _employees.remove(employee);
+              _selectedEmployees.remove(employee);
+            });
+          }
+        });
+      }
+    }
   }
 
   _onSelectedRow(bool selected, Employee employee) async {
@@ -47,97 +88,81 @@ class DataTableDemoState extends State<DataTableDemo> {
     });
   }
 
-  _onSortColumn(int columnIndex, bool ascending) async {
-    if (0 == columnIndex) {
-      if (ascending) {
-        _employees.sort((a, b) => a.firstName.compareTo(b.firstName));
-      } else {
-        _employees.sort((a, b) => b.firstName.compareTo(a.firstName));
-      }
-    }
-  }
-
-  _deleteSelected() async {
-    setState(() {
-      if (_selectedEmployees.isNotEmpty) {
-        List<Employee> temp = [];
-        temp.addAll(_selectedEmployees);
-        for (Employee employee in temp) {
-          _employees.remove(employee);
-          _selectedEmployees.remove(employee);
-        }
-      }
-    });
-  }
-
   SingleChildScrollView _dataBody() {
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
-      child: DataTable(
-        sortAscending: sort,
-        sortColumnIndex: 0,
-        columns: [
-          DataColumn(
-              label: Text("ID"),
-              numeric: false,
-              onSort: (columnIndex, ascending) {
-                setState(() {
-                  sort = !sort;
-                });
-                _onSortColumn(columnIndex, ascending);
-              },
-              tooltip: "This is the employee id"),
-          DataColumn(
-              label: Text(
-                "FIRST NAME",
-              ),
-              numeric: false,
-              onSort: (i, b) {},
-              tooltip: "This is the last name"),
-          DataColumn(
-              label: Text("LAST NAME"),
-              numeric: false,
-              onSort: (i, b) {},
-              tooltip: "This is the last name"),
-        ],
-        rows: _employees
-            .map(
-              (employee) => DataRow(
-                selected: _selectedEmployees.contains(employee),
-                onSelectChanged: (b) {
-                  _onSelectedRow(b, employee);
-                },
-                cells: [
-                  DataCell(
-                    Text(employee.id),
-                    onTap: () {
-                      print("Tapped " + employee.firstName);
-                    },
-                  ),
-                  DataCell(
-                    Text(employee.firstName.toUpperCase()),
-                  ),
-                  DataCell(
-                    Text(employee.lastName.toUpperCase()),
-                  ),
-                ],
-              ),
-            )
-            .toList(),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: DataTable(
+          columns: [
+            DataColumn(
+                label: Text("ID"),
+                numeric: false,
+                tooltip: "This is the employee id"),
+            DataColumn(
+                label: Text(
+                  "FIRST NAME",
+                ),
+                numeric: false,
+                tooltip: "This is the last name"),
+            DataColumn(
+                label: Text("LAST NAME"),
+                numeric: false,
+                tooltip: "This is the last name"),
+          ],
+          rows: _employees
+              .map(
+                (employee) => DataRow(
+                  selected: _selectedEmployees.contains(employee),
+                  onSelectChanged: (b) {
+                    _onSelectedRow(b, employee);
+                  },
+                  cells: [
+                    DataCell(
+                      Text(employee.id),
+                      onTap: () {
+                        print("Tapped " + employee.firstName);
+                      },
+                    ),
+                    DataCell(
+                      Text(
+                        employee.firstName.toUpperCase(),
+                      ),
+                    ),
+                    DataCell(
+                      Text(
+                        employee.lastName.toUpperCase(),
+                        overflow: TextOverflow.ellipsis,
+                        softWrap: true,
+                        maxLines: 1,
+                      ),
+                    ),
+                  ],
+                ),
+              )
+              .toList(),
+        ),
       ),
     );
+  }
+
+  showSnackBar(context, message) {
+    scaffoldKey.currentState.showSnackBar(SnackBar(
+      content: Text(message),
+    ));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldKey,
       appBar: AppBar(
         title: Text("SELECTED [${_selectedEmployees.length}]"),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.add),
             onPressed: () {
-              _addEmployee();
+              _createTable();
             },
           ),
           IconButton(
@@ -151,12 +176,49 @@ class DataTableDemoState extends State<DataTableDemo> {
             onPressed: _selectedEmployees.isEmpty
                 ? null
                 : () {
-                    _deleteSelected();
+                    _deleteEmployee();
                   },
           ),
         ],
       ),
-      body: _dataBody(),
+      body: Container(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.all(20.0),
+              child: TextField(
+                onChanged: ((text) {
+                  _firstName = text;
+                }),
+                decoration: InputDecoration.collapsed(
+                  hintText: "Enter First Name",
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(20.0),
+              child: TextField(
+                onChanged: ((text) {
+                  _lastName = text;
+                }),
+                decoration: InputDecoration.collapsed(
+                  hintText: "Enter Last Name",
+                ),
+              ),
+            ),
+            Expanded(
+              child: _dataBody(),
+            )
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          _addEmployee();
+        },
+        child: Icon(Icons.add),
+      ),
     );
   }
 }
