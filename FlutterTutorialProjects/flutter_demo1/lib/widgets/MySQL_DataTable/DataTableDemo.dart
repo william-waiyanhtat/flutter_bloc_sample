@@ -14,24 +14,19 @@ class DataTableDemo extends StatefulWidget {
 class DataTableDemoState extends State<DataTableDemo> {
   List<Employee> _employees;
   List<Employee> _selectedEmployees;
-  bool sort;
-  bool selected;
-  GlobalKey<ScaffoldState> scaffoldKey;
-  TextEditingController controller = TextEditingController();
-  String _firstName;
-  String _lastName;
+  GlobalKey<ScaffoldState> _scaffoldKey;
+  TextEditingController _firstNameController;
+  TextEditingController _lastNameController;
 
   @override
   void initState() {
-    sort = false;
-    selected = false;
-    _firstName = '';
-    _lastName = '';
+    super.initState();
     _selectedEmployees = [];
     _employees = [];
-    scaffoldKey = GlobalKey();
+    _scaffoldKey = GlobalKey();
+    _firstNameController = TextEditingController();
+    _lastNameController = TextEditingController();
     _getEmployees();
-    super.initState();
   }
 
   _createTable() {
@@ -41,13 +36,18 @@ class DataTableDemoState extends State<DataTableDemo> {
   }
 
   _addEmployee() {
-    if (_firstName.trim().isEmpty || _lastName.trim().isEmpty) {
+    if (_firstNameController.text.trim().isEmpty ||
+        _lastNameController.text.trim().isEmpty) {
+      print("Empty fields");
       return;
     }
-    Services.addEmployee(_firstName, _lastName).then((result) {
+    Services.addEmployee(_firstNameController.text, _lastNameController.text)
+        .then((result) {
       if (result == 'success') {
         _getEmployees();
       }
+      _firstNameController.text = '';
+      _lastNameController.text = '';
       showSnackBar(context, result);
     });
   }
@@ -61,7 +61,12 @@ class DataTableDemoState extends State<DataTableDemo> {
     });
   }
 
-  _deleteEmployee() {
+  _deleteEmployee(Employee employee) {
+    if (null != employee) {
+      _selectedEmployees.clear();
+      _selectedEmployees.add(employee);
+    }
+
     if (_selectedEmployees.isNotEmpty) {
       List<Employee> temp = [];
       temp.addAll(_selectedEmployees);
@@ -80,6 +85,8 @@ class DataTableDemoState extends State<DataTableDemo> {
 
   _onSelectedRow(bool selected, Employee employee) async {
     setState(() {
+      _firstNameController.text = employee.firstName;
+      _lastNameController.text = employee.lastName;
       if (selected) {
         _selectedEmployees.add(employee);
       } else {
@@ -109,6 +116,10 @@ class DataTableDemoState extends State<DataTableDemo> {
                 label: Text("LAST NAME"),
                 numeric: false,
                 tooltip: "This is the last name"),
+            DataColumn(
+                label: Text("DELETE"),
+                numeric: false,
+                tooltip: "Delete Action"),
           ],
           rows: _employees
               .map(
@@ -128,14 +139,28 @@ class DataTableDemoState extends State<DataTableDemo> {
                       Text(
                         employee.firstName.toUpperCase(),
                       ),
+                      onTap: () {
+                        print("Tapped " + employee.firstName);
+                      },
                     ),
                     DataCell(
                       Text(
                         employee.lastName.toUpperCase(),
-                        overflow: TextOverflow.ellipsis,
-                        softWrap: true,
-                        maxLines: 1,
                       ),
+                      onTap: () {
+                        print("Tapped " + employee.firstName);
+                      },
+                    ),
+                    DataCell(
+                      IconButton(
+                        icon: Icon(Icons.delete),
+                        onPressed: () {
+                          _deleteEmployee(employee);
+                        },
+                      ),
+                      onTap: () {
+                        print("Tapped " + employee.firstName);
+                      },
                     ),
                   ],
                 ),
@@ -147,7 +172,7 @@ class DataTableDemoState extends State<DataTableDemo> {
   }
 
   showSnackBar(context, message) {
-    scaffoldKey.currentState.showSnackBar(SnackBar(
+    _scaffoldKey.currentState.showSnackBar(SnackBar(
       content: Text(message),
     ));
   }
@@ -155,9 +180,9 @@ class DataTableDemoState extends State<DataTableDemo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: scaffoldKey,
+      key: _scaffoldKey,
       appBar: AppBar(
-        title: Text("SELECTED [${_selectedEmployees.length}]"),
+        title: Text(widget.title),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.add),
@@ -176,7 +201,7 @@ class DataTableDemoState extends State<DataTableDemo> {
             onPressed: _selectedEmployees.isEmpty
                 ? null
                 : () {
-                    _deleteEmployee();
+                    _deleteEmployee(null);
                   },
           ),
         ],
@@ -188,22 +213,18 @@ class DataTableDemoState extends State<DataTableDemo> {
             Padding(
               padding: EdgeInsets.all(20.0),
               child: TextField(
-                onChanged: ((text) {
-                  _firstName = text;
-                }),
+                controller: _firstNameController,
                 decoration: InputDecoration.collapsed(
-                  hintText: "Enter First Name",
+                  hintText: "First Name",
                 ),
               ),
             ),
             Padding(
               padding: EdgeInsets.all(20.0),
               child: TextField(
-                onChanged: ((text) {
-                  _lastName = text;
-                }),
+                controller: _lastNameController,
                 decoration: InputDecoration.collapsed(
-                  hintText: "Enter Last Name",
+                  hintText: "Last Name",
                 ),
               ),
             ),

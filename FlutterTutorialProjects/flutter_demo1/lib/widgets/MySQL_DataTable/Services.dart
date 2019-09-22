@@ -8,7 +8,7 @@ class Services {
   static const String _CREATE_TABLE = 'CREATE_TABLE';
   static const String _ADD_EMP_ACTION = 'ADD_EMP';
   static const String _UPDATE_EMP_ACTION = 'UPDATE_EMP';
-  static const String _DELETE_EMP_ACTIOn = 'DELETE_EMP';
+  static const String _DELETE_EMP_ACTION = 'DELETE_EMP';
 
   static Future<List<Employee>> getEmployees() async {
     try {
@@ -61,7 +61,7 @@ class Services {
   static Future<String> deleteEmployee(String empId) async {
     try {
       var map = new Map<String, dynamic>();
-      map["action"] = _DELETE_EMP_ACTIOn;
+      map["action"] = _DELETE_EMP_ACTION;
       map["emp_id"] = empId;
       final response = await http.post(ROOT, body: map);
       print("deleteEmployee >> Response:: ${response.body}");
