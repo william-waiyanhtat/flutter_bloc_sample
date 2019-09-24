@@ -5,7 +5,7 @@ import 'Services.dart';
 class DataTableDemo extends StatefulWidget {
   DataTableDemo() : super();
 
-  final String title = "Flutter Data Table";
+  final String title = "Data Table Flutter Demo";
 
   @override
   DataTableDemoState createState() => DataTableDemoState();
@@ -13,38 +13,25 @@ class DataTableDemo extends StatefulWidget {
 
 class DataTableDemoState extends State<DataTableDemo> {
   List<Employee> _employees;
+  List<Employee> _selectedEmployees;
   GlobalKey<ScaffoldState> _scaffoldKey;
   TextEditingController _firstNameController;
   TextEditingController _lastNameController;
-  Employee _selectedEmployee;
-  bool _isUpdating;
-  String _titleProgress;
 
   @override
   void initState() {
     super.initState();
+    _selectedEmployees = [];
     _employees = [];
-    _isUpdating = false;
-    _titleProgress = widget.title;
     _scaffoldKey = GlobalKey();
     _firstNameController = TextEditingController();
     _lastNameController = TextEditingController();
     _getEmployees();
   }
 
-  _showProgress(String message) {
-    setState(() {
-      _titleProgress = message;
-    });
-  }
-
   _createTable() {
-    _showProgress('Creating Table...');
     Services.createTable().then((result) {
-      if ('success' == result) {
-        showSnackBar(context, result);
-        _getEmployees();
-      }
+      showSnackBar(context, result);
     });
   }
 
@@ -54,67 +41,70 @@ class DataTableDemoState extends State<DataTableDemo> {
       print("Empty fields");
       return;
     }
-    _showProgress('Adding Employee...');
     Services.addEmployee(_firstNameController.text, _lastNameController.text)
         .then((result) {
-      if ('success' == result) {
+      if (result == 'success') {
         _getEmployees();
       }
-      _clearValues();
+      _firstNameController.text = '';
+      _lastNameController.text = '';
+      showSnackBar(context, result);
     });
   }
 
   _getEmployees() {
-    _showProgress('Loading Employees...');
     Services.getEmployees().then((employees) {
       setState(() {
         _employees = employees;
       });
-      _showProgress(widget.title);
       print("Length: ${employees.length}");
     });
   }
 
+  // _deleteEmployee(Employee employee) {
+  //   if (null != employee) {
+  //     _selectedEmployees.clear();
+  //     _selectedEmployees.add(employee);
+  //   }
+
+  //   if (_selectedEmployees.isNotEmpty) {
+  //     List<Employee> temp = [];
+  //     temp.addAll(_selectedEmployees);
+  //     for (Employee employee in temp) {
+  //       Services.deleteEmployee(employee.id).then((result) {
+  //         if (result == 'success') {
+  //           setState(() {
+  //             _employees.remove(employee);
+  //             _selectedEmployees.remove(employee);
+  //           });
+  //         }
+  //       });
+  //     }
+  //   }
+  // }
+
   _deleteEmployee(Employee employee) {
-    _showProgress('Deleting Employee...');
     Services.deleteEmployee(employee.id).then((result) {
-      if ('success' == result) {
+      if (result == 'success') {
         setState(() {
           _employees.remove(employee);
+          _selectedEmployees.remove(employee);
         });
-        _getEmployees();
       }
     });
   }
 
-  _updateEmployee(Employee employee) {
-    _showProgress('Updating Employee...');
-    Services.updateEmployee(
-            employee.id, _firstNameController.text, _lastNameController.text)
-        .then((result) {
-      if ('success' == result) {
-        _getEmployees();
-        setState(() {
-          _isUpdating = false;
-        });
-        _firstNameController.text = '';
-        _lastNameController.text = '';
-      }
-    });
-  }
-
-  _setValues(Employee employee) {
-    _firstNameController.text = employee.firstName;
-    _lastNameController.text = employee.lastName;
-    setState(() {
-      _isUpdating = true;
-    });
-  }
-
-  _clearValues() {
-    _firstNameController.text = '';
-    _lastNameController.text = '';
-  }
+  // _onSelectedRow(bool selected, Employee employee) async {
+  //   setState(() {
+  //     _firstNameController.text = employee.firstName;
+  //     _lastNameController.text = employee.lastName;
+  //     if (selected) {
+  //       _selectedEmployees.add(employee);
+  //     } else {
+  //       _selectedEmployees.remove(employee);
+  //     }
+  //   });
+  // }
 
   SingleChildScrollView _dataBody() {
     return SingleChildScrollView(
@@ -129,12 +119,12 @@ class DataTableDemoState extends State<DataTableDemo> {
                 tooltip: "This is the employee id"),
             DataColumn(
                 label: Text(
-                  "FIRST",
+                  "FIRST NAME",
                 ),
                 numeric: false,
                 tooltip: "This is the last name"),
             DataColumn(
-                label: Text("LAST"),
+                label: Text("LAST NAME"),
                 numeric: false,
                 tooltip: "This is the last name"),
             DataColumn(
@@ -145,13 +135,15 @@ class DataTableDemoState extends State<DataTableDemo> {
           rows: _employees
               .map(
                 (employee) => DataRow(
+                  // selected: _selectedEmployees.contains(employee),
+                  // onSelectChanged: (b) {
+                  //   _onSelectedRow(b, employee);
+                  // },
                   cells: [
                     DataCell(
                       Text(employee.id),
                       onTap: () {
                         print("Tapped " + employee.firstName);
-                        _setValues(employee);
-                        _selectedEmployee = employee;
                       },
                     ),
                     DataCell(
@@ -160,8 +152,6 @@ class DataTableDemoState extends State<DataTableDemo> {
                       ),
                       onTap: () {
                         print("Tapped " + employee.firstName);
-                        _setValues(employee);
-                        _selectedEmployee = employee;
                       },
                     ),
                     DataCell(
@@ -170,8 +160,6 @@ class DataTableDemoState extends State<DataTableDemo> {
                       ),
                       onTap: () {
                         print("Tapped " + employee.firstName);
-                        _setValues(employee);
-                        _selectedEmployee = employee;
                       },
                     ),
                     DataCell(
@@ -205,7 +193,7 @@ class DataTableDemoState extends State<DataTableDemo> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Text(_titleProgress),
+        title: Text(widget.title),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.add),
@@ -243,27 +231,6 @@ class DataTableDemoState extends State<DataTableDemo> {
                 ),
               ),
             ),
-            _isUpdating
-                ? Row(
-                    children: <Widget>[
-                      OutlineButton(
-                        child: Text('UPDATE'),
-                        onPressed: () {
-                          _updateEmployee(_selectedEmployee);
-                        },
-                      ),
-                      OutlineButton(
-                        child: Text('CANCEL'),
-                        onPressed: () {
-                          setState(() {
-                            _isUpdating = false;
-                          });
-                          _clearValues();
-                        },
-                      ),
-                    ],
-                  )
-                : Container(),
             Expanded(
               child: _dataBody(),
             )

@@ -58,6 +58,22 @@ class Services {
     }
   }
 
+  static Future<String> updateEmployee(
+      String empId, String firstName, String lastName) async {
+    try {
+      var map = new Map<String, dynamic>();
+      map["action"] = _UPDATE_EMP_ACTION;
+      map["emp_id"] = empId;
+      map["first_name"] = firstName;
+      map["last_name"] = lastName;
+      final response = await http.post(ROOT, body: map);
+      print("deleteEmployee >> Response:: ${response.body}");
+      return response.body;
+    } catch (e) {
+      return 'error';
+    }
+  }
+
   static Future<String> deleteEmployee(String empId) async {
     try {
       var map = new Map<String, dynamic>();
