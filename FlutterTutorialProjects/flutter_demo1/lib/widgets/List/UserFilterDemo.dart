@@ -28,8 +28,7 @@ class Debouncer {
 }
 
 class UserFilterDemoState extends State<UserFilterDemo> {
-  // https://jsonplaceholder.typicode.com/users
-
+  //
   final _debouncer = Debouncer(milliseconds: 500);
   List<User> users = List();
   List<User> filteredUsers = List();

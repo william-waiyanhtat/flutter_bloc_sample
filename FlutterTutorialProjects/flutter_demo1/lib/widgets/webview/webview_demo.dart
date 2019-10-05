@@ -13,18 +13,20 @@ class WebViewTest extends StatefulWidget {
 class _WebViewTestState extends State<WebViewTest> {
   //
   WebViewController _webViewController;
-  String filePath = 'files/test.html';
+  // String filePath = 'files/test.html';
+
+  String filePath = 'file:///android_asset/test.html';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Webview Demo')),
       body: WebView(
-        initialUrl: '',
+        initialUrl: filePath,
         javascriptMode: JavascriptMode.unrestricted,
         onWebViewCreated: (WebViewController webViewController) {
           _webViewController = webViewController;
-          _loadHtmlFromAssets();
+          //_loadHtmlFromAssets();
         },
       ),
       floatingActionButton: FloatingActionButton(

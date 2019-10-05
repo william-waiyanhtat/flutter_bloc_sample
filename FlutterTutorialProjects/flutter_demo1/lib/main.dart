@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'others/Isolates/IsolateDemo2.dart';
-import 'widgets/MySQL_DataTable/DataTableDemo.dart';
+import 'package:flutter_demo1/widgets/webview/webview2.dart';
+import 'widgets/DataTableMySqlDemo/DataTableDemo.dart';
+import 'widgets/webview/WebViewLocal.dart';
+import 'widgets/webview/webview_demo.dart';
 
 void main() {
   runApp(
