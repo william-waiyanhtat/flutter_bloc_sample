@@ -13,6 +13,18 @@ class DataTableDemo extends StatefulWidget {
   DataTableDemoState createState() => DataTableDemoState();
 }
 
+// Now we will write a class that will help in searching.
+// This is called a Debouncer class.
+// I have made other videos explaining about the debouncer classes
+// The link is provided in the description or tap the 'i' button on the right corner of the video.
+// The Debouncer class helps to add a delay to the search
+// that means when the class will wait for the user to stop for a defined time
+// and then start searching
+// So if the user is continuosly typing without any delay, it wont search
+// This helps to keep the app more performant and if the search is directly hitting the server
+// it keeps less hit on the server as well.
+// Lets write the Debouncer class
+
 class Debouncer {
   final int milliseconds;
   VoidCallback action;
@@ -22,14 +34,17 @@ class Debouncer {
 
   run(VoidCallback action) {
     if (null != _timer) {
-      _timer.cancel();
+      _timer
+          .cancel(); // when the user is continuosly typing, this cancels the timer
     }
+    // then we will start a new timer looking for the user to stop
     _timer = Timer(Duration(milliseconds: milliseconds), action);
   }
 }
 
 class DataTableDemoState extends State<DataTableDemo> {
   List<Employee> _employees;
+  // this list will hold the filtered employees
   List<Employee> _filterEmployees;
   GlobalKey<ScaffoldState> _scaffoldKey;
   // controller for the First Name TextField we are going to create.
@@ -39,12 +54,21 @@ class DataTableDemoState extends State<DataTableDemo> {
   Employee _selectedEmployee;
   bool _isUpdating;
   String _titleProgress;
-  final _debouncer = Debouncer(milliseconds: 500);
+  // This will wait for 500 milliseconds after the user has stopped typing.
+  // This puts less pressure on the device while searching.
+  // If the search is done on the server while typing, it keeps the
+  // server hit down, thereby improving the performance and conserving
+  // battery life...
+  final _debouncer = Debouncer(milliseconds: 2000);
+  // Lets increase the time to wait and search to 2 seconds.
+  // So now its searching after 2 seconds when the user stops typing...
+  // That's how we can do filtering in Flutter DataTables.
 
   @override
   void initState() {
     super.initState();
     _employees = [];
+    _filterEmployees = [];
     _isUpdating = false;
     _titleProgress = widget.title;
     _scaffoldKey = GlobalKey(); // key to get the context to show a SnackBar
@@ -100,6 +124,7 @@ class DataTableDemoState extends State<DataTableDemo> {
     Services.getEmployees().then((employees) {
       setState(() {
         _employees = employees;
+        // Initialize to the list from Server when reloading...
         _filterEmployees = employees;
       });
       _showProgress(widget.title); // Reset the title...
@@ -173,6 +198,7 @@ class DataTableDemoState extends State<DataTableDemo> {
               label: Text('DELETE'),
             )
           ],
+          // the list should show the filtered list now
           rows: _filterEmployees
               .map(
                 (employee) => DataRow(cells: [
@@ -230,6 +256,7 @@ class DataTableDemoState extends State<DataTableDemo> {
     );
   }
 
+  // Let's add a searchfield to search in the DataTable.
   searchField() {
     return Padding(
       padding: EdgeInsets.all(20.0),
@@ -239,7 +266,10 @@ class DataTableDemoState extends State<DataTableDemo> {
           hintText: 'Filter by First name or Last name',
         ),
         onChanged: (string) {
+          // We will start filtering when the user types in the textfield.
+          // Run the debouncer and start searching
           _debouncer.run(() {
+            // Filter the original List and update the Filter list
             setState(() {
               _filterEmployees = _employees
                   .where((u) => (u.firstName
