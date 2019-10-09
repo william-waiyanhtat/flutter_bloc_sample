@@ -1,50 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import 'dart:async';
-import 'dart:convert';
-import 'dart:typed_data';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'Utility.dart';
+import 'DBHelper.dart';
+import 'Photo.dart';
 
-class PickImageDemo extends StatefulWidget {
-  PickImageDemo() : super();
+class SaveImageDemo extends StatefulWidget {
+  SaveImageDemo() : super();
 
   final String title = "Flutter Pick Image demo";
 
   @override
-  _PickImageDemoState createState() => _PickImageDemoState();
+  _SaveImageDemoState createState() => _SaveImageDemoState();
 }
 
-class Utility {
-  static const String KEY = "IMAGE_KEY";
-
-  static Future<String> getImageFromPreferences() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString(KEY) ?? null;
-  }
-
-  static Future<bool> saveImageToPreferences(String value) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.setString(KEY, value);
-  }
-
-  static Image imageFromBase64String(String base64String) {
-    return Image.memory(base64Decode(base64String));
-  }
-
-  static Uint8List dataFromBase64String(String base64String) {
-    return base64Decode(base64String);
-  }
-
-  String base64String(Uint8List data) {
-    return base64Encode(data);
-  }
-}
-
-class _PickImageDemoState extends State<PickImageDemo> {
+class _SaveImageDemoState extends State<SaveImageDemo> {
   //
   Future<File> imageFile;
   Image image;
+  DBHelper dbHelper;
+  List<Photo> images;
+
+  @override
+  void initState() {
+    super.initState();
+    images = [];
+    dbHelper = new DBHelper();
+    dbHelper.getPhotos().then((val) {
+      images = val;
+    });
+  }
 
   pickImageFromGallery(ImageSource source) {
     setState(() {
@@ -52,16 +37,24 @@ class _PickImageDemoState extends State<PickImageDemo> {
     });
   }
 
-  loadImageFromPreferences() {
-    Utility.getImageFromPreferences().then((img) {
-      // print(img);
-      if (null == img) {
-        return;
-      }
-      setState(() {
-        image = Utility.imageFromBase64String(img);
-      });
-    });
+  gridview() {
+    return Padding(
+      padding: EdgeInsets.all(5.0),
+      child: GridView.count(
+        crossAxisCount: 2,
+        childAspectRatio: 1.0,
+        mainAxisSpacing: 4.0,
+        crossAxisSpacing: 4.0,
+        children: images.map(
+          (photo) {
+            return GridTile(
+              child:
+                  Text('sdsdsd'), // Utility.imageFromBase64String(photo.data),
+            );
+          },
+        ).toList(),
+      ),
+    );
   }
 
   Widget imageFromGallery() {
@@ -70,12 +63,19 @@ class _PickImageDemoState extends State<PickImageDemo> {
       builder: (BuildContext context, AsyncSnapshot<File> snapshot) {
         if (snapshot.connectionState == ConnectionState.done &&
             null != snapshot.data) {
-          //print(snapshot.data.path);
-          Utility.saveImageToPreferences(
-              base64Encode(snapshot.data.readAsBytesSync()));
+          print(snapshot.data.path);
+          String imgString = Utility.base64String(
+            snapshot.data.readAsBytesSync(),
+          );
+          Photo photo = Photo(0, imgString);
+          dbHelper.save(photo);
+          // setState(() {
+          //   images.add(photo);
+          // });
           return Image.file(
             snapshot.data,
           );
+          //return Container();
         } else if (null != snapshot.error) {
           return const Text(
             'Error Picking Image',
@@ -110,20 +110,13 @@ class _PickImageDemoState extends State<PickImageDemo> {
                 });
               },
             ),
-            SizedBox(
-              height: 20.0,
-            ),
             imageFromGallery(),
             SizedBox(
               height: 20.0,
             ),
-            OutlineButton(
-              child: Text('Load Image from Storage'),
-              onPressed: () {
-                loadImageFromPreferences();
-              },
+            Flexible(
+              child: gridview(),
             ),
-            null == image ? Container() : image,
           ],
         ),
       ),

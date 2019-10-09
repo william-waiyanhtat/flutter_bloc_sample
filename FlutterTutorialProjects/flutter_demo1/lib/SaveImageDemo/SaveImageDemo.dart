@@ -1,47 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import 'dart:async';
-import 'dart:convert';
-import 'dart:typed_data';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'Utility.dart';
 
-class PickImageDemo extends StatefulWidget {
-  PickImageDemo() : super();
+class SaveImageDemo extends StatefulWidget {
+  SaveImageDemo() : super();
 
   final String title = "Flutter Pick Image demo";
 
   @override
-  _PickImageDemoState createState() => _PickImageDemoState();
+  _SaveImageDemoState createState() => _SaveImageDemoState();
 }
 
-class Utility {
-  static const String KEY = "IMAGE_KEY";
-
-  static Future<String> getImageFromPreferences() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString(KEY) ?? null;
-  }
-
-  static Future<bool> saveImageToPreferences(String value) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.setString(KEY, value);
-  }
-
-  static Image imageFromBase64String(String base64String) {
-    return Image.memory(base64Decode(base64String));
-  }
-
-  static Uint8List dataFromBase64String(String base64String) {
-    return base64Decode(base64String);
-  }
-
-  String base64String(Uint8List data) {
-    return base64Encode(data);
-  }
-}
-
-class _PickImageDemoState extends State<PickImageDemo> {
+class _SaveImageDemoState extends State<SaveImageDemo> {
   //
   Future<File> imageFile;
   Image image;
@@ -54,7 +25,6 @@ class _PickImageDemoState extends State<PickImageDemo> {
 
   loadImageFromPreferences() {
     Utility.getImageFromPreferences().then((img) {
-      // print(img);
       if (null == img) {
         return;
       }
@@ -72,7 +42,7 @@ class _PickImageDemoState extends State<PickImageDemo> {
             null != snapshot.data) {
           //print(snapshot.data.path);
           Utility.saveImageToPreferences(
-              base64Encode(snapshot.data.readAsBytesSync()));
+              Utility.base64String(snapshot.data.readAsBytesSync()));
           return Image.file(
             snapshot.data,
           );
