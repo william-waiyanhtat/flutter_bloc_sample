@@ -4,7 +4,7 @@ import 'widgets/DataTableMySqlDemo/DataTableDemo.dart';
 import 'widgets/webview/WebViewLocal.dart';
 import 'widgets/webview/webview_demo.dart';
 import 'asset_demo/asset_demo.dart';
-import 'SaveImageDemo/SaveImageDemoSQLite.dart';
+import 'SaveImageDemo/SaveImageDemo.dart';
 
 void main() {
   runApp(

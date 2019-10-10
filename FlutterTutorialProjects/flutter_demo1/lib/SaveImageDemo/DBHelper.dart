@@ -49,17 +49,6 @@ class DBHelper {
     return employees;
   }
 
-  Future<int> delete(int id) async {
-    var dbClient = await db;
-    return await dbClient.delete(TABLE, where: '$ID = ?', whereArgs: [id]);
-  }
-
-  Future<int> update(Photo employee) async {
-    var dbClient = await db;
-    return await dbClient.update(TABLE, employee.toMap(),
-        where: '$ID = ?', whereArgs: [employee.id]);
-  }
-
   Future close() async {
     var dbClient = await db;
     dbClient.close();

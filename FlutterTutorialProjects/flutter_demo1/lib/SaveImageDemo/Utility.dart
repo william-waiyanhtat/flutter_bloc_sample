@@ -22,7 +22,6 @@ class Utility {
     return Image.memory(
       base64Decode(base64String),
       fit: BoxFit.fill,
-      height: 200,
     );
   }
 

@@ -6,7 +6,7 @@ import 'Utility.dart';
 class SaveImageDemo extends StatefulWidget {
   SaveImageDemo() : super();
 
-  final String title = "Flutter Pick Image demo";
+  final String title = "Flutter Save Image in Preferences";
 
   @override
   _SaveImageDemoState createState() => _SaveImageDemoState();
@@ -15,7 +15,7 @@ class SaveImageDemo extends StatefulWidget {
 class _SaveImageDemoState extends State<SaveImageDemo> {
   //
   Future<File> imageFile;
-  Image image;
+  Image imageFromPreferences;
 
   pickImageFromGallery(ImageSource source) {
     setState(() {
@@ -29,7 +29,7 @@ class _SaveImageDemoState extends State<SaveImageDemo> {
         return;
       }
       setState(() {
-        image = Utility.imageFromBase64String(img);
+        imageFromPreferences = Utility.imageFromBase64String(img);
       });
     });
   }
@@ -66,20 +66,28 @@ class _SaveImageDemoState extends State<SaveImageDemo> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.add),
+            onPressed: () {
+              pickImageFromGallery(ImageSource.gallery);
+              setState(() {
+                imageFromPreferences = null;
+              });
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.refresh),
+            onPressed: () {
+              loadImageFromPreferences();
+            },
+          ),
+        ],
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            OutlineButton(
-              child: Text("Select Image from Gallery"),
-              onPressed: () {
-                pickImageFromGallery(ImageSource.gallery);
-                setState(() {
-                  image = null;
-                });
-              },
-            ),
             SizedBox(
               height: 20.0,
             ),
@@ -87,13 +95,7 @@ class _SaveImageDemoState extends State<SaveImageDemo> {
             SizedBox(
               height: 20.0,
             ),
-            OutlineButton(
-              child: Text('Load Image from Storage'),
-              onPressed: () {
-                loadImageFromPreferences();
-              },
-            ),
-            null == image ? Container() : image,
+            null == imageFromPreferences ? Container() : imageFromPreferences,
           ],
         ),
       ),
