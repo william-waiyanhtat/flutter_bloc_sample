@@ -4,17 +4,18 @@ import 'dart:io';
 import 'Utility.dart';
 import 'DBHelper.dart';
 import 'Photo.dart';
+import 'dart:async';
 
 class SaveImageDemo extends StatefulWidget {
   SaveImageDemo() : super();
 
-  final String title = "Flutter Pick Image demo";
+  final String title = "Flutter Save Image in DB";
 
   @override
-  _SaveImageDemoState createState() => _SaveImageDemoState();
+  SaveImageDemoState createState() => SaveImageDemoState();
 }
 
-class _SaveImageDemoState extends State<SaveImageDemo> {
+class SaveImageDemoState extends State<SaveImageDemo> {
   //
   Future<File> imageFile;
   Image image;
@@ -26,14 +27,27 @@ class _SaveImageDemoState extends State<SaveImageDemo> {
     super.initState();
     images = [];
     dbHelper = new DBHelper();
+    refreshImages();
+  }
+
+  refreshImages() {
     dbHelper.getPhotos().then((val) {
-      images = val;
+      setState(() {
+        images.clear();
+        images.addAll(val);
+      });
     });
   }
 
   pickImageFromGallery(ImageSource source) {
-    setState(() {
-      imageFile = ImagePicker.pickImage(source: source);
+    ImagePicker.pickImage(source: source).then((imgFile) {
+      print("Returned ${imgFile.path}");
+      String imgString = Utility.base64String(
+        imgFile.readAsBytesSync(),
+      );
+      Photo photo = Photo(0, imgString);
+      dbHelper.save(photo);
+      refreshImages();
     });
   }
 
@@ -47,47 +61,10 @@ class _SaveImageDemoState extends State<SaveImageDemo> {
         crossAxisSpacing: 4.0,
         children: images.map(
           (photo) {
-            return GridTile(
-              child:
-                  Text('sdsdsd'), // Utility.imageFromBase64String(photo.data),
-            );
+            return Utility.imageFromBase64String(photo.photo_name);
           },
         ).toList(),
       ),
-    );
-  }
-
-  Widget imageFromGallery() {
-    return FutureBuilder<File>(
-      future: imageFile,
-      builder: (BuildContext context, AsyncSnapshot<File> snapshot) {
-        if (snapshot.connectionState == ConnectionState.done &&
-            null != snapshot.data) {
-          print(snapshot.data.path);
-          String imgString = Utility.base64String(
-            snapshot.data.readAsBytesSync(),
-          );
-          Photo photo = Photo(0, imgString);
-          dbHelper.save(photo);
-          // setState(() {
-          //   images.add(photo);
-          // });
-          return Image.file(
-            snapshot.data,
-          );
-          //return Container();
-        } else if (null != snapshot.error) {
-          return const Text(
-            'Error Picking Image',
-            textAlign: TextAlign.center,
-          );
-        } else {
-          return const Text(
-            'No Image Selected',
-            textAlign: TextAlign.center,
-          );
-        }
-      },
     );
   }
 
@@ -96,24 +73,19 @@ class _SaveImageDemoState extends State<SaveImageDemo> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.add),
+            onPressed: () {
+              pickImageFromGallery(ImageSource.gallery);
+            },
+          ),
+        ],
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            OutlineButton(
-              child: Text("Select Image from Gallery"),
-              onPressed: () {
-                pickImageFromGallery(ImageSource.gallery);
-                setState(() {
-                  image = null;
-                });
-              },
-            ),
-            imageFromGallery(),
-            SizedBox(
-              height: 20.0,
-            ),
             Flexible(
               child: gridview(),
             ),

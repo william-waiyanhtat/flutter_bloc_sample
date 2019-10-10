@@ -13,7 +13,7 @@ class DBHelper {
   static const String DB_NAME = 'photos.db';
 
   Future<Database> get db async {
-    if (_db != null) {
+    if (null != _db) {
       return _db;
     }
     _db = await initDb();
@@ -28,8 +28,7 @@ class DBHelper {
   }
 
   _onCreate(Database db, int version) async {
-    await db
-        .execute("CREATE TABLE $TABLE ($ID INTEGER PRIMARY KEY, $NAME TEXT)");
+    await db.execute("CREATE TABLE $TABLE ($ID INTEGER, $NAME TEXT)");
   }
 
   Future<Photo> save(Photo employee) async {
@@ -41,7 +40,6 @@ class DBHelper {
   Future<List<Photo>> getPhotos() async {
     var dbClient = await db;
     List<Map> maps = await dbClient.query(TABLE, columns: [ID, NAME]);
-    //List<Map> maps = await dbClient.rawQuery("SELECT * FROM $TABLE");
     List<Photo> employees = [];
     if (maps.length > 0) {
       for (int i = 0; i < maps.length; i++) {
