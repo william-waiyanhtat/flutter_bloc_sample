@@ -6,16 +6,17 @@ import 'DBHelper.dart';
 import 'Photo.dart';
 import 'dart:async';
 
-class SaveImageDemo extends StatefulWidget {
-  SaveImageDemo() : super();
+class SaveImageDemoSQLite extends StatefulWidget {
+  //
+  SaveImageDemoSQLite() : super();
 
-  final String title = "Flutter Save Image in DB";
+  final String title = "Flutter Save Image";
 
   @override
-  SaveImageDemoState createState() => SaveImageDemoState();
+  _SaveImageDemoSQLiteState createState() => _SaveImageDemoSQLiteState();
 }
 
-class SaveImageDemoState extends State<SaveImageDemo> {
+class _SaveImageDemoSQLiteState extends State<SaveImageDemoSQLite> {
   //
   Future<File> imageFile;
   Image image;
@@ -26,32 +27,29 @@ class SaveImageDemoState extends State<SaveImageDemo> {
   void initState() {
     super.initState();
     images = [];
-    dbHelper = new DBHelper();
+    dbHelper = DBHelper();
     refreshImages();
   }
 
   refreshImages() {
-    dbHelper.getPhotos().then((val) {
+    dbHelper.getPhotos().then((imgs) {
       setState(() {
         images.clear();
-        images.addAll(val);
+        images.addAll(imgs);
       });
     });
   }
 
-  pickImageFromGallery(ImageSource source) {
-    ImagePicker.pickImage(source: source).then((imgFile) {
-      print("Returned ${imgFile.path}");
-      String imgString = Utility.base64String(
-        imgFile.readAsBytesSync(),
-      );
+  pickImageFromGallery() {
+    ImagePicker.pickImage(source: ImageSource.gallery).then((imgFile) {
+      String imgString = Utility.base64String(imgFile.readAsBytesSync());
       Photo photo = Photo(0, imgString);
       dbHelper.save(photo);
       refreshImages();
     });
   }
 
-  gridview() {
+  gridView() {
     return Padding(
       padding: EdgeInsets.all(5.0),
       child: GridView.count(
@@ -59,11 +57,9 @@ class SaveImageDemoState extends State<SaveImageDemo> {
         childAspectRatio: 1.0,
         mainAxisSpacing: 4.0,
         crossAxisSpacing: 4.0,
-        children: images.map(
-          (photo) {
-            return Utility.imageFromBase64String(photo.photo_name);
-          },
-        ).toList(),
+        children: images.map((photo) {
+          return Utility.imageFromBase64String(photo.photoName);
+        }).toList(),
       ),
     );
   }
@@ -77,9 +73,9 @@ class SaveImageDemoState extends State<SaveImageDemo> {
           IconButton(
             icon: Icon(Icons.add),
             onPressed: () {
-              pickImageFromGallery(ImageSource.gallery);
+              pickImageFromGallery();
             },
-          ),
+          )
         ],
       ),
       body: Center(
@@ -87,8 +83,8 @@ class SaveImageDemoState extends State<SaveImageDemo> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             Flexible(
-              child: gridview(),
-            ),
+              child: gridView(),
+            )
           ],
         ),
       ),

@@ -38,25 +38,27 @@ class _SaveImageDemoState extends State<SaveImageDemo> {
     return FutureBuilder<File>(
       future: imageFile,
       builder: (BuildContext context, AsyncSnapshot<File> snapshot) {
-        if (snapshot.connectionState == ConnectionState.done &&
-            null != snapshot.data) {
-          //print(snapshot.data.path);
+        if (snapshot.connectionState == ConnectionState.done) {
+          if (null == snapshot.data) {
+            return const Text(
+              "Error",
+              textAlign: TextAlign.center,
+            );
+          }
           Utility.saveImageToPreferences(
               Utility.base64String(snapshot.data.readAsBytesSync()));
-          return Image.file(
-            snapshot.data,
-          );
-        } else if (null != snapshot.error) {
+          return Image.file(snapshot.data);
+        }
+        if (null != snapshot.error) {
           return const Text(
             'Error Picking Image',
             textAlign: TextAlign.center,
           );
-        } else {
-          return const Text(
-            'No Image Selected',
-            textAlign: TextAlign.center,
-          );
         }
+        return const Text(
+          'No Image Selected',
+          textAlign: TextAlign.center,
+        );
       },
     );
   }
@@ -88,13 +90,7 @@ class _SaveImageDemoState extends State<SaveImageDemo> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            SizedBox(
-              height: 20.0,
-            ),
             imageFromGallery(),
-            SizedBox(
-              height: 20.0,
-            ),
             null == imageFromPreferences ? Container() : imageFromPreferences,
           ],
         ),

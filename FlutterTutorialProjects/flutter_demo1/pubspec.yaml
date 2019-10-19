@@ -40,6 +40,7 @@ dependencies:
   cached_network_image: ^1.0.0 
   animator: ^0.1.4  
   json_annotation: 
+  charts_flutter: ^0.8.1
 
   
 dev_dependencies:
