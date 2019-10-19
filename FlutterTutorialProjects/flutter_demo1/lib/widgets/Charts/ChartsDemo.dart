@@ -20,13 +20,14 @@ class ChartsDemoState extends State<ChartsDemo> {
   @override
   void initState() {
     super.initState();
-    _createRandomData();
-    _createSampleData();
-    animate = false;
+    seriesList = _createRandomData();
+    //_createSampleData();
+    animate = true;
   }
 
   /// Create random data.
   static List<charts.Series<OrdinalSales, String>> _createRandomData() {
+    //
     final random = new Random();
 
     final data = [
@@ -54,6 +55,7 @@ class ChartsDemoState extends State<ChartsDemo> {
         title: Text(widget.title),
       ),
       body: Container(
+        padding: EdgeInsets.all(20.0),
         child: charts.BarChart(
           seriesList,
           animate: animate,

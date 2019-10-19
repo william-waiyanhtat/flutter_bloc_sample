@@ -5,6 +5,7 @@ import 'widgets/webview/WebViewLocal.dart';
 import 'widgets/webview/webview_demo.dart';
 import 'asset_demo/asset_demo.dart';
 import 'widgets/Charts/ChartsDemo.dart';
+import 'widgets/Test/HomeScreen.dart';
 
 void main() {
   runApp(
@@ -35,7 +36,7 @@ class HomeApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Tutorials',
-      home: new ChartsDemo(),
+      home: new GridViewDemo(),
     );
   }
 }
