@@ -31,7 +31,7 @@ class HomeApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Tutorials',
-      home: new HomeScreen(),
+      home: new ChartsDemo(),
     );
   }
 }
