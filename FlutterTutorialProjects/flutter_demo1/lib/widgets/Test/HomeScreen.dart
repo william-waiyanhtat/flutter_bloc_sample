@@ -1,26 +1,53 @@
 import 'package:flutter/material.dart';
-import 'services.dart';
+//import 'services.dart';
 import 'album.dart';
 import 'gridcell.dart';
 import 'details.dart';
 import 'dart:async';
 import 'Utility.dart';
 
-class GridViewDemo extends StatefulWidget {
+class HomeScreen extends StatefulWidget {
   //
-  GridViewDemo() : super();
+  HomeScreen() : super();
 
   final String title = "Home";
 
   @override
-  GridViewDemoState createState() => GridViewDemoState();
+  HomeScreenState createState() => HomeScreenState();
 }
 
-class GridViewDemoState extends State<GridViewDemo> {
+class HomeScreenState extends State<HomeScreen> {
   //
-  StreamController<int> streamController = new StreamController<int>();
 
-  gridview(AsyncSnapshot<List<Album>> snapshot) {
+  StreamController<int> streamController = new StreamController<int>();
+  List<Album> albums;
+
+  @override
+  void initState() {
+    super.initState();
+    albums = [];
+    getTiles();
+  }
+
+  getTiles() {
+    albums.clear();
+    Album album = new Album(0, 0, 'I...', '', 'images/apple.png');
+    albums.add(album);
+    album = new Album(0, 0, 'A...', '', 'images/apple.png');
+    albums.add(album);
+    album = new Album(0, 0, 'Ob...', '', 'images/apple.png');
+    albums.add(album);
+    album = new Album(0, 0, 'E...', '', 'images/apple.png');
+    albums.add(album);
+    album = new Album(0, 0, 'R...', '', 'images/apple.png');
+    albums.add(album);
+    album = new Album(0, 0, 'A...', '', 'images/apple.png');
+    albums.add(album);
+    album = new Album(0, 0, 'A...', '', 'images/apple.png');
+    albums.add(album);
+  }
+
+  gridview() {
     return Padding(
         padding: EdgeInsets.fromLTRB(40, 10, 40, 0),
         child: MediaQuery.removePadding(
@@ -31,7 +58,7 @@ class GridViewDemoState extends State<GridViewDemo> {
             childAspectRatio: 1.0,
             mainAxisSpacing: 10.0,
             crossAxisSpacing: 2.0,
-            children: snapshot.data.map(
+            children: albums.map(
               (album) {
                 return GestureDetector(
                   child: GridTile(
@@ -131,21 +158,7 @@ class GridViewDemoState extends State<GridViewDemo> {
             ),
           ),
           Flexible(
-            child: FutureBuilder<List<Album>>(
-              future: Services.getPhotos(),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return Text('Error ${snapshot.error}');
-                }
-                //
-                if (snapshot.hasData) {
-                  streamController.sink.add(snapshot.data.length);
-                  // gridview
-                  return gridview(snapshot);
-                }
-                return circularProgress();
-              },
-            ),
+            child: gridview(),
           ),
         ],
       ),

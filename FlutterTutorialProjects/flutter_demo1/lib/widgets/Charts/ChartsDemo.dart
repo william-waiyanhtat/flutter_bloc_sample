@@ -21,7 +21,6 @@ class ChartsDemoState extends State<ChartsDemo> {
   void initState() {
     super.initState();
     seriesList = _createRandomData();
-    //_createSampleData();
     animate = true;
   }
 
@@ -35,16 +34,18 @@ class ChartsDemoState extends State<ChartsDemo> {
       new OrdinalSales('2015', random.nextInt(100)),
       new OrdinalSales('2016', random.nextInt(100)),
       new OrdinalSales('2017', random.nextInt(100)),
+      new OrdinalSales('2018', random.nextInt(100)),
     ];
 
     return [
       new charts.Series<OrdinalSales, String>(
-        id: 'Sales',
-        colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
-        domainFn: (OrdinalSales sales, _) => sales.year,
-        measureFn: (OrdinalSales sales, _) => sales.sales,
-        data: data,
-      )
+          id: 'Sales',
+          colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
+          domainFn: (OrdinalSales sales, _) => sales.year,
+          measureFn: (OrdinalSales sales, _) => sales.sales,
+          data: data,
+          labelAccessorFn: (OrdinalSales sales, _) =>
+              '${sales.sales.toString()}')
     ];
   }
 
@@ -56,32 +57,18 @@ class ChartsDemoState extends State<ChartsDemo> {
       ),
       body: Container(
         padding: EdgeInsets.all(20.0),
-        child: charts.BarChart(
-          seriesList,
-          animate: animate,
-        ),
+        child: barChart(),
       ),
     );
   }
 
-  /// Create one series with sample hard coded data.
-  static List<charts.Series<OrdinalSales, String>> _createSampleData() {
-    final data = [
-      new OrdinalSales('2014', 5),
-      new OrdinalSales('2015', 25),
-      new OrdinalSales('2016', 100),
-      new OrdinalSales('2017', 75),
-    ];
-
-    return [
-      new charts.Series<OrdinalSales, String>(
-        id: 'Sales',
-        colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
-        domainFn: (OrdinalSales sales, _) => sales.year,
-        measureFn: (OrdinalSales sales, _) => sales.sales,
-        data: data,
-      )
-    ];
+  barChart() {
+    return charts.BarChart(
+      seriesList,
+      animate: animate,
+      //barRendererDecorator: new charts.BarLabelDecorator<String>(),
+      //domainAxis: new charts.OrdinalAxisSpec(),
+    );
   }
 }
 

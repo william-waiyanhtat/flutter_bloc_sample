@@ -1,9 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_demo1/widgets/webview/webview2.dart';
-import 'widgets/DataTableMySqlDemo/DataTableDemo.dart';
-import 'widgets/webview/WebViewLocal.dart';
-import 'widgets/webview/webview_demo.dart';
-import 'asset_demo/asset_demo.dart';
 import 'widgets/Charts/ChartsDemo.dart';
 import 'widgets/Test/HomeScreen.dart';
 
@@ -36,7 +31,7 @@ class HomeApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Tutorials',
-      home: new GridViewDemo(),
+      home: new HomeScreen(),
     );
   }
 }

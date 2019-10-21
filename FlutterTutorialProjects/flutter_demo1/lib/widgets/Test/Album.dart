@@ -5,9 +5,9 @@ class Album {
   String url;
   String thumbnailUrl;
 
-  Album({this.albumId, this.id, this.title, this.url, this.thumbnailUrl});
+  Album(this.albumId, this.id, this.title, this.url, this.thumbnailUrl);
 
-  factory Album.fromJson(Map<String, dynamic> json) {
+  /*factory Album.fromJson(Map<String, dynamic> json) {
     return Album(
       albumId: json['albumId'] as int,
       id: json['id'] as int,
@@ -15,5 +15,5 @@ class Album {
       url: json['url'] as String,
       thumbnailUrl: json['thumbnailUrl'] as String,
     );
-  }
+  }*/
 }

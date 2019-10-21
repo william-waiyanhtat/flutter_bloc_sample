@@ -32,12 +32,13 @@ class AlbumCell extends StatelessWidget {
                     children: <Widget>[
                       Hero(
                         tag: "image${album.id}",
-                        child: FadeInImage.assetNetwork(
-                          placeholder: "images/no_image.png",
-                          image: album.thumbnailUrl,
-                          fit: BoxFit.fill,
+                        child: Container(
+                          color: Colors.blue,
+                          child: Image.asset(
+                            album.thumbnailUrl,
+                          ),
                         ),
-                      ),
+                      ), //
                       Padding(
                         padding: EdgeInsets.all(20.0),
                         child: Text(
@@ -46,7 +47,8 @@ class AlbumCell extends StatelessWidget {
                           softWrap: true,
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            fontSize: 20.0,
+                            fontSize: 16.0,
+                            color: Colors.white,
                             fontWeight: FontWeight.w500,
                           ),
                         ),

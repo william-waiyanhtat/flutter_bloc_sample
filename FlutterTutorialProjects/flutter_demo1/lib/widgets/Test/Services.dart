@@ -21,6 +21,7 @@ class Services {
 
   static List<Album> parsePhotos(String responseBody) {
     final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
-    return parsed.map<Album>((json) => Album.fromJson(json)).toList();
+    return null;
+    //parsed.map<Album>((json) => Album.fromJson(json)).toList();
   }
 }
