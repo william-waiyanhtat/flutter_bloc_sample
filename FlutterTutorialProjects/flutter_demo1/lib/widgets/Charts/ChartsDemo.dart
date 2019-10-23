@@ -20,8 +20,55 @@ class ChartsDemoState extends State<ChartsDemo> {
   @override
   void initState() {
     super.initState();
-    seriesList = _createRandomData();
+    seriesList = _createRandomData2();
     animate = true;
+  }
+
+  /// Create random data.
+  static List<charts.Series<Sales, String>> _createRandomData2() {
+    final random = new Random();
+
+    final desktopSalesData = [
+      new Sales('2014', random.nextInt(100)),
+      new Sales('2015', random.nextInt(100)),
+      new Sales('2016', random.nextInt(100)),
+      new Sales('2017', random.nextInt(100)),
+    ];
+
+    final tableSalesData = [
+      new Sales('2014', random.nextInt(100)),
+      new Sales('2015', random.nextInt(100)),
+      new Sales('2016', random.nextInt(100)),
+      new Sales('2017', random.nextInt(100)),
+    ];
+
+    final mobileSalesData = [
+      new Sales('2014', random.nextInt(100)),
+      new Sales('2015', random.nextInt(100)),
+      new Sales('2016', random.nextInt(100)),
+      new Sales('2017', random.nextInt(100)),
+    ];
+
+    return [
+      new charts.Series<Sales, String>(
+        id: 'Desktop',
+        domainFn: (Sales sales, _) => sales.year,
+        measureFn: (Sales sales, _) => sales.sales,
+        data: desktopSalesData,
+      ),
+      new charts.Series<Sales, String>(
+        id: 'Tablet',
+        domainFn: (Sales sales, _) => sales.year,
+        measureFn: (Sales sales, _) => sales.sales,
+        data: tableSalesData,
+      ),
+      new charts.Series<Sales, String>(
+        id: 'Mobile',
+        domainFn: (Sales sales, _) => sales.year,
+        measureFn: (Sales sales, _) => sales.sales,
+        data: mobileSalesData,
+      ),
+    ];
   }
 
   /// Create random data.
@@ -71,8 +118,17 @@ class ChartsDemoState extends State<ChartsDemo> {
       ),
       body: Container(
         padding: EdgeInsets.all(20.0),
-        child: barChart(),
+        child: stackedBarChart(),
       ),
+    );
+  }
+
+  stackedBarChart() {
+    return new charts.BarChart(
+      seriesList,
+      animate: animate,
+      barGroupingType: charts.BarGroupingType.stacked,
+      vertical: false,
     );
   }
 
