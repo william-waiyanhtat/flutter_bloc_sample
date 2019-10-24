@@ -39,13 +39,13 @@ class ChartsDemoState extends State<ChartsDemo> {
 
     return [
       new charts.Series<OrdinalSales, String>(
-          id: 'Sales',
-          colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
-          domainFn: (OrdinalSales sales, _) => sales.year,
-          measureFn: (OrdinalSales sales, _) => sales.sales,
-          data: data,
-          labelAccessorFn: (OrdinalSales sales, _) =>
-              '${sales.sales.toString()}')
+        id: 'Sales',
+        colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
+        domainFn: (OrdinalSales sales, _) => sales.year,
+        measureFn: (OrdinalSales sales, _) => sales.sales,
+        data: data,
+        labelAccessorFn: (OrdinalSales sales, _) => '${sales.sales.toString()}',
+      )
     ];
   }
 
