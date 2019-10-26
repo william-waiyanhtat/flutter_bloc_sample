@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:charts_flutter/flutter.dart' as charts;
 
 class ChartsDemo extends StatefulWidget {
+  //
   ChartsDemo() : super();
 
   final String title = "Charts Demo";
@@ -25,26 +26,89 @@ class ChartsDemoState extends State<ChartsDemo> {
   }
 
   /// Create random data.
-  static List<charts.Series<OrdinalSales, String>> _createRandomData() {
+  static List<charts.Series<Sales, String>> _createStackedRandomData() {
+    final random = new Random();
+
+    final desktopSalesData = [
+      new Sales('2014', random.nextInt(100)),
+      new Sales('2015', random.nextInt(100)),
+      new Sales('2016', random.nextInt(100)),
+      new Sales('2017', random.nextInt(100)),
+    ];
+
+    final tableSalesData = [
+      new Sales('2014', random.nextInt(100)),
+      new Sales('2015', random.nextInt(100)),
+      new Sales('2016', random.nextInt(100)),
+      new Sales('2017', random.nextInt(100)),
+    ];
+
+    final mobileSalesData = [
+      new Sales('2014', random.nextInt(100)),
+      new Sales('2015', random.nextInt(100)),
+      new Sales('2016', random.nextInt(100)),
+      new Sales('2017', random.nextInt(100)),
+    ];
+
+    return [
+      new charts.Series<Sales, String>(
+        id: 'Desktop',
+        domainFn: (Sales sales, _) => sales.year,
+        measureFn: (Sales sales, _) => sales.sales,
+        data: desktopSalesData,
+      ),
+      new charts.Series<Sales, String>(
+        id: 'Tablet',
+        domainFn: (Sales sales, _) => sales.year,
+        measureFn: (Sales sales, _) => sales.sales,
+        data: tableSalesData,
+      ),
+      new charts.Series<Sales, String>(
+        id: 'Mobile',
+        domainFn: (Sales sales, _) => sales.year,
+        measureFn: (Sales sales, _) => sales.sales,
+        data: mobileSalesData,
+      ),
+    ];
+  }
+
+  // Create random data.
+  static List<charts.Series<Sales, String>> _createRandomData() {
     //
     final random = new Random();
 
     final data = [
-      new OrdinalSales('2014', random.nextInt(100)),
-      new OrdinalSales('2015', random.nextInt(100)),
-      new OrdinalSales('2016', random.nextInt(100)),
-      new OrdinalSales('2017', random.nextInt(100)),
-      new OrdinalSales('2018', random.nextInt(100)),
+      new Sales('2014', random.nextInt(100)),
+      new Sales('2015', random.nextInt(100)),
+      new Sales('2016', random.nextInt(100)),
+      new Sales('2017', random.nextInt(100)),
+      new Sales('2018', random.nextInt(100)),
     ];
 
     return [
-      new charts.Series<OrdinalSales, String>(
+      new charts.Series<Sales, String>(
         id: 'Sales',
-        colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
-        domainFn: (OrdinalSales sales, _) => sales.year,
-        measureFn: (OrdinalSales sales, _) => sales.sales,
+        //colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
+        domainFn: (Sales sales, _) => sales.year,
+        measureFn: (Sales sales, _) => sales.sales,
         data: data,
-        labelAccessorFn: (OrdinalSales sales, _) => '${sales.sales.toString()}',
+        fillColorFn: (Sales sales, _) {
+          return (sales.year == '2015')
+              ? charts.MaterialPalette.red.shadeDefault
+              : charts.MaterialPalette.green.shadeDefault;
+        },
+        insideLabelStyleAccessorFn: (Sales sales, _) {
+          final color = (sales.year == '2014')
+              ? charts.MaterialPalette.red.shadeDefault
+              : charts.MaterialPalette.yellow.shadeDefault.darker;
+          return new charts.TextStyleSpec(color: color);
+        },
+        // outsideLabelStyleAccessorFn: (Sales sales, _) {
+        //   final color = (sales.year == '2015')
+        //       ? charts.MaterialPalette.red.shadeDefault
+        //       : charts.MaterialPalette.yellow.shadeDefault.darker;
+        //   return new charts.TextStyleSpec(color: color);
+        // },
       )
     ];
   }
@@ -66,16 +130,28 @@ class ChartsDemoState extends State<ChartsDemo> {
     return charts.BarChart(
       seriesList,
       animate: animate,
-      //barRendererDecorator: new charts.BarLabelDecorator<String>(),
-      //domainAxis: new charts.OrdinalAxisSpec(),
+      //barGroupingType: charts.BarGroupingType.stacked,
+      // defaultRenderer: new charts.BarRendererConfig(
+      //   cornerStrategy: const charts.ConstCornerStrategy(30),
+      // ),
+      defaultRenderer: new charts.BarRendererConfig(
+          groupingType: charts.BarGroupingType.stacked, strokeWidthPx: 2.0),
+      // defaultRenderer: new charts.BarRendererConfig(
+      //     groupingType: charts.BarGroupingType.grouped, strokeWidthPx: 2.0),
+      vertical: false,
+      barRendererDecorator: new charts.BarLabelDecorator<String>(),
+      // Hide domain axis.
+      // domainAxis: new charts.OrdinalAxisSpec(
+      //   renderSpec: new charts.NoneRenderSpec(),
+      // ),
     );
   }
 }
 
 /// Sample ordinal data type.
-class OrdinalSales {
+class Sales {
   final String year;
   final int sales;
 
-  OrdinalSales(this.year, this.sales);
+  Sales(this.year, this.sales);
 }
