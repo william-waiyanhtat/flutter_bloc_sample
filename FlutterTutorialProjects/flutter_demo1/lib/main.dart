@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'widgets/Charts/ChartsDemo.dart';
+import 'widgets/Share/ShareDemo.dart';
 
 void main() {
   runApp(
@@ -30,7 +31,7 @@ class HomeApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Tutorials',
-      home: new ChartsDemo(),
+      home: new ShareDemo(),
     );
   }
 }
