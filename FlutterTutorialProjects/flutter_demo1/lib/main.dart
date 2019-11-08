@@ -32,7 +32,7 @@ class HomeApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Tutorials',
-      home: new LaunchUrlDemo(),
+      home: new ShareDemo(),
     );
   }
 }
