@@ -7,6 +7,7 @@ class ShareDemo extends StatefulWidget {
 }
 
 class ShareDemoState extends State<ShareDemo> {
+  //
   String text = '';
   String subject = '';
 
@@ -20,37 +21,43 @@ class ShareDemoState extends State<ShareDemo> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Share Plugin Demo',
+      title: 'Share Demo',
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Share Plugin Demo'),
+          title: const Text('Share Demo'),
         ),
         body: Container(
-          padding: const EdgeInsets.all(25.0),
+          padding: EdgeInsets.all(25.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               TextField(
                 decoration: const InputDecoration(
-                  labelText: 'Text:',
-                  hintText: 'Enter some text and/or link to share',
+                  labelText: 'Text',
+                  hintText: 'Enter some text or link to share',
                 ),
                 maxLines: 2,
-                onChanged: (String value) => setState(() {
-                  text = value;
-                }),
+                onChanged: (String txt) {
+                  setState(() {
+                    text = txt;
+                  });
+                },
               ),
               TextField(
                 decoration: const InputDecoration(
-                  labelText: 'Subject:',
-                  hintText: 'Enter subject to share',
+                  labelText: 'Text',
+                  hintText: 'Enter some subject to share',
                 ),
                 maxLines: 2,
-                onChanged: (String value) => setState(() {
-                  subject = value;
-                }),
+                onChanged: (String txt) {
+                  setState(() {
+                    subject = txt;
+                  });
+                },
               ),
-              const Padding(padding: EdgeInsets.only(top: 24.0)),
+              SizedBox(
+                height: 20,
+              ),
               Builder(
                 builder: (BuildContext context) {
                   return RaisedButton(
@@ -58,13 +65,6 @@ class ShareDemoState extends State<ShareDemo> {
                     onPressed: text.isEmpty
                         ? null
                         : () {
-                            // A builder is used to retrieve the context immediately
-                            // surrounding the RaisedButton.
-                            //
-                            // The context's `findRenderObject` returns the first
-                            // RenderObject in its descendent tree when it's not
-                            // a RenderObjectWidget. The RaisedButton's RenderObject
-                            // has its position and size after it's built.
                             share(context);
                           },
                   );
