@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'widgets/DataTableMySqlDemo/DataTableDemo.dart';
 import 'widgets/Share/ShareDemo.dart';
+import 'widgets/Share/LaunchUrl.dart';
 
 void main() {
   runApp(
@@ -31,7 +31,7 @@ class HomeApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Tutorials',
-      home: new ShareDemo(),
+      home: new LaunchUrlDemo(),
     );
   }
 }
