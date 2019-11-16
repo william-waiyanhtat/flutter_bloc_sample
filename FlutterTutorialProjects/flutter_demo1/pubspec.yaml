@@ -42,7 +42,7 @@ dependencies:
   json_annotation: 
   charts_flutter: ^0.8.1
   share: ^0.6.3+1
-  url_launcher: ^5.2.5
+  url_launcher: ^5.2.5 
 
   
 dev_dependencies:
