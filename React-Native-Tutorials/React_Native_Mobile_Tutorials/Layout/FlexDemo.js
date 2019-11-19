@@ -6,38 +6,38 @@ export default class FlexDemoScreen extends Component {
         return (
             <View style={{flex:1}}>
                 <View style={{ height: 50 }}></View>
-                {/* <View style={{flex:1, flexDirection: 'row', backgroundColor:'red'}}> */}
-                {/* <View style={{flex:1, flexDirection: 'column', backgroundColor:'red'}}> */}
-                {/* <View style={{flex:1, flexDirection: 'row-reverse', backgroundColor:'red'}}> */}
-                {/* <View style={{flexDirection: 'column-reverse', backgroundColor:'red'}}> */}
+                {/* <View style={{flex:1, flexDirection: 'row', backgroundColor:'green'}}> */}
+                {/* <View style={{flex:1, flexDirection: 'column', backgroundColor:'green'}}> */}
+                {/* <View style={{flex:1, flexDirection: 'row-reverse', backgroundColor:'green'}}> */}
+                {/* <View style={{flexDirection: 'column-reverse', backgroundColor:'green'}}> */}
                 {/* <View style={{
                     flex: 1,
                     flexDirection: 'column-reverse',
-                    backgroundColor: 'red',
+                    backgroundColor: 'green',
                     justifyContent: 'space-between' 
                 }}> */}
                 {/* <View style={{
                     flex: 1,
                     flexDirection: 'column-reverse',
-                    backgroundColor: 'red',
+                    backgroundColor: 'green',
                     justifyContent: 'center'
                 }}> */}
                 {/* <View style={{
                     flex: 1,
                     flexDirection: 'column',
-                    backgroundColor: 'red',
+                    backgroundColor: 'green',
                     justifyContent: 'flex-start'
                 }}> */}
                 {/* <View style={{
                     flex: 1,
                     flexDirection: 'column-reverse',
-                    backgroundColor: 'red',
+                    backgroundColor: 'green',
                     justifyContent: 'flex-end'
                 }}> */}
                 {/* <View style={{
                     flex: 1,
                     flexDirection: 'row',
-                    backgroundColor: 'red',
+                    backgroundColor: 'green',
                     justifyContent: 'center',
                     alignItems: 'flex-start' // remove width
                 }}>
