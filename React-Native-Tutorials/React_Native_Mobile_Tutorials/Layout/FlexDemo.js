@@ -52,7 +52,7 @@ export default class FlexDemoScreen extends Component {
                     flex: 1,
                     // flexWrap:'wrap', //wrap, nowrap
                     flexDirection: 'row',
-                    backgroundColor: 'red',
+                    backgroundColor: 'green',
                     justifyContent: 'center',
                     alignItems: 'flex-start' // remove width
                 }}>
