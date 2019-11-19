@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text } from 'react-native';
 
-export default class Homescreen extends Component {
+export default class FlexDemoScreen extends Component {
     render() {
         return (
             <View style={{flex:1}}>
@@ -14,7 +14,7 @@ export default class Homescreen extends Component {
                     flex: 1,
                     flexDirection: 'column-reverse',
                     backgroundColor: 'red',
-                    justifyContent: 'space-between'
+                    justifyContent: 'space-between' 
                 }}> */}
                 {/* <View style={{
                     flex: 1,
@@ -50,7 +50,7 @@ export default class Homescreen extends Component {
                 
             <View style={{
                     flex: 1,
-                    flexWrap:'wrap', //wrap, nowrap
+                    // flexWrap:'wrap', //wrap, nowrap
                     flexDirection: 'row',
                     backgroundColor: 'red',
                     justifyContent: 'center',
@@ -61,9 +61,8 @@ export default class Homescreen extends Component {
                   <View style={{width: 50, height: 50, backgroundColor: 'powderblue'}} />
                     {/* <View style={{width: 50, height: 50, backgroundColor: 'skyblue'}} /> */}
                     {/* <View style={{width: '20%', height: 50, backgroundColor: 'skyblue', alignSelf:'center'}} /> */}
-                    <View style={{width: '20%', height: 50, backgroundColor: 'skyblue', alignSelf:'center'}} />
-                    <View style={{ width: 550, height: 50, backgroundColor: 'steelblue' }} />
-                    
+                    <View style={{width: '20%', height: 50, backgroundColor: 'skyblue'}} />
+                    <View style={{ width: 50, height: 50, backgroundColor: 'steelblue' }} />
                 </View>
             </View>
         )
