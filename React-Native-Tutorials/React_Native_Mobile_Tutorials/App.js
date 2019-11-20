@@ -4,7 +4,7 @@ import {
   StatusBar,
 } from 'react-native';
 
-import FlexDemoScreen from './Layout/FlexDemo';
+// import FlexDemoScreen from './Layout/FlexDemo';
 import TFDemo from './Widgets/TextField/TextFieldDemo';
 
 const App: () => React$Node = () => {
