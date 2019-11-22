@@ -5,14 +5,14 @@ import {
 } from 'react-native';
 
 // import FlexDemoScreen from './Layout/FlexDemo';
-import TFDemo from './Widgets/TextField/TextFieldDemo';
+import FlatListDemo from './Widgets/FlastLIst/FlastListDemo';
 
 const App: () => React$Node = () => {
   return (
     <>
       <StatusBar barStyle="dark-content" />
       <SafeAreaView style={{flex:1}}>
-       <TFDemo />
+       <FlatListDemo />
       </SafeAreaView>
     </>
   );
