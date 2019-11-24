@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'widgets/Share/LaunchUrl.dart';
+import 'widgets/BarcodeScanner/BarcodeScannerDemo.dart';
 
 void main() {
   runApp(
@@ -31,7 +32,7 @@ class HomeApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Tutorials',
-      home: new LaunchUrlDemo(),
+      home: new BarcodeScannerDemo(),
     );
   }
 }

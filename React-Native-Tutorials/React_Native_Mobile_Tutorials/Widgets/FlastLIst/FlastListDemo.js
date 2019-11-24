@@ -1,56 +1,55 @@
 import React, { Component } from "react";
-import { View, Text, FlatList } from "react-native";
-import { List, ListItem, SearchBar } from "react-native-elements";
+import { View, Text, FlatList, Button } from "react-native";
+import { ListItem, SearchBar } from "react-native-elements";
 
 class FlatListDemo extends Component {
-  constructor(props) {
-    super(props);
 
-    this.state = {
-      loading: false,
-        data: [],
+  constructor(props) {
+    super(props); 
+ 
+    this.state = { 
+      loading: false,   
+      data: [],
       temp: [],
-      page: 1,
-      seed: 1,
       error: null,
-        refreshing: false,
-      search: '',
+      search: null
     };
   }
-
+ 
   componentDidMount() {
-    this.makeRemoteRequest();
+    this.getData();
   }
 
-  makeRemoteRequest = () => {
-    const { page, seed } = this.state;
+   getData = async ()  => {
     const url = `https://jsonplaceholder.typicode.com/users`;
     this.setState({ loading: true });
-    fetch(url)
-      .then(res => res.json())
-        .then(res => {
-          console.log("result : " + res[0].id);
-          this.setState({
-              data: [...this.state.data, ...res],
-              temp: [...this.state.temp, ...res],
-            error: res.error || null,
-            loading: false,
-            refreshing: false
-          });
-      })
-      .catch(error => {
-        this.setState({ error, loading: false });
-      });
+     
+     try {
+        const response = await fetch(url);
+        const json = await response.json();
+        this.setResult(json);
+     } catch (e) {
+        this.setState({ error: 'Error Loading content', loading: false });
+     }
   };
+
+  setResult = (res) => {
+    this.setState({
+      data: [...this.state.data, ...res],
+      temp: [...this.state.temp, ...res],
+      error: res.error || null,
+      loading: false
+    });
+  }
 
   renderHeader = () => {
       return <SearchBar placeholder="Search Here..."
           lightTheme round editable={true}
           value={this.state.search}
-          onChangeText={this.updateSearch} />;
-  };
+          onChangeText={this.updateSearch} />; 
+  }; 
 
-    updateSearch = search => {
+  updateSearch = search => {
         this.setState({ search }, () => {
             if ('' == search) {
                 this.setState({
@@ -65,10 +64,19 @@ class FlatListDemo extends Component {
                 return {id, name, email};
             });
         });
-   };
+  };
 
   render() {
     return (
+      this.state.error != null ?
+        <View style={{ flex: 1, flexDirection: 'column',justifyContent: 'center', alignItems: 'center' }}>
+          <Text>{this.state.error}</Text>
+          <Button onPress={
+            () => {
+              this.getData();
+            }
+          } title="Reload" />
+        </View> : 
         <FlatList
             ListHeaderComponent={this.renderHeader}
             data={this.state.data}
@@ -78,12 +86,9 @@ class FlatListDemo extends Component {
                 roundAvatar
                 title={`${item.name}`}
                 subtitle={item.email}
-                // avatar={{ uri: item.picture.thumbnail }}
             />
         )}
       />
-        // <View />
-            
     );
   }
 }
