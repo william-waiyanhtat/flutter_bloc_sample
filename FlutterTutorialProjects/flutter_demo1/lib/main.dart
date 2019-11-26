@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'widgets/Share/LaunchUrl.dart';
-import 'widgets/BarcodeScanner/BarcodeScannerDemo.dart';
+import 'widgets/BarcodeScanner/BarcodeScannerDemo2.dart';
 
 void main() {
   runApp(
     new HomeApp(),
   );
 }
-
 
 /*
 // Wrap main widget inside the StreamProvider

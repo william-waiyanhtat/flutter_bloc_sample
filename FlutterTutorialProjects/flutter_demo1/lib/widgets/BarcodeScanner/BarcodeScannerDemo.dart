@@ -12,7 +12,7 @@ class BarcodeScannerDemo extends StatefulWidget {
 
 class BarcodeScannerDemoState extends State<BarcodeScannerDemo> {
   //
-String barcode = "";
+  String barcode = "";
 
   @override
   initState() {
@@ -23,21 +23,24 @@ String barcode = "";
   Widget build(BuildContext context) {
     return new MaterialApp(
       home: new Scaffold(
-          appBar: new AppBar(
-            title: new Text(widget.title),
-          ),
-          body: new Center(
-            child: new Column(
-              children: <Widget>[
-                new Container(
-                  child: new MaterialButton(
-                      onPressed: scan, child: new Text("Scan")),
-                  padding: const EdgeInsets.all(8.0),
+        appBar: AppBar(
+          title: Text(widget.title),
+        ),
+        body: Center(
+          child: Column(
+            children: <Widget>[
+              Container(
+                child: MaterialButton(
+                  onPressed: scan,
+                  child: new Text("Scan"),
                 ),
-                new Text(barcode),
-              ],
-            ),
-          )),
+                padding: const EdgeInsets.all(8.0),
+              ),
+              Text(barcode),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
@@ -46,6 +49,7 @@ String barcode = "";
       String barcode = await BarcodeScanner.scan();
       setState(() => this.barcode = barcode);
     } on PlatformException catch (e) {
+      print('code: ${e.code}');
       if (e.code == BarcodeScanner.CameraAccessDenied) {
         setState(() {
           this.barcode = 'The user did not grant the camera permission!';
@@ -53,11 +57,11 @@ String barcode = "";
       } else {
         setState(() => this.barcode = 'Unknown error: $e');
       }
-    } on FormatException{
-      setState(() => this.barcode = 'null (User returned using the "back"-button before scanning anything. Result)');
+    } on FormatException {
+      setState(() => this.barcode =
+          'null (User returned using the "back"-button before scanning anything. Result)');
     } catch (e) {
       setState(() => this.barcode = 'Unknown error: $e');
     }
   }
-
 }
