@@ -90,8 +90,8 @@ class UploadMultipleImageDemoState extends State<UploadMultipleImageDemo> {
         ),
       ],
       onChanged: (value) => setState(() {
-            _pickType = value;
-          }),
+        _pickType = value;
+      }),
     );
   }
 
