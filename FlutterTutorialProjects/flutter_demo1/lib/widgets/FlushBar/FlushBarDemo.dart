@@ -3,7 +3,7 @@ import 'package:flushbar/flushbar.dart';
 
 class FlushBarDemo extends StatefulWidget {
   //
-  final String title = "Barcode Scanner Demo";
+  final String title = "FlushBar Demo";
   @override
   FlushBarDemoState createState() => FlushBarDemoState();
 }
@@ -18,31 +18,6 @@ class FlushBarDemoState extends State<FlushBarDemo> {
   Flushbar<List<String>> flush2;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   Form userInputForm;
-
-  listView() {
-    return Flexible(
-      child: ListView.builder(
-        itemCount: 3,
-        itemBuilder: (context, pos) {
-          return Padding(
-            padding: EdgeInsets.only(bottom: 5.0),
-            child: Card(
-              color: Colors.white,
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
-                child: Text(
-                  'Test $pos',
-                  style: TextStyle(
-                    fontSize: 18.0,
-                  ),
-                ),
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
 
   TextFormField getFormField() {
     return TextFormField(
@@ -60,9 +35,9 @@ class FlushBarDemoState extends State<FlushBarDemo> {
             color: Colors.green[500],
           ),
           border: UnderlineInputBorder(),
-          helperText: "Helper Text",
+          helperText: "Name",
           helperStyle: TextStyle(color: Colors.grey),
-          labelText: "Label Text",
+          labelText: "Type your name",
           labelStyle: TextStyle(color: Colors.grey)),
     );
   }
@@ -79,8 +54,7 @@ class FlushBarDemoState extends State<FlushBarDemo> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            //getFormField(),
-            listView(),
+            getFormField(),
             Align(
               alignment: Alignment.bottomRight,
               child: Padding(
@@ -95,7 +69,7 @@ class FlushBarDemoState extends State<FlushBarDemo> {
                   textColor: Colors.red,
                   padding: EdgeInsets.all(8.0),
                   onPressed: () {
-                    flush2.dismiss([controller.text, 'val2']);
+                    flush2.dismiss([controller.text, 'world']);
                   },
                 ),
               ),
@@ -152,26 +126,27 @@ class FlushBarDemoState extends State<FlushBarDemo> {
       titleText: Text(
         "Title",
         style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 20.0,
-            color: Colors.yellow,
-            fontFamily: "ShadowsIntoLightTwo"),
+          fontWeight: FontWeight.bold,
+          fontSize: 20.0,
+          color: Colors.yellow,
+          fontFamily: "Roboto-Medium",
+        ),
       ),
       messageText: Text(
         "Sample Message",
         style: TextStyle(
-            fontSize: 18.0,
-            color: Colors.green,
-            fontFamily: "ShadowsIntoLightTwo"),
+          fontSize: 18.0,
+          color: Colors.green,
+          fontFamily: "Roboto-Medium",
+        ),
       ),
     )..show(context);
   }
 
   normal(BuildContext context) {
     Flushbar(
-      title: "Hey Ninja",
-      message:
-          "Lorem Ipsum is simply dummy text of the printing and typesetting industry",
+      title: "Hello there",
+      message: "How are you?",
       duration: Duration(seconds: 3),
       flushbarPosition: FlushbarPosition.TOP,
       flushbarStyle: FlushbarStyle.GROUNDED,
