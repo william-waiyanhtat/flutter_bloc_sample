@@ -44,6 +44,8 @@ dependencies:
     share: ^0.6.3+1
     url_launcher: ^5.2.5
     flushbar: ^1.9.1
+    webfeed: ^0.4.2
+    intl: ^0.15.8
 
 dev_dependencies:
     flutter_test:

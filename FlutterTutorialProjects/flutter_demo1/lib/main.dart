@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'widgets/FlushBar/FlushBarDemo.dart';
+import 'RSSDemo/RSSDemo.dart';
 
 void main() {
   runApp(
@@ -30,7 +31,7 @@ class HomeApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Tutorials',
-      home: new FlushBarDemo(),
+      home: new RSSDemo(),
     );
   }
 }
