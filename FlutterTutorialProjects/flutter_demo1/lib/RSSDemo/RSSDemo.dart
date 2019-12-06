@@ -7,7 +7,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 class RSSDemo extends StatefulWidget {
   RSSDemo() : super();
 
-  final String title = "RSS Demo";
+  final String title = "RSS Feed Demo";
 
   @override
   RSSDemoState createState() => RSSDemoState();
@@ -16,9 +16,9 @@ class RSSDemo extends StatefulWidget {
 class RSSDemoState extends State<RSSDemo> {
   // https://github.com/witochandra/webfeed
   //
-  RssFeed _feed;
   static const String FEED_URL =
       'https://www.nasa.gov/rss/dyn/lg_image_of_the_day.rss';
+  RssFeed _feed;
   String _title;
 
   @override
@@ -28,20 +28,27 @@ class RSSDemoState extends State<RSSDemo> {
     load();
   }
 
+  updateTitle(message) async {
+    setState(() {
+      _title = message;
+    });
+  }
+
+  updateFeed(feed) async {
+    setState(() {
+      _feed = feed;
+    });
+  }
+
   load() async {
     updateTitle('Loading Feed...');
-    //
     loadFeed().then((res) {
-      //
       if (null == res || res.toString().isEmpty) {
-        updateTitle('Error');
+        updateTitle('Error Loading Feed.');
         return;
       }
-
-      setState(() {
-        _feed = res;
-        _title = _feed.title;
-      });
+      updateFeed(res);
+      updateTitle(_feed.title);
     });
   }
 
@@ -51,13 +58,12 @@ class RSSDemoState extends State<RSSDemo> {
       final response = await client.get(FEED_URL);
       return RssFeed.parse(response.body);
     } catch (e) {
-      print('error');
-      updateTitle('Error Loading Feed');
+      //
     }
     return null;
   }
 
-  Future<void> _launchInApp(String url) async {
+  Future<void> _launchInApp(BuildContext context, String url) async {
     if (await canLaunch(url)) {
       await launch(
         url,
@@ -65,14 +71,8 @@ class RSSDemoState extends State<RSSDemo> {
         forceWebView: false,
       );
     } else {
-      print('Error opening Feed');
+      updateTitle('Error opening Feed');
     }
-  }
-
-  updateTitle(message) {
-    setState(() {
-      _title = message;
-    });
   }
 
   thumbnail(url) {
@@ -98,6 +98,19 @@ class RSSDemoState extends State<RSSDemo> {
     );
   }
 
+  subtitle(title) {
+    return Text(
+      title,
+      style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w100),
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+    );
+  }
+
+  isFeedEmpty() {
+    return null == _feed || null == _feed.items;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -106,16 +119,12 @@ class RSSDemoState extends State<RSSDemo> {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.refresh),
-            onPressed: () {
-              load();
-            },
+            onPressed: () => load(),
           ),
         ],
       ),
-      body: null == _feed || null == _feed.items
-          ? Center(
-              child: CircularProgressIndicator(),
-            )
+      body: isFeedEmpty()
+          ? Center(child: CircularProgressIndicator())
           : ListView.builder(
               itemCount: _feed.items.length,
               itemBuilder: (BuildContext ctxt, int index) {
@@ -125,10 +134,10 @@ class RSSDemoState extends State<RSSDemo> {
                   leading: thumbnail(item.enclosure.url),
                   trailing: Icon(Icons.keyboard_arrow_right,
                       color: Colors.grey, size: 30.0),
-                  subtitle: Text('Published at ' + item.pubDate),
-                  contentPadding: EdgeInsets.all(16.0),
+                  subtitle: subtitle(item.pubDate),
+                  contentPadding: EdgeInsets.all(5.0),
                   onTap: () {
-                    _launchInApp(item.link);
+                    _launchInApp(context, item.link);
                   },
                 );
               },
