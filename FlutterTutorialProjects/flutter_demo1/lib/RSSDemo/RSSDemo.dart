@@ -16,17 +16,21 @@ class RSSDemoState extends State<RSSDemo> {
   //
   RssFeed _feed;
   static const String FEED_URL =
-      'https://rss.itunes.apple.com/api/v1/us/apple-music/coming-soon/all/10/explicit.rss';
+      'https://www.nasa.gov/rss/dyn/lg_image_of_the_day.rss';
   String _loading;
 
   @override
   void initState() {
     super.initState();
+    load();
+  }
+
+  load() async {
     _loading = widget.title;
     setState(() {
       _loading = 'Loading...';
     });
-    load().then((res) {
+    loadFeed().then((res) {
       setState(() {
         _feed = res;
         _loading = _feed.title;
@@ -34,7 +38,7 @@ class RSSDemoState extends State<RSSDemo> {
     });
   }
 
-  Future<RssFeed> load() async {
+  Future<RssFeed> loadFeed() async {
     final client = new http.Client();
     final response = await client.get(FEED_URL);
     final feed = new RssFeed.parse(response.body);
@@ -58,6 +62,14 @@ class RSSDemoState extends State<RSSDemo> {
     return Scaffold(
       appBar: AppBar(
         title: Text(_loading),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.refresh),
+            onPressed: () {
+              load();
+            },
+          ),
+        ],
       ),
       body: null == _feed || null == _feed.items
           ? Center(
@@ -67,11 +79,16 @@ class RSSDemoState extends State<RSSDemo> {
               itemCount: _feed.items.length,
               itemBuilder: (BuildContext ctxt, int index) {
                 final item = _feed.items[index];
-                print('Media ${item.media.thumbnails}');
+                print('Media ${item.enclosure.url}');
                 return ListTile(
                   title: Text(item.title),
-                  trailing: Image.network(
-                      'http://pngimg.com/uploads/apple/apple_PNG12509.png'),
+                  leading: FadeInImage.assetNetwork(
+                    placeholder: 'images/no_image.png',
+                    image: item.enclosure.url,
+                    width: 50,
+                    fit: BoxFit.fill,
+                    alignment: Alignment.center,
+                  ),
                   subtitle: Text('Published at ' + item.pubDate),
                   contentPadding: EdgeInsets.all(16.0),
                   onTap: () async {
