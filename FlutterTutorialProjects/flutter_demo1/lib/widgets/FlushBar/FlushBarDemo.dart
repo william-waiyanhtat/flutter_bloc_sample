@@ -10,44 +10,45 @@ class FlushBarDemo extends StatefulWidget {
 
 class FlushBarDemoState extends State<FlushBarDemo> {
   //
-  Flushbar flush;
-  String inputVal = '';
-  TextEditingController controller;
+
+  Flushbar flushbar;
 
   //
-  Flushbar<List<String>> flush2;
+  TextEditingController _controller = TextEditingController();
+  Flushbar<List<String>> flushbar2;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   Form userInputForm;
+  String inputVal = '';
 
   TextFormField getFormField() {
     return TextFormField(
-      controller: controller,
+      controller: _controller,
       initialValue: null,
       style: TextStyle(color: Colors.white),
       maxLength: 100,
       maxLines: 1,
-      maxLengthEnforced: true,
       decoration: InputDecoration(
-          fillColor: Colors.white10,
-          filled: true,
-          icon: Icon(
-            Icons.label,
-            color: Colors.green[500],
-          ),
-          border: UnderlineInputBorder(),
-          helperText: "Name",
-          helperStyle: TextStyle(color: Colors.grey),
-          labelText: "Type your name",
-          labelStyle: TextStyle(color: Colors.grey)),
+        fillColor: Colors.white12,
+        filled: true,
+        icon: Icon(
+          Icons.label,
+          color: Colors.green,
+        ),
+        border: UnderlineInputBorder(),
+        helperText: 'Enter Name',
+        helperStyle: TextStyle(color: Colors.grey),
+        labelText: 'Type your name',
+        labelStyle: TextStyle(color: Colors.grey),
+      ),
     );
   }
 
-  withInputField(BuildContext context) {
-    flush2 = Flushbar<List<String>>(
+  withInputField(BuildContext context) async {
+    flushbar2 = Flushbar<List<String>>(
       flushbarPosition: FlushbarPosition.BOTTOM,
       flushbarStyle: FlushbarStyle.GROUNDED,
       reverseAnimationCurve: Curves.decelerate,
-      forwardAnimationCurve: Curves.elasticInOut,
+      forwardAnimationCurve: Curves.elasticIn,
       userInputForm: Form(
         key: _formKey,
         child: Column(
@@ -58,43 +59,40 @@ class FlushBarDemoState extends State<FlushBarDemo> {
             Align(
               alignment: Alignment.bottomRight,
               child: Padding(
-                padding: EdgeInsets.all(10.0),
+                padding: EdgeInsets.all(20.0),
                 child: FlatButton(
                   child: Text('DONE'),
-                  shape: new RoundedRectangleBorder(
-                    borderRadius: new BorderRadius.circular(18.0),
-                    side: BorderSide(color: Colors.red),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15.0),
                   ),
                   color: Colors.white,
                   textColor: Colors.red,
-                  padding: EdgeInsets.all(8.0),
+                  padding: EdgeInsets.all(6.0),
                   onPressed: () {
-                    flush2.dismiss([controller.text, 'world']);
+                    flushbar2.dismiss([_controller.text, ' World']);
                   },
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),
-    )..show(context).then(
-        (result) {
-          if (result != null) {
-            String userInput1 = result[0];
-            String userInput2 = result[1];
-            print(userInput1 + userInput2);
-            setState(() {
-              inputVal = userInput1 + ', ' + userInput2;
-            });
-          }
-        },
-      );
+    )..show(context).then((result) {
+        if (null != result) {
+          String userInput1 = result[0];
+          String userInput2 = result[1];
+          setState(() {
+            inputVal = userInput1 + userInput2;
+          });
+        }
+      });
   }
 
   custom(BuildContext context) {
-    flush = Flushbar(
-      title: "Hello",
-      message: "Sample Message",
+    flushbar = Flushbar(
+      title: 'Hello there',
+      message: 'How are you?',
+      duration: Duration(seconds: 30),
       flushbarPosition: FlushbarPosition.BOTTOM,
       flushbarStyle: FlushbarStyle.GROUNDED,
       reverseAnimationCurve: Curves.decelerate,
@@ -102,81 +100,65 @@ class FlushBarDemoState extends State<FlushBarDemo> {
       backgroundColor: Colors.red,
       boxShadows: [
         BoxShadow(
-            color: Colors.blue[800], offset: Offset(0.0, 2.0), blurRadius: 3.0)
+          color: Colors.blue[800],
+          offset: Offset(0.0, 2.0),
+          blurRadius: 3.0,
+        ),
       ],
-      backgroundGradient:
-          LinearGradient(colors: [Colors.blueGrey, Colors.black]),
+      backgroundGradient: LinearGradient(
+        colors: [Colors.blueGrey, Colors.green],
+      ),
       isDismissible: false,
-      duration: Duration(seconds: 4),
       icon: Icon(
         Icons.check,
-        color: Colors.greenAccent,
+        color: Colors.yellow,
       ),
       mainButton: FlatButton(
         onPressed: () {
-          flush.dismiss();
+          flushbar.dismiss();
         },
         child: Text(
-          "DONE",
-          style: TextStyle(color: Colors.blue),
+          'DONE',
+          style: TextStyle(color: Colors.white),
         ),
       ),
       showProgressIndicator: true,
       progressIndicatorBackgroundColor: Colors.blueGrey,
-      titleText: Text(
-        "Title",
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 20.0,
-          color: Colors.yellow,
-          fontFamily: "Roboto-Medium",
-        ),
-      ),
-      messageText: Text(
-        "Sample Message",
-        style: TextStyle(
-          fontSize: 18.0,
-          color: Colors.green,
-          fontFamily: "Roboto-Medium",
-        ),
-      ),
     )..show(context);
   }
 
   normal(BuildContext context) {
     Flushbar(
-      title: "Hello there",
-      message: "How are you?",
+      title: 'Hello there',
+      message: 'How are you?',
       duration: Duration(seconds: 3),
-      flushbarPosition: FlushbarPosition.TOP,
+      flushbarPosition: FlushbarPosition.BOTTOM,
       flushbarStyle: FlushbarStyle.GROUNDED,
       onStatusChanged: (FlushbarStatus status) {
         switch (status) {
           case FlushbarStatus.SHOWING:
             {
+              print('SHOWING');
               break;
             }
           case FlushbarStatus.IS_APPEARING:
             {
+              print('IS_APPEARING');
               break;
             }
           case FlushbarStatus.IS_HIDING:
             {
+              print('IS_HIDING');
               break;
             }
           case FlushbarStatus.DISMISSED:
             {
+              print('DISMISSED');
               break;
             }
         }
       },
     )..show(context);
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    controller = TextEditingController();
   }
 
   @override
@@ -188,23 +170,23 @@ class FlushBarDemoState extends State<FlushBarDemo> {
       body: Container(
         padding: EdgeInsets.all(20.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             OutlineButton(
-              child: Text("Normal"),
+              child: Text('Show FlushBar'),
               onPressed: () {
                 normal(context);
               },
             ),
             OutlineButton(
-              child: Text("Custom With Icon"),
+              child: Text('Show Custom FlushBar'),
               onPressed: () {
                 custom(context);
               },
             ),
             OutlineButton(
-              child: Text("With Input"),
+              child: Text('Show Custom FlushBar With Input Field'),
               onPressed: () {
                 withInputField(context);
               },
