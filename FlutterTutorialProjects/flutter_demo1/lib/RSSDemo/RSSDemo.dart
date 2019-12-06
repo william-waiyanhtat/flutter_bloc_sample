@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:webfeed/webfeed.dart';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class RSSDemo extends StatefulWidget {
   RSSDemo() : super();
@@ -22,15 +23,20 @@ class RSSDemoState extends State<RSSDemo> {
   @override
   void initState() {
     super.initState();
+    updateTitle(widget.title);
     load();
   }
 
   load() async {
-    _loading = widget.title;
-    setState(() {
-      _loading = 'Loading...';
-    });
+    updateTitle('Loading Feed...');
+    //
     loadFeed().then((res) {
+      //
+      if (null == res || res.toString().isEmpty) {
+        updateTitle('Error');
+        return;
+      }
+
       setState(() {
         _feed = res;
         _loading = _feed.title;
@@ -39,10 +45,15 @@ class RSSDemoState extends State<RSSDemo> {
   }
 
   Future<RssFeed> loadFeed() async {
-    final client = new http.Client();
-    final response = await client.get(FEED_URL);
-    final feed = new RssFeed.parse(response.body);
-    return feed;
+    try {
+      final client = new http.Client();
+      final response = await client.get(FEED_URL);
+      return RssFeed.parse(response.body);
+    } catch (e) {
+      print('error');
+      updateTitle('Error Loading Feed');
+    }
+    return null;
   }
 
   Future<void> _launchInApp(String url) async {
@@ -55,6 +66,35 @@ class RSSDemoState extends State<RSSDemo> {
     } else {
       print('Error opening Feed');
     }
+  }
+
+  updateTitle(message) {
+    setState(() {
+      _loading = message;
+    });
+  }
+
+  thumbnail(url) {
+    return Padding(
+      padding: EdgeInsets.only(left: 15.0),
+      child: CachedNetworkImage(
+        placeholder: (context, url) => Image.asset('images/no_image.png'),
+        imageUrl: url,
+        height: 50,
+        width: 50,
+        alignment: Alignment.center,
+        fit: BoxFit.fill,
+      ),
+    );
+  }
+
+  title(title) {
+    return Text(
+      title,
+      style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500),
+      maxLines: 2,
+      overflow: TextOverflow.ellipsis,
+    );
   }
 
   @override
@@ -79,19 +119,14 @@ class RSSDemoState extends State<RSSDemo> {
               itemCount: _feed.items.length,
               itemBuilder: (BuildContext ctxt, int index) {
                 final item = _feed.items[index];
-                print('Media ${item.enclosure.url}');
                 return ListTile(
-                  title: Text(item.title),
-                  leading: FadeInImage.assetNetwork(
-                    placeholder: 'images/no_image.png',
-                    image: item.enclosure.url,
-                    width: 50,
-                    fit: BoxFit.fill,
-                    alignment: Alignment.center,
-                  ),
+                  title: title(item.title),
+                  leading: thumbnail(item.enclosure.url),
+                  trailing: Icon(Icons.keyboard_arrow_right,
+                      color: Colors.grey, size: 30.0),
                   subtitle: Text('Published at ' + item.pubDate),
                   contentPadding: EdgeInsets.all(16.0),
-                  onTap: () async {
+                  onTap: () {
                     _launchInApp(item.link);
                   },
                 );
