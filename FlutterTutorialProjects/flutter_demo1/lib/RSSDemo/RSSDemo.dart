@@ -14,11 +14,12 @@ class RSSDemo extends StatefulWidget {
 }
 
 class RSSDemoState extends State<RSSDemo> {
+  // https://github.com/witochandra/webfeed
   //
   RssFeed _feed;
   static const String FEED_URL =
       'https://www.nasa.gov/rss/dyn/lg_image_of_the_day.rss';
-  String _loading;
+  String _title;
 
   @override
   void initState() {
@@ -39,7 +40,7 @@ class RSSDemoState extends State<RSSDemo> {
 
       setState(() {
         _feed = res;
-        _loading = _feed.title;
+        _title = _feed.title;
       });
     });
   }
@@ -70,7 +71,7 @@ class RSSDemoState extends State<RSSDemo> {
 
   updateTitle(message) {
     setState(() {
-      _loading = message;
+      _title = message;
     });
   }
 
@@ -101,7 +102,7 @@ class RSSDemoState extends State<RSSDemo> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_loading),
+        title: Text(_title),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.refresh),
