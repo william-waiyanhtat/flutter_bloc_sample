@@ -20,10 +20,16 @@ class RSSDemoState extends State<RSSDemo> {
       'https://www.nasa.gov/rss/dyn/lg_image_of_the_day.rss';
   RssFeed _feed;
   String _title;
+  GlobalKey<RefreshIndicatorState> refreshKey;
+  static const String loadingMsg = 'Loading Feed...';
+  static const String feedLoadErrorMsg = 'Error Loading Feed.';
+  static const String feedOpenErrorMsg = 'Error Opening Feed.';
+  static const String placeholderImg = 'images/no_image.png';
 
   @override
   void initState() {
     super.initState();
+    refreshKey = GlobalKey<RefreshIndicatorState>();
     updateTitle(widget.title);
     load();
   }
@@ -41,10 +47,10 @@ class RSSDemoState extends State<RSSDemo> {
   }
 
   load() async {
-    updateTitle('Loading Feed...');
+    updateTitle(loadingMsg);
     loadFeed().then((res) {
       if (null == res || res.toString().isEmpty) {
-        updateTitle('Error Loading Feed.');
+        updateTitle(feedLoadErrorMsg);
         return;
       }
       updateFeed(res);
@@ -70,19 +76,19 @@ class RSSDemoState extends State<RSSDemo> {
         forceSafariVC: true,
         forceWebView: false,
       );
-    } else {
-      updateTitle('Error opening Feed');
+      return;
     }
+    updateTitle(feedOpenErrorMsg);
   }
 
   thumbnail(url) {
     return Padding(
       padding: EdgeInsets.only(left: 15.0),
       child: CachedNetworkImage(
-        placeholder: (context, url) => Image.asset('images/no_image.png'),
+        placeholder: (context, url) => Image.asset(placeholderImg),
         imageUrl: url,
         height: 50,
-        width: 50,
+        width: 70,
         alignment: Alignment.center,
         fit: BoxFit.fill,
       ),
@@ -98,50 +104,56 @@ class RSSDemoState extends State<RSSDemo> {
     );
   }
 
-  subtitle(title) {
+  subtitle(subTitle) {
     return Text(
-      title,
+      subTitle,
       style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w100),
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
     );
   }
 
+  rightIcon() {
+    return Icon(Icons.keyboard_arrow_right, color: Colors.grey, size: 30.0);
+  }
+
   isFeedEmpty() {
     return null == _feed || null == _feed.items;
+  }
+
+  list() {
+    return ListView.builder(
+      itemCount: _feed.items.length,
+      itemBuilder: (BuildContext ctxt, int index) {
+        final item = _feed.items[index];
+        return ListTile(
+          title: title(item.title),
+          leading: thumbnail(item.enclosure.url),
+          trailing: rightIcon(),
+          subtitle: subtitle(item.pubDate),
+          contentPadding: EdgeInsets.all(5.0),
+          onTap: () => _launchInApp(context, item.link),
+        );
+      },
+    );
+  }
+
+  body() {
+    return isFeedEmpty()
+        ? Center(child: CircularProgressIndicator())
+        : RefreshIndicator(
+            key: refreshKey,
+            child: list(),
+            onRefresh: () => load(),
+          );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(_title),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.refresh),
-            onPressed: () => load(),
-          ),
-        ],
-      ),
-      body: isFeedEmpty()
-          ? Center(child: CircularProgressIndicator())
-          : ListView.builder(
-              itemCount: _feed.items.length,
-              itemBuilder: (BuildContext ctxt, int index) {
-                final item = _feed.items[index];
-                return ListTile(
-                  title: title(item.title),
-                  leading: thumbnail(item.enclosure.url),
-                  trailing: Icon(Icons.keyboard_arrow_right,
-                      color: Colors.grey, size: 30.0),
-                  subtitle: subtitle(item.pubDate),
-                  contentPadding: EdgeInsets.all(5.0),
-                  onTap: () {
-                    _launchInApp(context, item.link);
-                  },
-                );
-              },
-            ),
-    );
+        appBar: AppBar(
+          title: Text(_title),
+        ),
+        body: body());
   }
 }
