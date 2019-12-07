@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'widgets/FlushBar/FlushBarDemo.dart';
 import 'RSSDemo/RSSDemo.dart';
 
 void main() {
