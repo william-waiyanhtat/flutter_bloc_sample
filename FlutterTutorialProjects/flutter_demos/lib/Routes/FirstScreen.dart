@@ -34,14 +34,14 @@ class FirstScreen extends StatelessWidget {
             SizedBox(
               height: 20.0,
             ),
-            RaisedButton(
+            OutlineButton(
               child: Text('Launch screen (Normal)'),
               onPressed: () => buttonTap1(context),
             ),
             SizedBox(
               height: 20.0,
             ),
-            RaisedButton(
+            OutlineButton(
               child: Text('Launch named (Named Route))'),
               onPressed: () => buttonTap2(context),
             ),
@@ -80,6 +80,9 @@ class FirstScreen extends StatelessWidget {
   }
 
   showSnackBar(context, result) {
+    if (null == result || result.toString().isEmpty) {
+      return;
+    }
     Scaffold.of(context)
       ..removeCurrentSnackBar()
       ..showSnackBar(SnackBar(content: Text("$result")));
