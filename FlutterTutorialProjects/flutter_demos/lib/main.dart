@@ -42,11 +42,12 @@ class HomeApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: FirstScreen.routeName,
+      //home: SecondScreen(),
       routes: {
         FirstScreen.routeName: (context) => FirstScreen(),
         SecondScreen.routeName: (context) => SecondScreen(),
       },
+      initialRoute: FirstScreen.routeName,
     );
   }
 }

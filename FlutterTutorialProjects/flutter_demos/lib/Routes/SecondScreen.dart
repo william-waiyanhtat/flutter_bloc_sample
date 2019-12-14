@@ -4,14 +4,21 @@ import 'ScreenArguments.dart';
 class SecondScreen extends StatelessWidget {
   //
   static const routeName = 'SecondScreen';
+
+  final String title;
+  final String message;
+  SecondScreen({this.title, this.message});
+
+  //
   final TextEditingController _controllerTitle = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    final ScreenArguments args = ModalRoute.of(context).settings.arguments;
+    //final ScreenArguments args = ModalRoute.of(context).settings.arguments;
     return Scaffold(
       appBar: AppBar(
-        title: Text(args.title),
+        //title: Text(null == args ? '' : args.title),
+        title: Text(null == title ? '' : title),
       ),
       body: Column(
         children: <Widget>[
@@ -25,7 +32,8 @@ class SecondScreen extends StatelessWidget {
           SizedBox(
             height: 20.0,
           ),
-          Text(args.message),
+          //Text(null == args ? '' : args.message),
+          Text(null == message ? '' : message),
           SizedBox(
             height: 20.0,
           ),

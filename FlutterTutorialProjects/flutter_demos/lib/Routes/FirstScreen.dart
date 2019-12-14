@@ -42,7 +42,7 @@ class FirstScreen extends StatelessWidget {
               height: 20.0,
             ),
             OutlineButton(
-              child: Text('Launch named (Named Route))'),
+              child: Text('Launch Named Screen (Named Route)'),
               onPressed: () => buttonTap2(context),
             ),
           ],
@@ -56,6 +56,7 @@ class FirstScreen extends StatelessWidget {
       context,
       MaterialPageRoute(
         builder: (context) => SecondScreen(),
+        // title: _controllerTitle.text, message: _controllerMessage.text),
         settings: RouteSettings(
           arguments: ScreenArguments(
             _controllerTitle.text,
