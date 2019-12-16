@@ -3,45 +3,41 @@ import 'ScreenArguments.dart';
 
 class SecondScreen extends StatelessWidget {
   //
-  static const routeName = 'SecondScreen';
+
+  static String routeId = 'second_screen';
 
   final String title;
   final String message;
+
   SecondScreen({this.title, this.message});
 
-  //
-  final TextEditingController _controllerTitle = TextEditingController();
+  final TextEditingController _controllerMessageBack = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    //final ScreenArguments args = ModalRoute.of(context).settings.arguments;
+    final ScreenArguments args = ModalRoute.of(context).settings.arguments;
     return Scaffold(
       appBar: AppBar(
-        //title: Text(null == args ? '' : args.title),
-        title: Text(null == title ? '' : title),
+        title: Text(null == args ? 'Second Screen' : args.title),
       ),
       body: Column(
         children: <Widget>[
           TextField(
-            controller: _controllerTitle,
+            controller: _controllerMessageBack,
             decoration: InputDecoration(
               contentPadding: EdgeInsets.all(15.0),
-              hintText: 'Enter something',
+              hintText: 'Enter return message',
             ),
           ),
           SizedBox(
             height: 20.0,
           ),
-          //Text(null == args ? '' : args.message),
-          Text(null == message ? '' : message),
-          SizedBox(
-            height: 20.0,
-          ),
-          RaisedButton(
+          Text(null == args ? '' : args.message),
+          OutlineButton(
+            child: Text('Done'),
             onPressed: () {
-              Navigator.pop(context, _controllerTitle.text);
+              Navigator.pop(context, _controllerMessageBack.text);
             },
-            child: Text('Go back!'),
           ),
         ],
       ),

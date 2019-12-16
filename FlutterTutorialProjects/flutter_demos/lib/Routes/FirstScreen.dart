@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_demos/Routes/SecondScreen.dart';
+import 'SecondScreen.dart';
 import 'ScreenArguments.dart';
 
 class FirstScreen extends StatelessWidget {
   //
-  static const routeName = 'FirstScreen';
+  static String routeId = 'first_screen';
+
   final TextEditingController _controllerTitle = TextEditingController();
   final TextEditingController _controllerMessage = TextEditingController();
 
@@ -35,15 +36,16 @@ class FirstScreen extends StatelessWidget {
               height: 20.0,
             ),
             OutlineButton(
-              child: Text('Launch screen (Normal)'),
-              onPressed: () => buttonTap1(context),
-            ),
-            SizedBox(
-              height: 20.0,
+              child: Text('Launch Second Screen'),
+              onPressed: () {
+                buttonTap1(context);
+              },
             ),
             OutlineButton(
-              child: Text('Launch Named Screen (Named Route)'),
-              onPressed: () => buttonTap2(context),
+              child: Text('Launch Second Screen (Named)'),
+              onPressed: () {
+                buttonTap2(context);
+              },
             ),
           ],
         ),
@@ -56,7 +58,6 @@ class FirstScreen extends StatelessWidget {
       context,
       MaterialPageRoute(
         builder: (context) => SecondScreen(),
-        // title: _controllerTitle.text, message: _controllerMessage.text),
         settings: RouteSettings(
           arguments: ScreenArguments(
             _controllerTitle.text,
@@ -71,7 +72,7 @@ class FirstScreen extends StatelessWidget {
   buttonTap2(BuildContext context) async {
     final result = await Navigator.pushNamed(
       context,
-      SecondScreen.routeName,
+      SecondScreen.routeId,
       arguments: ScreenArguments(
         _controllerTitle.text,
         _controllerMessage.text,
@@ -86,6 +87,10 @@ class FirstScreen extends StatelessWidget {
     }
     Scaffold.of(context)
       ..removeCurrentSnackBar()
-      ..showSnackBar(SnackBar(content: Text("$result")));
+      ..showSnackBar(
+        SnackBar(
+          content: Text('$result'),
+        ),
+      );
   }
 }
