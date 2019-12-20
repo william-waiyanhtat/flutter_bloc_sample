@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'Routes/FirstScreen.dart';
-import 'Routes/SecondScreen.dart';
+import 'ErrorHandling/HomeScreen.dart';
 
 void main() {
   runApp(
@@ -8,6 +7,35 @@ void main() {
   );
 }
 
+/*
+// Wrap main widget inside the StreamProvider
+class HomeApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return StreamProvider<ConnectivityResult>(
+      builder: (context) => ConnectivityService().connectionStatusController,
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Flutter Tutorials',
+        home: new ConnectivityDemo(),
+      ),
+    );
+  }
+}
+*/
+
+class HomeApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Flutter Tutorials',
+      home: new HomeScreen(),
+    );
+  }
+}
+
+/*
 class HomeApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -22,3 +50,4 @@ class HomeApp extends StatelessWidget {
     );
   }
 }
+*/
