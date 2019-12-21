@@ -6,6 +6,7 @@ import 'Failures.dart';
 import 'FailureCodes.dart';
 
 class Services {
+  //
   static const String url = 'https://jsonplaceholder.typicode.com/users';
 
   // static Future<List<User>> getUsers() async {
@@ -26,19 +27,25 @@ class Services {
   static Future<List<User>> getUsers() async {
     try {
       final response = await http.get(url);
-      if (response.statusCode == 200) {
+      if (200 == response.statusCode) {
         List<User> list = parseUsers(response.body);
         //return list;
         throw SocketException('No Internet');
       } else {
-        throw NoUsersFailure(0, "No Users.");
+        throw NoUsersFailureException(FailureCodes.NO_USERS, "No Users.");
       }
     } on SocketException catch (e) {
-      throw InternetFailureException(-1, "No Internet Connection.");
+      throw InternetFailureException(
+          FailureCodes.NO_INTERNET, "No Internet Connection. ${e.message}");
     } on HttpException {
-      throw ServiceNotFoundException(-2, "Service Failure.");
+      throw ServiceNotFoundException(
+          FailureCodes.NO_SERVICE_FOUND, "Service Failure.");
     } on FormatException {
-      throw InvalidDataFormatException(-3, "Invalid Data Format.");
+      throw InvalidDataFormatException(
+          FailureCodes.INVALID_DATA_FORMAT, "Invalid Data Format.");
+    } catch (e) {
+      throw UncaughtException(
+          FailureCodes.UNCAUGHT_ERROR, "Something went wrong.");
     }
   }
 

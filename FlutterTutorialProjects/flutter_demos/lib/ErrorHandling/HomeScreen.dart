@@ -6,7 +6,7 @@ import 'Failures.dart';
 class HomeScreen extends StatefulWidget {
   HomeScreen() : super();
 
-  final String title = "Error Demo";
+  final String title = "Error Handling Demo";
 
   @override
   HomeScreenState createState() => HomeScreenState();
@@ -29,9 +29,27 @@ class HomeScreenState extends State<HomeScreen> {
         if (snapshot.hasData) {
           List<User> users = snapshot.data;
           return Column(
-            children: users.map((user) => Text(user.name)).toList(),
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: users
+                .map(
+                  (user) => Padding(
+                    padding: EdgeInsets.all(10.0),
+                    child: Text(
+                      user.name,
+                      style: TextStyle(
+                        fontSize: 20,
+                      ),
+                    ),
+                  ),
+                )
+                .toList(),
           );
         }
+
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator();
+        }
+
         if (snapshot.hasError) {
           if (snapshot.error is InternetFailureException) {
             InternetFailureException internetFailureException =
@@ -48,15 +66,23 @@ class HomeScreenState extends State<HomeScreen> {
                 snapshot.error as InvalidDataFormatException;
             return showError(invalidDataFormatException.message);
           }
-          UncaughtError uncaughtError = snapshot.error as UncaughtError;
-          return showError(uncaughtError.message);
+          if (snapshot.error is NoUsersFailureException) {
+            NoUsersFailureException noUsersFailureException =
+                snapshot.error as NoUsersFailureException;
+            return showError(noUsersFailureException.message);
+          }
+          if (snapshot.error is UncaughtException) {
+            UncaughtException uncaughtError =
+                snapshot.error as UncaughtException;
+            return showError(uncaughtError.message);
+          }
         }
-        return CircularProgressIndicator();
+        return showError('Service not available at this time.');
       },
     );
   }
 
-  Widget showError(String message) {
+  Center showError(String message) {
     return Center(
       child: Text(
         message,
@@ -71,11 +97,7 @@ class HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Column(
-        children: <Widget>[
-          list(),
-        ],
-      ),
+      body: list(),
     );
   }
 }

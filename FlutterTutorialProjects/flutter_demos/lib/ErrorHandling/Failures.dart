@@ -1,8 +1,8 @@
-class NoUsersFailure {
+class NoUsersFailureException {
   final int code;
   final String message;
 
-  NoUsersFailure(this.code, this.message);
+  NoUsersFailureException(this.code, this.message);
 }
 
 class InternetFailureException {
@@ -26,9 +26,9 @@ class InvalidDataFormatException {
   InvalidDataFormatException(this.code, this.message);
 }
 
-class UncaughtError {
+class UncaughtException {
   final int code;
   final String message;
 
-  UncaughtError(this.code, this.message);
+  UncaughtException(this.code, this.message);
 }
