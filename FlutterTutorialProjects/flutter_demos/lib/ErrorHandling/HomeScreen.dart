@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'User.dart';
+import 'package:flutter_demos/ErrorHandling/Exceptions.dart';
 import 'Services.dart';
-import 'Failures.dart';
+import 'User.dart';
 
 class HomeScreen extends StatefulWidget {
+  //
   HomeScreen() : super();
 
   final String title = "Error Handling Demo";
@@ -28,6 +29,9 @@ class HomeScreenState extends State<HomeScreen> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           List<User> users = snapshot.data;
+          if (users.isEmpty) {
+            return showError('No Users');
+          }
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: users
@@ -37,7 +41,7 @@ class HomeScreenState extends State<HomeScreen> {
                     child: Text(
                       user.name,
                       style: TextStyle(
-                        fontSize: 20,
+                        fontSize: 20.0,
                       ),
                     ),
                   ),
@@ -45,49 +49,34 @@ class HomeScreenState extends State<HomeScreen> {
                 .toList(),
           );
         }
-
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
-        }
-
         if (snapshot.hasError) {
-          if (snapshot.error is InternetFailureException) {
-            InternetFailureException internetFailureException =
-                snapshot.error as InternetFailureException;
-            return showError(internetFailureException.message);
+          if (snapshot.error is NoInternetException) {
+            NoInternetException noInternetException =
+                snapshot.error as NoInternetException;
+            return showError(noInternetException.message);
           }
-          if (snapshot.error is ServiceNotFoundException) {
-            ServiceNotFoundException serviceNotFoundException =
-                snapshot.error as ServiceNotFoundException;
-            return showError(serviceNotFoundException.message);
+          if (snapshot.error is NoServiceFoundException) {
+            NoServiceFoundException noServiceFoundException =
+                snapshot.error as NoServiceFoundException;
+            return showError(noServiceFoundException.message);
           }
-          if (snapshot.error is InvalidDataFormatException) {
-            InvalidDataFormatException invalidDataFormatException =
-                snapshot.error as InvalidDataFormatException;
-            return showError(invalidDataFormatException.message);
+          if (snapshot.error is InvalidFormatException) {
+            InvalidFormatException invalidFormatException =
+                snapshot.error as InvalidFormatException;
+            return showError(invalidFormatException.message);
           }
-          if (snapshot.error is NoUsersFailureException) {
-            NoUsersFailureException noUsersFailureException =
-                snapshot.error as NoUsersFailureException;
-            return showError(noUsersFailureException.message);
-          }
-          if (snapshot.error is UncaughtException) {
-            UncaughtException uncaughtError =
-                snapshot.error as UncaughtException;
-            return showError(uncaughtError.message);
-          }
+          UnknownException unknownException =
+              snapshot.error as UnknownException;
+          return showError(unknownException.message);
         }
-        return showError('Service not available at this time.');
+        return CircularProgressIndicator();
       },
     );
   }
 
-  Center showError(String message) {
+  Widget showError(message) {
     return Center(
-      child: Text(
-        message,
-        style: TextStyle(color: Colors.grey, fontSize: 20),
-      ),
+      child: Text(message),
     );
   }
 
