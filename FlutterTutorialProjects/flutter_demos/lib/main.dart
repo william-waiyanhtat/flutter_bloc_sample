@@ -1,10 +1,35 @@
 import 'package:flutter/material.dart';
-import 'ErrorHandling/HomeScreen.dart';
+import 'package:provider/provider.dart';
+import 'widgets/ThemeDemo/ThemeDemo.dart';
+import 'widgets/ThemeDemo/AppTheme.dart';
+import 'widgets/ThemeDemo/AppNotifier.dart';
 
 void main() {
   runApp(
-    new HomeApp(),
+    ChangeNotifierProvider<AppNotifier>(
+      builder: (context) => AppNotifier(),
+      child: HomeApp(),
+    ),
   );
+}
+
+class HomeApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<AppNotifier>(
+      builder: (context, appState, child) {
+        return MaterialApp(
+          title: 'Flutter Tutorials',
+          debugShowCheckedModeBanner: false,
+          theme: AppTheme.lightTheme, // ThemeData(primarySwatch: Colors.blue),
+          darkTheme:
+              AppTheme.darkTheme, // ThemeData(primarySwatch: Colors.blue),
+          home: ThemeDemo(),
+          themeMode: appState.isDarkMode ? ThemeMode.dark : ThemeMode.light,
+        );
+      },
+    );
+  }
 }
 
 /*
@@ -23,17 +48,6 @@ class HomeApp extends StatelessWidget {
   }
 }
 */
-
-class HomeApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Tutorials',
-      home: new HomeScreen(),
-    );
-  }
-}
 
 /*
 class HomeApp extends StatelessWidget {

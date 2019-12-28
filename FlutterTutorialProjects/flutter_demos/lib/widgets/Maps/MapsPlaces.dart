@@ -100,6 +100,7 @@ class MapsPlacesDemoState extends State<MapsPlacesDemo> {
   }
 
   Future<LatLng> getUserLocation() async {
+    /*
     var currentLocation = <String, double>{};
     final location = LocationManager.Location();
     try {
@@ -111,7 +112,7 @@ class MapsPlacesDemoState extends State<MapsPlacesDemo> {
     } on Exception {
       currentLocation = null;
       return null;
-    }
+    }*/
   }
 
   void getNearbyPlaces(LatLng center) async {

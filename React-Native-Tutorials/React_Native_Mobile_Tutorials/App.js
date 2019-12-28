@@ -1,15 +1,14 @@
 import React from 'react';
-import {SafeAreaView, StatusBar} from 'react-native';
+import {SafeAreaView, StatusBar, View} from 'react-native';
 
-import FlexDemoScreen from './Layout/FlexDemo';
-import FlatListDemo from './Widgets/FlastLIst/FlastListDemo';
+import FlatListDemo from './Widgets/FlastList/FlatListDemo';
 
 const App: () => React$Node = () => {
   return (
     <>
       <StatusBar barStyle="dark-content" />
       <SafeAreaView style={{flex: 1}}>
-        <FlexDemoScreen />
+        <FlatListDemo />
       </SafeAreaView>
     </>
   );
