@@ -31,6 +31,7 @@ class ThemeDemoState extends State<ThemeDemo> {
           itemCount: 10,
           itemBuilder: (context, pos) {
             return Card(
+              elevation: 0,
               child: ListTile(
                 title: Text(
                   "Title $pos",
