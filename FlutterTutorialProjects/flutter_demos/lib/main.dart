@@ -4,10 +4,33 @@ import 'widgets/ThemeDemo/ThemeDemo.dart';
 import 'widgets/ThemeDemo/AppTheme.dart';
 import 'widgets/ThemeDemo/AppNotifier.dart';
 
+/*
 void main() {
   runApp(
-    ChangeNotifierProvider<AppNotifier>(
-      builder: (context) => AppNotifier(),
+    HomeApp(),
+  );
+}
+*/
+
+/*
+class HomeApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Tutorials',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(primarySwatch: Colors.blue),
+      darkTheme: ThemeData(primarySwatch: Colors.green),
+      home: ThemeDemo(),
+    );
+  }
+}
+*/
+
+void main() {
+  runApp(
+    ChangeNotifierProvider<AppStateNotifier>(
+      builder: (context) => AppStateNotifier(),
       child: HomeApp(),
     ),
   );
@@ -16,7 +39,7 @@ void main() {
 class HomeApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Consumer<AppNotifier>(
+    return Consumer<AppStateNotifier>(
       builder: (context, appState, child) {
         return MaterialApp(
           title: 'Flutter Tutorials',

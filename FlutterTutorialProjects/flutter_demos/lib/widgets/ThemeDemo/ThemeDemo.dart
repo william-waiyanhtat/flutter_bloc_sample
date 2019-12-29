@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'AppNotifier.dart';
@@ -16,34 +14,38 @@ class ThemeDemoState extends State<ThemeDemo> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Theme Demo'),
+        elevation: 0,
+        title: Text('Flutter Themes'),
         leading: Icon(Icons.menu),
         actions: <Widget>[
           Switch(
-            value: Provider.of<AppNotifier>(context).isDarkMode,
+            value: Provider.of<AppStateNotifier>(context).isDarkMode,
             onChanged: (boolVal) {
-              Provider.of<AppNotifier>(context).updateTheme(boolVal);
+              Provider.of<AppStateNotifier>(context).updateTheme(boolVal);
             },
           )
         ],
       ),
       body: Container(
         child: ListView.builder(
-          itemCount: 5,
+          itemCount: 10,
           itemBuilder: (context, pos) {
-            int val = Random().nextInt(100);
             return Card(
               child: ListTile(
                 title: Text(
-                  "Hello $val",
+                  "Title $pos",
                   style: Theme.of(context).textTheme.title,
                 ),
                 subtitle: Text(
-                  "Subtitle $val",
+                  "Subtitle $pos",
                   style: Theme.of(context).textTheme.subtitle,
                 ),
                 leading: Icon(
                   Icons.alarm,
+                  color: Theme.of(context).iconTheme.color,
+                ),
+                trailing: Icon(
+                  Icons.chevron_right,
                   color: Theme.of(context).iconTheme.color,
                 ),
               ),

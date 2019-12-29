@@ -11,33 +11,36 @@ class AppTheme {
       iconTheme: IconThemeData(
         color: Colors.white,
       ),
-      textTheme: TextTheme(
-        title: TextStyle(
-          color: Colors.white,
-          fontSize: 18.0,
-        ),
-        subtitle: TextStyle(
-          color: Colors.black,
-          fontSize: 18.0,
-        ),
-      ),
+      // textTheme: TextTheme(
+      //   title: TextStyle(
+      //     color: Colors.white,
+      //     fontSize: 18.0,
+      //   ),
+      //   subtitle: TextStyle(
+      //     color: Colors.black,
+      //     fontSize: 18.0,
+      //   ),
+      // ),
     ),
     colorScheme: ColorScheme.light(
-      primary: Colors.green,
-      onPrimary: Colors.green,
-      primaryVariant: Colors.green[100],
+      primary: Colors.white,
+      onPrimary: Colors.white,
+      primaryVariant: Colors.white38,
       secondary: Colors.red,
+    ),
+    cardTheme: CardTheme(
+      color: Colors.green,
     ),
     iconTheme: IconThemeData(
       color: Colors.amber,
     ),
     textTheme: TextTheme(
       title: TextStyle(
-        color: Colors.black,
+        color: Colors.white,
         fontSize: 20.0,
       ),
       subtitle: TextStyle(
-        color: Colors.black,
+        color: Colors.white54,
         fontSize: 18.0,
       ),
     ),
@@ -50,36 +53,36 @@ class AppTheme {
       iconTheme: IconThemeData(
         color: Colors.white,
       ),
-      textTheme: TextTheme(
-        title: TextStyle(
-          color: Colors.white,
-          fontSize: 18.0,
-        ),
-        subtitle: TextStyle(
-          color: Colors.black,
-          fontSize: 18.0,
-        ),
-      ),
+      // textTheme: TextTheme(
+      //   title: TextStyle(
+      //     color: Colors.white,
+      //     fontSize: 18.0,
+      //   ),
+      //   subtitle: TextStyle(
+      //     color: Colors.black,
+      //     fontSize: 18.0,
+      //   ),
+      // ),
     ),
     colorScheme: ColorScheme.light(
-      primary: Colors.green,
-      onPrimary: Colors.green,
-      primaryVariant: Colors.green[100],
+      primary: Colors.black,
+      onPrimary: Colors.black,
+      primaryVariant: Colors.black,
       secondary: Colors.red,
     ),
     cardTheme: CardTheme(
-      color: Colors.purple,
+      color: Colors.black,
     ),
     iconTheme: IconThemeData(
       color: Colors.amber,
     ),
     textTheme: TextTheme(
       title: TextStyle(
-        color: Colors.green,
+        color: Colors.white,
         fontSize: 20.0,
       ),
       subtitle: TextStyle(
-        color: Colors.black,
+        color: Colors.white70,
         fontSize: 18.0,
       ),
     ),
