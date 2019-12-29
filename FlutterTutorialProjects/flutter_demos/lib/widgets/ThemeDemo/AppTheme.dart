@@ -5,9 +5,9 @@ class AppTheme {
   AppTheme._();
 
   static final ThemeData lightTheme = ThemeData(
-    scaffoldBackgroundColor: Colors.green,
+    scaffoldBackgroundColor: Colors.teal,
     appBarTheme: AppBarTheme(
-      color: Colors.green,
+      color: Colors.teal,
       iconTheme: IconThemeData(
         color: Colors.white,
       ),
@@ -29,10 +29,10 @@ class AppTheme {
       secondary: Colors.red,
     ),
     cardTheme: CardTheme(
-      color: Colors.green,
+      color: Colors.teal,
     ),
     iconTheme: IconThemeData(
-      color: Colors.amber,
+      color: Colors.white54,
     ),
     textTheme: TextTheme(
       title: TextStyle(
@@ -40,7 +40,7 @@ class AppTheme {
         fontSize: 20.0,
       ),
       subtitle: TextStyle(
-        color: Colors.white54,
+        color: Colors.white70,
         fontSize: 18.0,
       ),
     ),
@@ -74,7 +74,7 @@ class AppTheme {
       color: Colors.black,
     ),
     iconTheme: IconThemeData(
-      color: Colors.amber,
+      color: Colors.white54,
     ),
     textTheme: TextTheme(
       title: TextStyle(
