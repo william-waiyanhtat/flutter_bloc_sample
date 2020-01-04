@@ -1,32 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'widgets/ThemeDemo/ThemeDemo.dart';
-import 'widgets/ThemeDemo/AppTheme.dart';
-import 'widgets/ThemeDemo/AppNotifier.dart';
+import 'widgets/CustomWidgets/CustomWidgetDemo.dart';
 
-/*
 void main() {
   runApp(
     HomeApp(),
   );
 }
-*/
 
-/*
 class HomeApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Tutorials',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(primarySwatch: Colors.blue),
-      darkTheme: ThemeData(primarySwatch: Colors.green),
-      home: ThemeDemo(),
+      home: CustomWidgetDemo(),
     );
   }
 }
-*/
 
+/*
 void main() {
   runApp(
     ChangeNotifierProvider<AppStateNotifier>(
@@ -36,6 +27,7 @@ void main() {
   );
 }
 
+
 class HomeApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -44,16 +36,17 @@ class HomeApp extends StatelessWidget {
         return MaterialApp(
           title: 'Flutter Tutorials',
           debugShowCheckedModeBanner: false,
-          theme: AppTheme.lightTheme, // ThemeData(primarySwatch: Colors.blue),
-          darkTheme:
-              AppTheme.darkTheme, // ThemeData(primarySwatch: Colors.blue),
+          theme: AppTheme.lightTheme,
+          darkTheme: AppTheme.darkTheme,
+          themeMode: appState.isDarkModeOn ? ThemeMode.dark : ThemeMode.light,
           home: ThemeDemo(),
-          themeMode: appState.isDarkMode ? ThemeMode.dark : ThemeMode.light,
         );
       },
     );
   }
 }
+
+*/
 
 /*
 // Wrap main widget inside the StreamProvider
