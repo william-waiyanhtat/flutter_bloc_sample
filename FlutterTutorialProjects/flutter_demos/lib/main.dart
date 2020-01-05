@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'widgets/CustomWidgets/CustomWidgetDemo.dart';
+import 'widgets/CustomWidgets/ExtendedDemo.dart';
 
 void main() {
   runApp(
@@ -12,7 +12,7 @@ class HomeApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: CustomWidgetDemo(),
+      home: ExtendedDemo(),
     );
   }
 }
