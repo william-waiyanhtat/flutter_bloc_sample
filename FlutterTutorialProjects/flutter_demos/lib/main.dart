@@ -1,6 +1,4 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'widgets/CustomWidgets/ExtendedDemo.dart';
 import 'FirebaseMessaging/FirebaseMessagingDemo.dart';
 
 void main() {
