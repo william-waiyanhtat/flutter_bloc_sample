@@ -1,2 +1,10 @@
 npm install -g firebase-tools
 firebase login
+
+mkdir FlutterCloudFunctionDemo
+cd FlutterCloudFunctionDemo/
+
+firebase init functions
+
+firebase deploy
+firebase deploy --only functions
