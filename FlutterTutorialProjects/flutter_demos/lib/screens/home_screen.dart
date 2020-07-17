@@ -14,8 +14,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: IAppBar(
+        color: context.watch<AppSettings>().appColor,
         height: 100,
-        color: Colors.green,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -43,9 +43,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: IconButton(
                     icon: Icon(Icons.settings),
                     onPressed: () {
-                      Navigator.pushReplacement(context,
+                      Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
-                        return HomeScreen();
+                        return SettingsScreen();
                       }));
                     },
                   ),
@@ -56,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       body: Container(
-        color: Colors.white,
+        color: context.watch<AppSettings>().appColor,
       ),
     );
   }
