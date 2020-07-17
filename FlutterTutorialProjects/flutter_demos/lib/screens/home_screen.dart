@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_demos/screens/settings.dart';
-import 'package:flutter_demos/utils/app_settings.dart';
+import 'package:flutter_demos/components/appbar.dart';
+import 'package:flutter_demos/screens/settings_screen.dart';
+import 'package:flutter_demos/utils/appsettings.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -12,25 +13,29 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: context.watch<AppSettings>().appColor,
-        title: Text('Home'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.settings),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => SettingsScreen(),
-                ),
-              );
-            },
-          )
-        ],
+      appBar: IAppBar(
+        height: 100,
+        color: Colors.green,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Text(
+              'HOME',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+              ),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+          ],
+        ),
       ),
       body: Container(
-        color: context.watch<AppSettings>().appColor,
+        color: Colors.white,
       ),
     );
   }

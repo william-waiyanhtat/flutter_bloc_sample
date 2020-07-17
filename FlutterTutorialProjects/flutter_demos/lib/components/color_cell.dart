@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_demos/utils/app_settings.dart';
+import 'package:flutter_demos/utils/appsettings.dart';
 import 'package:provider/provider.dart';
 
 class ColorCell extends StatelessWidget {
@@ -11,8 +11,8 @@ class ColorCell extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.center,
-      width: 72,
-      height: 72,
+      width: 80,
+      height: 80,
       decoration: BoxDecoration(color: color),
       child: context.watch<AppSettings>().appColor == color
           ? Icon(

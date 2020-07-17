@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 
-class AppSettings extends ChangeNotifier {
+class Constants {
   //
-  Color _appColor = Colors.teal;
-
-  Color get appColor => _appColor;
-
   static List<Color> colors = [
     Colors.black87,
     Colors.blue,
@@ -15,13 +11,7 @@ class AppSettings extends ChangeNotifier {
     Colors.teal,
     Colors.red,
     Colors.amber,
-    Colors.orange,
     Colors.brown,
     Colors.deepOrange,
   ];
-
-  void updateColorTheme(int index) {
-    _appColor = colors[index];
-    notifyListeners();
-  }
 }

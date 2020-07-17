@@ -1,19 +1,26 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 
 class LinkBtn extends StatelessWidget {
-  LinkBtn({this.onPress, this.btnTitle});
+  //
+  LinkBtn({this.onPress, this.text, this.color});
 
-  final String btnTitle;
   final Function onPress;
+  final String text;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: EdgeInsets.all(10),
       child: FlatButton(
-        child: Text(btnTitle),
         onPressed: onPress,
+        child: Text(
+          text,
+          style: TextStyle(color: color),
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(3.0),
+        ),
       ),
     );
   }

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
-class TF extends StatelessWidget {
-  TF({
+class AppTextFormField extends StatelessWidget {
+  //
+  AppTextFormField({
     this.controller,
     this.hintText,
     this.helpText,
@@ -26,28 +27,34 @@ class TF extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(10.0),
       child: TextFormField(
         controller: controller,
         readOnly: null == readOnly ? false : true,
-        obscureText: null == isPassword ? false : isPassword,
+        obscureText: null == isPassword ? false : true,
         decoration: InputDecoration(
           focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.greenAccent, width: 1.0),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.red, width: 1.0),
-          ),
-          border: new OutlineInputBorder(
-            borderSide: new BorderSide(
-              color: null == borderColor ? Colors.teal : borderColor,
+            borderSide: BorderSide(
+              color: Colors.greenAccent,
+              width: 1.0,
             ),
           ),
-          hintText: hintText,
-          contentPadding: EdgeInsets.all(20.0),
-          prefixIcon: null == suffixIcon ? null : Icon(prefixIcon),
-          suffixIcon: null == suffixIcon ? null : Icon(suffixIcon),
-          enabled: null == enabled ? true : enabled,
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Colors.greenAccent,
+              width: 1.0,
+            ),
+          ),
+          border: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: null == borderColor ? Colors.teal : borderColor,
+              width: 1.0,
+            ),
+          ),
+          hintText: null == hintText ? '' : hintText,
+          helperText: null == helpText ? '' : helpText,
+          prefixIcon: null == prefixIcon ? null : Icon(prefixIcon),
+          suffix: null == suffixIcon ? null : Icon(suffixIcon),
+          enabled: null == enabled ? true : false,
         ),
       ),
     );

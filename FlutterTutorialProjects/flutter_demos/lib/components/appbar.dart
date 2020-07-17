@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:flutter_demos/utils/app_settings.dart';
 
 class IAppBar extends PreferredSize {
+  //
   final Widget child;
   final double height;
+  final Color color;
 
-  IAppBar({@required this.child, this.height = kToolbarHeight});
+  IAppBar({
+    @required this.child,
+    this.color,
+    this.height = kToolbarHeight,
+  });
 
   @override
   Size get preferredSize => Size.fromHeight(height);
@@ -15,7 +19,7 @@ class IAppBar extends PreferredSize {
   Widget build(BuildContext context) {
     return Container(
       height: preferredSize.height,
-      color: context.watch<AppSettings>().appColor,
+      color: color ?? Colors.red,
       alignment: Alignment.center,
       child: child,
     );

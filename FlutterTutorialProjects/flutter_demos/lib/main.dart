@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_demos/utils/app_settings.dart';
+import 'package:flutter_demos/screens/login_screen.dart';
+import 'package:flutter_demos/utils/appsettings.dart';
 import 'package:provider/provider.dart';
-import 'screens/login_screen.dart';
 
 void main() {
   runApp(
@@ -16,10 +16,10 @@ class HomeApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(
           create: (_) => AppSettings(),
-        )
+        ),
       ],
       child: MaterialApp(
-        title: 'Win Interviews',
+        title: 'Flutter Demo',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primarySwatch: Colors.green,
