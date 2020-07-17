@@ -17,19 +17,40 @@ class _HomeScreenState extends State<HomeScreen> {
         height: 100,
         color: Colors.green,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              'HOME',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 20,
-              ),
-            ),
             SizedBox(
-              height: 20,
+              height: 30,
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Expanded(
+                  child: Text(
+                    'HOME',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.only(top: 0),
+                  child: IconButton(
+                    icon: Icon(Icons.settings),
+                    onPressed: () {
+                      Navigator.pushReplacement(context,
+                          MaterialPageRoute(builder: (context) {
+                        return HomeScreen();
+                      }));
+                    },
+                  ),
+                ),
+              ],
             ),
           ],
         ),
