@@ -9,6 +9,9 @@ import 'package:provider/provider.dart';
 import 'home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
+  //
+  static const ROUTE_ID = 'login_screen';
+
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -29,6 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('LOGIN'),
+        backgroundColor: context.watch<AppSettings>().appColor,
       ),
       body: Container(
         child: Column(
@@ -55,6 +59,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           MaterialPageRoute(builder: (context) {
                         return HomeScreen();
                       }));
+                      Utils.saveLoggedIn(true);
                     },
                     text: 'LOGIN',
                     color: context.watch<AppSettings>().appColor,

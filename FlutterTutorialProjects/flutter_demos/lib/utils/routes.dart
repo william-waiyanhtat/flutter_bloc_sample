@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_demos/screens/home_screen.dart';
 import 'package:flutter_demos/screens/login_screen.dart';
 import 'package:flutter_demos/screens/settings_screen.dart';
@@ -13,11 +12,11 @@ class Routes {
     };
   }
 
-  static initScreen() {
+  static initialRoute() {
     return LoginScreen.ROUTE_ID;
   }
 
-  static homeScreen() {
+  static homeRoute() {
     return HomeScreen.ROUTE_ID;
   }
 }

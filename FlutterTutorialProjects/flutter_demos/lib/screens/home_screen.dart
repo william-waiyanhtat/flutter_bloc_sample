@@ -1,15 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_demos/components/appbar.dart';
 import 'package:flutter_demos/screens/settings_screen.dart';
+import 'package:flutter_demos/utils/Utils.dart';
 import 'package:flutter_demos/utils/appsettings.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
+  //
+  static const ROUTE_ID = 'home_screen';
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  //
+  @override
+  void initState() {
+    super.initState();
+    _initTheme();
+  }
+
+  _initTheme() async {
+    int themeIndex = await Utils.getThemeIndex();
+    context.read<AppSettings>().updateColor(themeIndex);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
