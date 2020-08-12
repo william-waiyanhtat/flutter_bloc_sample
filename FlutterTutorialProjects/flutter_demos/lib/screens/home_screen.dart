@@ -1,77 +1,58 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_demos/components/appbar.dart';
-import 'package:flutter_demos/screens/settings_screen.dart';
-import 'package:flutter_demos/utils/Utils.dart';
-import 'package:flutter_demos/utils/appsettings.dart';
-import 'package:provider/provider.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class HomeScreen extends StatefulWidget {
   //
-  static const ROUTE_ID = 'home_screen';
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
   //
+  YoutubePlayerController _controller;
+  PlayerState _playerState;
+  YoutubeMetaData _videoMetaData;
+  double _volume = 100;
+  bool _muted = false;
+  bool _isPlayerReady = false;
+
   @override
   void initState() {
     super.initState();
-    _initTheme();
+    _controller = YoutubePlayerController(
+      initialVideoId: 'ARkO-6f9ZCo',
+      flags: YoutubePlayerFlags(
+        mute: false,
+        autoPlay: true,
+      ),
+    );
   }
 
-  _initTheme() async {
-    int themeIndex = await Utils.getThemeIndex();
-    context.read<AppSettings>().updateColor(themeIndex);
+  void listener() {
+    setState(() {
+      _playerState = _controller.value.playerState;
+      _videoMetaData = _controller.metadata;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: IAppBar(
-        color: context.watch<AppSettings>().appColor,
-        height: 100,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-              height: 30,
-            ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Expanded(
-                  child: Text(
-                    'HOME',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                    ),
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.only(top: 0),
-                  child: IconButton(
-                    icon: Icon(Icons.settings),
-                    onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
-                        return SettingsScreen();
-                      }));
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
+      appBar: AppBar(
+        title: Text('Youtube Player'),
       ),
       body: Container(
-        color: context.watch<AppSettings>().appColor,
+        child: Column(
+          children: [
+            YoutubePlayer(
+              controller: _controller,
+              showVideoProgressIndicator: true,
+              onReady: () {
+                print('Player is ready.');
+              },
+            )
+          ],
+        ),
       ),
     );
   }
