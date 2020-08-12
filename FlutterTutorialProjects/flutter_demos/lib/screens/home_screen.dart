@@ -20,19 +20,35 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _controller = YoutubePlayerController(
-      initialVideoId: 'ARkO-6f9ZCo',
-      flags: YoutubePlayerFlags(
-        mute: false,
-        autoPlay: true,
-      ),
-    );
+        initialVideoId: 'ARkO-6f9ZCo',
+        flags: YoutubePlayerFlags(
+          mute: false,
+          autoPlay: true,
+        ))
+      ..addListener(listener);
   }
 
   void listener() {
-    setState(() {
-      _playerState = _controller.value.playerState;
-      _videoMetaData = _controller.metadata;
-    });
+    if (_isPlayerReady && mounted && !_controller.value.isFullScreen) {
+      setState(() {
+        _playerState = _controller.value.playerState;
+        _videoMetaData = _controller.metadata;
+        print(_videoMetaData.author);
+      });
+    }
+  }
+
+  @override
+  void deactivate() {
+    // Pauses video while navigating to next page.
+    _controller.pause();
+    super.deactivate();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -42,16 +58,13 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Text('Youtube Player'),
       ),
       body: Container(
-        child: Column(
-          children: [
-            YoutubePlayer(
-              controller: _controller,
-              showVideoProgressIndicator: true,
-              onReady: () {
-                print('Player is ready.');
-              },
-            )
-          ],
+        child: YoutubePlayer(
+          controller: _controller,
+          showVideoProgressIndicator: true,
+          onReady: () {
+            print('Player is ready.');
+            _isPlayerReady = true;
+          },
         ),
       ),
     );
