@@ -1,72 +1,75 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:flutter_demos/model/account_model.dart';
+import 'package:flutter_demos/model/video_list_model.dart';
+import 'package:flutter_demos/utils/services.dart';
 
 class HomeScreen extends StatefulWidget {
-  //
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
   //
-  YoutubePlayerController _controller;
-  PlayerState _playerState;
-  YoutubeMetaData _videoMetaData;
-  double _volume = 100;
-  bool _muted = false;
-  bool _isPlayerReady = false;
+  AccountModel _accountModel;
+  Snippet _snippet;
+  bool _loaded;
+  String _playListId;
+  VideosList videosList;
 
   @override
   void initState() {
     super.initState();
-    _controller = YoutubePlayerController(
-        initialVideoId: 'ARkO-6f9ZCo',
-        flags: YoutubePlayerFlags(
-          mute: false,
-          autoPlay: true,
-        ))
-      ..addListener(listener);
+    _loaded = false;
+    _getAccountInfo();
   }
 
-  void listener() {
-    if (_isPlayerReady && mounted && !_controller.value.isFullScreen) {
-      setState(() {
-        _playerState = _controller.value.playerState;
-        _videoMetaData = _controller.metadata;
-        print(_videoMetaData.author);
-      });
-    }
-  }
-
-  @override
-  void deactivate() {
-    // Pauses video while navigating to next page.
-    _controller.pause();
-    super.deactivate();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
+  _getAccountInfo() async {
+    _accountModel = await Services.getAccountInfo();
+    Item item = _accountModel.items[0];
+    _snippet = item.snippet;
+    _playListId = item.contentDetails.relatedPlaylists.uploads;
+    print('_playListId: $_playListId');
+    videosList =
+        await Services.getVideosList(playlistId: _playListId, pageToken: '');
+    print(videosList.items.length);
+    setState(() {
+      _loaded = true;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Youtube Player'),
-      ),
-      body: Container(
-        child: YoutubePlayer(
-          controller: _controller,
-          showVideoProgressIndicator: true,
-          onReady: () {
-            print('Player is ready.');
-            _isPlayerReady = true;
-          },
+        appBar: AppBar(
+          title: Text(_loaded ? _snippet.title : 'Loading...'),
         ),
-      ),
-    );
+        body: Column(
+          children: [
+            Expanded(
+              child: ListView.builder(
+                itemCount: null == videosList ? 0 : videosList.items.length,
+                itemBuilder: (context, index) {
+                  VideoItem videoItem = videosList.items[index];
+                  return Row(
+                    children: [
+                      CachedNetworkImage(
+                          imageUrl: videoItem
+                              .snippet.thumbnails.thumbnailsDefault.url)
+                    ],
+                  );
+                },
+              ),
+            ),
+            FlatButton(
+                onPressed: () async {
+                  String nextToken = videosList.nextPageToken;
+                  videosList = await Services.getVideosList(
+                      playlistId: _playListId, pageToken: nextToken);
+                  setState(() {});
+                },
+                child: Text('More'))
+          ],
+        ));
   }
 }
