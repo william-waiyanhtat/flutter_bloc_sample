@@ -14,21 +14,21 @@ class VideosList {
     this.kind,
     this.etag,
     this.nextPageToken,
-    this.items,
+    this.videos,
     this.pageInfo,
   });
 
   String kind;
   String etag;
   String nextPageToken;
-  List<VideoItem> items;
+  List<VideoItem> videos;
   PageInfo pageInfo;
 
   factory VideosList.fromJson(Map<String, dynamic> json) => VideosList(
         kind: json["kind"],
         etag: json["etag"],
         nextPageToken: json["nextPageToken"],
-        items: List<VideoItem>.from(
+        videos: List<VideoItem>.from(
             json["items"].map((x) => VideoItem.fromJson(x))),
         pageInfo: PageInfo.fromJson(json["pageInfo"]),
       );
@@ -37,7 +37,7 @@ class VideosList {
         "kind": kind,
         "etag": etag,
         "nextPageToken": nextPageToken,
-        "items": List<dynamic>.from(items.map((x) => x.toJson())),
+        "items": List<dynamic>.from(videos.map((x) => x.toJson())),
         "pageInfo": pageInfo.toJson(),
       };
 }
@@ -53,13 +53,13 @@ class VideoItem {
   String kind;
   String etag;
   String id;
-  VideoSnippet snippet;
+  Video snippet;
 
   factory VideoItem.fromJson(Map<String, dynamic> json) => VideoItem(
         kind: json["kind"],
         etag: json["etag"],
         id: json["id"],
-        snippet: VideoSnippet.fromJson(json["snippet"]),
+        snippet: Video.fromJson(json["snippet"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -70,8 +70,8 @@ class VideoItem {
       };
 }
 
-class VideoSnippet {
-  VideoSnippet({
+class Video {
+  Video({
     this.publishedAt,
     this.channelId,
     this.title,
@@ -93,9 +93,9 @@ class VideoSnippet {
   int position;
   ResourceId resourceId;
 
-  factory VideoSnippet.fromJson(Map<String, dynamic> json) {
+  factory Video.fromJson(Map<String, dynamic> json) {
     print(json["thumbnails"]);
-    return VideoSnippet(
+    return Video(
       publishedAt: DateTime.parse(json["publishedAt"]),
       channelId: json["channelId"],
       title: json["title"],

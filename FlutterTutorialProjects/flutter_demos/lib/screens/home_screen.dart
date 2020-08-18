@@ -12,64 +12,88 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   //
   AccountModel _accountModel;
-  Snippet _snippet;
-  bool _loaded;
+  bool _loading;
+  Item _item;
   String _playListId;
-  VideosList videosList;
+  VideosList _videosList;
+  ScrollController _scrollController;
+  String _nextPageToken;
 
   @override
   void initState() {
     super.initState();
-    _loaded = false;
+    _loading = true;
+    _nextPageToken = '';
+    _scrollController = ScrollController();
+    _videosList = VideosList();
+    _videosList.videos = List();
     _getAccountInfo();
   }
 
   _getAccountInfo() async {
     _accountModel = await Services.getAccountInfo();
-    Item item = _accountModel.items[0];
-    _snippet = item.snippet;
-    _playListId = item.contentDetails.relatedPlaylists.uploads;
+    _item = _accountModel.items[0];
+
+    print('Videos: ${_item.statistics.videoCount}');
+    _playListId = _item.contentDetails.relatedPlaylists.uploads;
     print('_playListId: $_playListId');
-    videosList =
-        await Services.getVideosList(playlistId: _playListId, pageToken: '');
-    print(videosList.items.length);
+    await _loadVideos();
+    print(_videosList.videos.length);
     setState(() {
-      _loaded = true;
+      _loading = false;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(_loaded ? _snippet.title : 'Loading...'),
-        ),
-        body: Column(
-          children: [
-            Expanded(
+      appBar: AppBar(
+        title: Text(_loading ? 'Loading...' : _item.snippet.title),
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: NotificationListener<ScrollEndNotification>(
+              onNotification: (ScrollNotification scrollDetails) {
+                if (scrollDetails.metrics.pixels ==
+                    scrollDetails.metrics.maxScrollExtent) {
+                  _loadVideos();
+                }
+                return true;
+              },
               child: ListView.builder(
-                itemCount: null == videosList ? 0 : videosList.items.length,
+                controller: _scrollController,
+                itemCount:
+                    null == _videosList.videos ? 0 : _videosList.videos.length,
                 itemBuilder: (context, index) {
-                  VideoItem videoItem = videosList.items[index];
-                  return Row(
-                    children: [
-                      CachedNetworkImage(
+                  VideoItem videoItem = _videosList.videos[index];
+                  return Container(
+                    padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
+                    child: Row(
+                      children: [
+                        CachedNetworkImage(
                           imageUrl: videoItem
-                              .snippet.thumbnails.thumbnailsDefault.url)
-                    ],
+                              .snippet.thumbnails.thumbnailsDefault.url,
+                        ),
+                        SizedBox(width: 20),
+                        Flexible(child: Text(videoItem.snippet.title)),
+                      ],
+                    ),
                   );
                 },
               ),
             ),
-            FlatButton(
-                onPressed: () async {
-                  String nextToken = videosList.nextPageToken;
-                  videosList = await Services.getVideosList(
-                      playlistId: _playListId, pageToken: nextToken);
-                  setState(() {});
-                },
-                child: Text('More'))
-          ],
-        ));
+          ),
+        ],
+      ),
+    );
+  }
+
+  _loadVideos() async {
+    VideosList tempVideosList = await Services.getVideosList(
+        playlistId: _playListId, pageToken: _nextPageToken);
+    _nextPageToken = tempVideosList.nextPageToken;
+    _videosList.videos.addAll(tempVideosList.videos);
+    setState(() {});
   }
 }
