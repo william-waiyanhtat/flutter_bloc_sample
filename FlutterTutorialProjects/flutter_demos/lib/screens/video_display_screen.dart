@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_demos/model/video_list_model.dart';
 import 'package:flutter_demos/utils/services.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class VideoDisplayScreen extends StatefulWidget {
   //
+  VideoDisplayScreen({this.videoItem});
+  final VideoItem videoItem;
+
   @override
   _VideoDisplayScreenState createState() => _VideoDisplayScreenState();
 }
@@ -11,17 +15,13 @@ class VideoDisplayScreen extends StatefulWidget {
 class _VideoDisplayScreenState extends State<VideoDisplayScreen> {
   //
   YoutubePlayerController _controller;
-  PlayerState _playerState;
-  YoutubeMetaData _videoMetaData;
-  double _volume = 100;
-  bool _muted = false;
   bool _isPlayerReady = false;
 
   @override
   void initState() {
     super.initState();
     _controller = YoutubePlayerController(
-        initialVideoId: 'ARkO-6f9ZCo',
+        initialVideoId: widget.videoItem.video.resourceId.videoId,
         flags: YoutubePlayerFlags(
           mute: false,
           autoPlay: true,
@@ -32,11 +32,7 @@ class _VideoDisplayScreenState extends State<VideoDisplayScreen> {
 
   void listener() {
     if (_isPlayerReady && mounted && !_controller.value.isFullScreen) {
-      setState(() {
-        _playerState = _controller.value.playerState;
-        _videoMetaData = _controller.metadata;
-        // print(_videoMetaData.author);
-      });
+      //
     }
   }
 
@@ -57,7 +53,7 @@ class _VideoDisplayScreenState extends State<VideoDisplayScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Youtube Player'),
+        title: Text(widget.videoItem.video.title),
       ),
       body: Container(
         child: YoutubePlayer(

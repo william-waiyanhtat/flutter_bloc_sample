@@ -47,26 +47,26 @@ class VideoItem {
     this.kind,
     this.etag,
     this.id,
-    this.snippet,
+    this.video,
   });
 
   String kind;
   String etag;
   String id;
-  Video snippet;
+  Video video;
 
   factory VideoItem.fromJson(Map<String, dynamic> json) => VideoItem(
         kind: json["kind"],
         etag: json["etag"],
         id: json["id"],
-        snippet: Video.fromJson(json["snippet"]),
+        video: Video.fromJson(json["snippet"]),
       );
 
   Map<String, dynamic> toJson() => {
         "kind": kind,
         "etag": etag,
         "id": id,
-        "snippet": snippet.toJson(),
+        "snippet": video.toJson(),
       };
 }
 

@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_demos/model/account_model.dart';
 import 'package:flutter_demos/model/video_list_model.dart';
+import 'package:flutter_demos/screens/video_display_screen.dart';
 import 'package:flutter_demos/utils/services.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -33,7 +34,6 @@ class _HomeScreenState extends State<HomeScreen> {
   _getAccountInfo() async {
     _accountModel = await Services.getAccountInfo();
     _item = _accountModel.items[0];
-
     print('Videos: ${_item.statistics.videoCount}');
     _playListId = _item.contentDetails.relatedPlaylists.uploads;
     print('_playListId: $_playListId');
@@ -48,10 +48,11 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_loading ? 'Loading...' : _item.snippet.title),
+        title: Text('Youtube'),
       ),
       body: Column(
         children: [
+          _buildProfile(),
           Expanded(
             child: NotificationListener<ScrollEndNotification>(
               onNotification: (ScrollNotification scrollDetails) {
@@ -67,17 +68,27 @@ class _HomeScreenState extends State<HomeScreen> {
                     null == _videosList.videos ? 0 : _videosList.videos.length,
                 itemBuilder: (context, index) {
                   VideoItem videoItem = _videosList.videos[index];
-                  return Container(
-                    padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
-                    child: Row(
-                      children: [
-                        CachedNetworkImage(
-                          imageUrl: videoItem
-                              .snippet.thumbnails.thumbnailsDefault.url,
-                        ),
-                        SizedBox(width: 20),
-                        Flexible(child: Text(videoItem.snippet.title)),
-                      ],
+                  return InkWell(
+                    onTap: () async {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return VideoDisplayScreen(
+                          videoItem: videoItem,
+                        );
+                      }));
+                    },
+                    child: Container(
+                      padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
+                      child: Row(
+                        children: [
+                          CachedNetworkImage(
+                            imageUrl: videoItem
+                                .video.thumbnails.thumbnailsDefault.url,
+                          ),
+                          SizedBox(width: 20),
+                          Flexible(child: Text(videoItem.video.title)),
+                        ],
+                      ),
                     ),
                   );
                 },
@@ -87,6 +98,37 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
     );
+  }
+
+  _buildProfile() {
+    return _loading
+        ? Container()
+        : Container(
+            padding: EdgeInsets.all(10),
+            child: Card(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    CachedNetworkImage(
+                      imageUrl: _item.snippet.thumbnails.medium.url,
+                      height: 60,
+                      width: 60,
+                    ),
+                    SizedBox(width: 20),
+                    Expanded(
+                        child: Text(
+                      _item.snippet.title,
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
+                    )),
+                    Text(_item.statistics.videoCount),
+                    SizedBox(width: 20),
+                  ],
+                ),
+              ),
+            ),
+          );
   }
 
   _loadVideos() async {
