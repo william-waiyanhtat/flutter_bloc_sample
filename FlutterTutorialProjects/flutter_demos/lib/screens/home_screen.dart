@@ -110,10 +110,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
                   children: [
-                    CachedNetworkImage(
-                      imageUrl: _item.snippet.thumbnails.medium.url,
-                      height: 60,
-                      width: 60,
+                    CircleAvatar(
+                      backgroundImage: CachedNetworkImageProvider(
+                        _item.snippet.thumbnails.medium.url,
+                      ),
                     ),
                     SizedBox(width: 20),
                     Expanded(
