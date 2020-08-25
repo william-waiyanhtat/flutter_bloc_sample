@@ -1,16 +1,16 @@
 // To parse this JSON data, do
 //
-//     final accountModel = accountModelFromJson(jsonString);
+//     final channelInfo = channelInfoFromJson(jsonString);
 
 import 'dart:convert';
 
-AccountModel accountModelFromJson(String str) =>
-    AccountModel.fromJson(json.decode(str));
+ChannelInfo channelInfoFromJson(String str) =>
+    ChannelInfo.fromJson(json.decode(str));
 
-String accountModelToJson(AccountModel data) => json.encode(data.toJson());
+String channelInfoToJson(ChannelInfo data) => json.encode(data.toJson());
 
-class AccountModel {
-  AccountModel({
+class ChannelInfo {
+  ChannelInfo({
     this.kind,
     this.etag,
     this.pageInfo,
@@ -22,7 +22,7 @@ class AccountModel {
   PageInfo pageInfo;
   List<Item> items;
 
-  factory AccountModel.fromJson(Map<String, dynamic> json) => AccountModel(
+  factory ChannelInfo.fromJson(Map<String, dynamic> json) => ChannelInfo(
         kind: json["kind"],
         etag: json["etag"],
         pageInfo: PageInfo.fromJson(json["pageInfo"]),
@@ -260,20 +260,16 @@ class Statistics {
 
 class PageInfo {
   PageInfo({
-    this.totalResults,
     this.resultsPerPage,
   });
 
-  int totalResults;
   int resultsPerPage;
 
   factory PageInfo.fromJson(Map<String, dynamic> json) => PageInfo(
-        totalResults: json["totalResults"],
         resultsPerPage: json["resultsPerPage"],
       );
 
   Map<String, dynamic> toJson() => {
-        "totalResults": totalResults,
         "resultsPerPage": resultsPerPage,
       };
 }

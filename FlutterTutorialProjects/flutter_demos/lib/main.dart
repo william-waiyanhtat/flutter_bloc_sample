@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_demos/screens/home_screen.dart';
-import 'package:flutter_demos/screens/video_display_screen.dart';
 
-void main() async {
+void main() {
   runApp(
     HomeApp(),
   );
@@ -10,9 +9,6 @@ void main() async {
 
 class HomeApp extends StatelessWidget {
   //
-  HomeApp({this.route});
-  final String route;
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

@@ -1,36 +1,35 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_demos/model/video_list_model.dart';
-import 'package:flutter_demos/utils/services.dart';
+import 'package:flutter_demos/models/viideos_list.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
-class VideoDisplayScreen extends StatefulWidget {
+class VideoPlayerScreen extends StatefulWidget {
   //
-  VideoDisplayScreen({this.videoItem});
+  VideoPlayerScreen({this.videoItem});
   final VideoItem videoItem;
 
   @override
-  _VideoDisplayScreenState createState() => _VideoDisplayScreenState();
+  _VideoPlayerScreenState createState() => _VideoPlayerScreenState();
 }
 
-class _VideoDisplayScreenState extends State<VideoDisplayScreen> {
+class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
   //
   YoutubePlayerController _controller;
-  bool _isPlayerReady = false;
+  bool _isPlayerReady;
 
   @override
   void initState() {
     super.initState();
+    _isPlayerReady = false;
     _controller = YoutubePlayerController(
-        initialVideoId: widget.videoItem.video.resourceId.videoId,
-        flags: YoutubePlayerFlags(
-          mute: false,
-          autoPlay: true,
-        ))
-      ..addListener(listener);
-    Services.getAccountInfo();
+      initialVideoId: widget.videoItem.video.resourceId.videoId,
+      flags: YoutubePlayerFlags(
+        mute: false,
+        autoPlay: true,
+      ),
+    )..addListener(_listener);
   }
 
-  void listener() {
+  void _listener() {
     if (_isPlayerReady && mounted && !_controller.value.isFullScreen) {
       //
     }
@@ -38,7 +37,6 @@ class _VideoDisplayScreenState extends State<VideoDisplayScreen> {
 
   @override
   void deactivate() {
-    // Pauses video while navigating to next page.
     _controller.pause();
     super.deactivate();
   }
