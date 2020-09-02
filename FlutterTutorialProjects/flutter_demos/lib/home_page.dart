@@ -27,32 +27,28 @@ class _MyHomePageState extends State<MyHomePage> {
                 );
               },
             ),
+            SizedBox(height: 30),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                FlatButton(
+                FloatingActionButton(
                   onPressed: () {
                     context.bloc<CounterBloc>().add(CounterEvent.increment);
                   },
-                  child: Text('Increment'),
+                  child: Icon(Icons.add),
                 ),
-                FlatButton(
+                SizedBox(width: 30),
+                FloatingActionButton(
                   onPressed: () {
                     context.bloc<CounterBloc>().add(CounterEvent.decrement);
                   },
-                  child: Text('Decrement'),
-                )
+                  child: Icon(Icons.remove),
+                ),
               ],
             ),
           ],
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    // _bloc.dispose();
   }
 }
