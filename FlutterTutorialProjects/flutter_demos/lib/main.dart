@@ -1,24 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_demos/screens/home_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'counter_bloc.dart';
+
+import 'home_page.dart';
 
 void main() {
-  runApp(
-    HomeApp(),
-  );
+  runApp(MyApp());
 }
 
-class HomeApp extends StatelessWidget {
-  //
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.red,
+        primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: HomeScreen(),
+      home: BlocProvider(
+        create: (context) => CounterBloc(),
+        child: MyHomePage(),
+      ),
     );
   }
 }
