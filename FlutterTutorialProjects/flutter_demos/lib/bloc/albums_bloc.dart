@@ -1,36 +1,12 @@
 import 'dart:io';
-import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:async';
-import 'package:meta/meta.dart';
 import '../api/error.dart';
 import '../api/services.dart';
 import '../models/albums_list.dart';
 import '../models/spotify_error.dart';
-
-@immutable
-abstract class SpotifyState extends Equatable {
-  @override
-  List<Object> get props => [];
-}
-
-class AlbumsInitState extends SpotifyState {
-  //
-}
-
-class AlbumsLoading extends SpotifyState {
-  //
-}
-
-class AlbumsLoaded extends SpotifyState {
-  final AlbumsList albumsList;
-  AlbumsLoaded(this.albumsList);
-}
-
-class AlbumListError extends SpotifyState {
-  final error;
-  AlbumListError({this.error});
-}
+import 'album_bloc_states.dart';
+import 'events.dart';
 
 class SpotifyBloc extends Bloc<SpotifyEvents, SpotifyState> {
   //
@@ -72,8 +48,4 @@ class SpotifyBloc extends Bloc<SpotifyEvents, SpotifyState> {
         break;
     }
   }
-}
-
-enum SpotifyEvents {
-  fetchAlbums,
 }
