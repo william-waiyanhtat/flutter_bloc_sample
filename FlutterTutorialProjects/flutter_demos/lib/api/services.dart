@@ -1,10 +1,10 @@
 import 'dart:io';
 import 'package:flutter_demos/models/albums_list.dart';
-import 'package:flutter_demos/models/spotify_error.dart';
+import 'package:flutter_demos/models/album_list_error.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'constants.dart';
-import 'error.dart';
+import 'exceptiions.dart';
 
 abstract class SpotifyRepo {
   Future<AlbumsList> getAlbumsList();
@@ -23,7 +23,6 @@ class SpotifyAlbumServices implements SpotifyRepo {
     };
     Uri uri = Uri.https(_baseUrl, _GET_ALBUMS, parameters);
     Response response = await http.get(uri, headers: headers());
-    print(response.body);
     try {
       if (response.statusCode == 200) {
         AlbumsList albumsList = albumsListFromJson(response.body);

@@ -10,29 +10,21 @@ class Retry extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: Container(
-        alignment: Alignment.center,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              message,
-              style: TextStyle(
-                color: Theme.of(context).textTheme.bodyText1.color,
-              ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            message,
+            style: TextStyle(
+              color: Colors.red,
             ),
-            FlatButton(
-              child: Text(
-                'Tap to Retry',
-                style: TextStyle(
-                  color: Theme.of(context).textTheme.bodyText1.color,
-                ),
-              ),
-              onPressed: onTap,
-            ),
-          ],
-        ),
+          ),
+          SizedBox(height: 10),
+          RaisedButton(
+            child: Text('Tap to Retry'),
+            onPressed: onTap,
+          ),
+        ],
       ),
     );
   }

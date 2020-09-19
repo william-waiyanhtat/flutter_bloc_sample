@@ -8,13 +8,9 @@ abstract class SpotifyState extends Equatable {
   List<Object> get props => [];
 }
 
-class AlbumsInitState extends SpotifyState {
-  //
-}
+class AlbumsInitState extends SpotifyState {}
 
-class AlbumsLoading extends SpotifyState {
-  //
-}
+class AlbumsLoading extends SpotifyState {}
 
 class AlbumsLoaded extends SpotifyState {
   final AlbumsList albumsList;

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_demos/bloc/album_bloc_states.dart';
-import 'package:flutter_demos/bloc/albums_bloc.dart';
-import 'package:flutter_demos/bloc/events.dart';
+import 'package:flutter_demos/bloc/album_list/states.dart';
+import 'package:flutter_demos/bloc/album_list/bloc.dart';
+import 'package:flutter_demos/bloc/album_list/events.dart';
 import 'package:flutter_demos/models/albums_list.dart';
 import 'package:flutter_demos/widgets/list_row.dart';
 import 'package:flutter_demos/widgets/loading.dart';
 import 'package:flutter_demos/widgets/retry.dart';
-import '../bloc/albums_bloc.dart';
+import '../bloc/album_list/bloc.dart';
 
 class AlbumsScreen extends StatefulWidget {
   @override
@@ -41,9 +41,6 @@ class _AlbumsScreenState extends State<AlbumsScreen> {
 
   _body() {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisSize: MainAxisSize.max,
       children: [
         BlocBuilder<SpotifyBloc, SpotifyState>(
             builder: (BuildContext context, SpotifyState state) {
