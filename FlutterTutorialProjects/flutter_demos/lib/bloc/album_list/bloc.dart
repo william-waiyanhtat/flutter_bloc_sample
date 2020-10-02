@@ -28,7 +28,7 @@ class AlbumsBloc extends Bloc<AlbumEvents, AlbumsState> {
           );
         } on HttpException {
           yield AlbumListError(
-            error: NoInternetException('No Service Found'),
+            error: NoServiceFoundException('No Service Found'),
           );
         } on FormatException {
           yield AlbumListError(
