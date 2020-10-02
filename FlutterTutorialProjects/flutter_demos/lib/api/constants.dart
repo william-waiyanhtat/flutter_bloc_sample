@@ -1,6 +1,0 @@
-const String AUTH_TOKEN =
-    'BQA3Gz-FrDwLqfDIJbnqGtk3V_zFaeISxDEfkPO496bnew573EB-6bpPlgnDiMnK_ekTWGnshvUGkcwQKCvoQO8FJBZnJHR99an1hUX7BYNFbCkijNav0oPq46aqMCKbxqkjvv8F2jud5wwW14IMZQ8RJlXDMkcbwfk';
-// 'BQD3zWP7bbKVAGBIq9GjpFVDaiZo6uZnyB387XZHfL_mGscoeeffmio2X2T1ANXkzSBR90NV9CpgXX8l_fmyXd_Hl1nzvN8h8f1tK4HY3PJBNnkLuQ2UnRdc5sqf4X_jIpq8bX_3qE9k7YhtK-5JdsZJc_NiB-xCy4c';
-// 'BQCi4sjHPyVtamB6E7gvo6mzP_ie2S7G3acXtggtn3dBalPKmRWNzQBvCZ_NmhNkpudJCAWX3-3DUH3zOz-aaWYdwuMIkNTdqxbpEDv0QqrW3H8v4BHwEzmsJijgc5COBnBocFg7E84nZRr-IkZHvbUu_NZahOOYlYU';
-const ids =
-    '382ObEPsp2rxGrnsizN5TX,1A2GTWGtFfWp7KSQTwWOyo,2noRn2Aes5aoNVsU6iWThc';

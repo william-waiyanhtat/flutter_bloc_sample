@@ -3,21 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_demos/models/albums_list.dart';
 
 @immutable
-abstract class SpotifyState extends Equatable {
+abstract class AlbumsState extends Equatable {
   @override
   List<Object> get props => [];
 }
 
-class AlbumsInitState extends SpotifyState {}
+class AlbumInitState extends AlbumsState {}
 
-class AlbumsLoading extends SpotifyState {}
+class AlbumsLoading extends AlbumsState {}
 
-class AlbumsLoaded extends SpotifyState {
-  final AlbumsList albumsList;
-  AlbumsLoaded(this.albumsList);
+class AlbumsLoaded extends AlbumsState {
+  final List<Album> albums;
+  AlbumsLoaded(this.albums);
 }
 
-class AlbumListError extends SpotifyState {
+class AlbumListError extends AlbumsState {
   final error;
   AlbumListError({this.error});
 }

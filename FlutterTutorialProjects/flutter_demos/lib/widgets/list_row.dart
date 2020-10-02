@@ -5,39 +5,20 @@ import 'package:flutter_demos/models/albums_list.dart';
 class ListRow extends StatelessWidget {
   //
   final Album album;
-  final Function onTap;
-  ListRow({this.album, this.onTap});
-
-  final dim = 50.0;
+  ListRow({this.album});
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        padding: EdgeInsets.all(20.0),
-        child: Row(
-          children: [
-            CachedNetworkImage(
-              width: dim,
-              height: dim,
-              imageUrl: album.images[0].url,
-              errorWidget: (context, url, error) => Container(
-                width: dim,
-                height: dim,
-                color: Colors.grey,
-              ),
-            ),
-            SizedBox(width: 20),
-            Flexible(
-                child: Text(
-              album.name,
-              style: TextStyle(
-                color: Theme.of(context).textTheme.bodyText1.color,
-              ),
-            )),
-          ],
-        ),
+    return Container(
+      padding: EdgeInsets.all(20.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('${album.userId}'),
+          SizedBox(height: 10),
+          Text(album.title),
+        ],
       ),
     );
   }

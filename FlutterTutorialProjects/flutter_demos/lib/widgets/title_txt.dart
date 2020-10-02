@@ -12,7 +12,7 @@ class TitleTxt extends StatelessWidget {
       padding: EdgeInsets.all(20),
       child: Text(
         text,
-        style: TextStyle(fontSize: 24),
+        style: TextStyle(fontSize: 30),
       ),
     );
   }

@@ -1,27 +1,26 @@
 import 'dart:io';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_demos/models/albums_list.dart';
 import 'dart:async';
-import '../../api/exceptiions.dart';
+import '../../api/exceptions.dart';
 import '../../api/services.dart';
-import '../../models/albums_list.dart';
-import '../../models/album_list_error.dart';
 import 'states.dart';
 import 'events.dart';
 
-class SpotifyBloc extends Bloc<SpotifyEvents, SpotifyState> {
+class AlbumsBloc extends Bloc<AlbumEvents, AlbumsState> {
   //
-  final SpotifyRepo spotifyRepo;
-  AlbumsList albumsList;
+  final AlbumsRepo albumsRepo;
+  List<Album> albumsList;
 
-  SpotifyBloc({this.spotifyRepo}) : super(AlbumsInitState());
+  AlbumsBloc({this.albumsRepo}) : super(AlbumInitState());
 
   @override
-  Stream<SpotifyState> mapEventToState(SpotifyEvents event) async* {
+  Stream<AlbumsState> mapEventToState(AlbumEvents event) async* {
     switch (event) {
-      case SpotifyEvents.fetchAlbums:
+      case AlbumEvents.fetchAlbums:
         yield AlbumsLoading();
         try {
-          albumsList = await spotifyRepo.getAlbumsList();
+          albumsList = await albumsRepo.getAlbumsList();
           yield AlbumsLoaded(albumsList);
         } on SocketException {
           yield AlbumListError(
@@ -34,11 +33,6 @@ class SpotifyBloc extends Bloc<SpotifyEvents, SpotifyState> {
         } on FormatException {
           yield AlbumListError(
             error: InvalidFormatException('Invalid Response Format'),
-          );
-        } on SpotifyException catch (e) {
-          SpotifyError spotifyError = e.error;
-          yield AlbumListError(
-            error: SpotifyException(message: spotifyError.error.message),
           );
         } catch (e) {
           yield AlbumListError(

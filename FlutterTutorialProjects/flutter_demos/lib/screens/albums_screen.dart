@@ -23,7 +23,7 @@ class _AlbumsScreenState extends State<AlbumsScreen> {
   }
 
   _loadAlbums() async {
-    context.bloc<SpotifyBloc>().add(SpotifyEvents.fetchAlbums);
+    context.bloc<AlbumsBloc>().add(AlbumEvents.fetchAlbums);
   }
 
   @override
@@ -42,8 +42,8 @@ class _AlbumsScreenState extends State<AlbumsScreen> {
   _body() {
     return Column(
       children: [
-        BlocBuilder<SpotifyBloc, SpotifyState>(
-            builder: (BuildContext context, SpotifyState state) {
+        BlocBuilder<AlbumsBloc, AlbumsState>(
+            builder: (BuildContext context, AlbumsState state) {
           if (state is AlbumListError) {
             return Retry(
               message: state.error.message,
@@ -51,8 +51,8 @@ class _AlbumsScreenState extends State<AlbumsScreen> {
             );
           }
           if (state is AlbumsLoaded) {
-            AlbumsList albumsList = state.albumsList;
-            return list(albumsList);
+            List<Album> albums = state.albums;
+            return _list(albums);
           }
           return Loading();
         }),
@@ -61,16 +61,13 @@ class _AlbumsScreenState extends State<AlbumsScreen> {
     );
   }
 
-  Widget list(AlbumsList albumsList) {
+  Widget _list(List<Album> albums) {
     return Expanded(
       child: ListView.builder(
-        itemCount: albumsList.albums.length,
+        itemCount: albums.length,
         itemBuilder: (_, index) {
-          Album album = albumsList.albums[index];
-          return ListRow(
-            album: album,
-            onTap: () async {},
-          );
+          Album album = albums[index];
+          return ListRow(album: album);
         },
       ),
     );

@@ -1,3 +1,3 @@
-enum SpotifyEvents {
+enum AlbumEvents {
   fetchAlbums,
 }

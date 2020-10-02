@@ -17,9 +17,3 @@ class UnknownException {
   String message;
   UnknownException(this.message);
 }
-
-class SpotifyException {
-  var error;
-  var message;
-  SpotifyException({this.error, this.message});
-}

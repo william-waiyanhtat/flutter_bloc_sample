@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: BlocProvider(
-        create: (context) => SpotifyBloc(spotifyRepo: SpotifyAlbumServices()),
+        create: (context) => AlbumsBloc(albumsRepo: AlbumServices()),
         child: AlbumsScreen(),
       ),
     );
