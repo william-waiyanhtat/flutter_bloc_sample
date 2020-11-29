@@ -1,6 +1,5 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_demos/models/albums_list.dart';
+import 'package:flutter_demos/model/albums_list.dart';
 
 class ListRow extends StatelessWidget {
   //
@@ -15,9 +14,14 @@ class ListRow extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('${album.userId}'),
-          SizedBox(height: 10),
-          Text(album.title),
+          Text(
+            album.title,
+            style: TextStyle(
+              fontSize: 20.0,
+              color: Theme.of(context).textTheme.bodyText1.color,
+            ),
+          ),
+          Divider(),
         ],
       ),
     );

@@ -14,6 +14,6 @@ class InvalidFormatException {
 }
 
 class UnknownException {
-  String message;
+  var message;
   UnknownException(this.message);
 }
