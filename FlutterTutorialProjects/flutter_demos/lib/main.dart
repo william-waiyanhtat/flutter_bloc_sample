@@ -3,10 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_demos/api/services.dart';
 import 'package:flutter_demos/bloc/albums/bloc.dart';
 import 'package:flutter_demos/screens/albums_screen.dart';
+import 'package:flutter_demos/settings/preferences.dart';
 
 import 'bloc/theme/theme_bloc.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Preferences.init();
   runApp(MyApp());
 }
 

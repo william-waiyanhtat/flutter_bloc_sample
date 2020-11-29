@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_demos/settings/theme.dart';
+import 'package:flutter_demos/settings/app_themes.dart';
 
 class ThemeState {
   final ThemeData themeData;
@@ -18,7 +18,6 @@ class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
   @override
   Stream<ThemeState> mapEventToState(ThemeEvent event) async* {
     if (event is ThemeEvent) {
-      // print(event.appTheme);
       yield ThemeState(themeData: AppThemes.appThemeData[event.appTheme]);
     }
   }

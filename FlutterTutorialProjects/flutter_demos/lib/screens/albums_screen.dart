@@ -5,7 +5,8 @@ import 'package:flutter_demos/bloc/albums/events.dart';
 import 'package:flutter_demos/bloc/albums/states.dart';
 import 'package:flutter_demos/bloc/theme/theme_bloc.dart';
 import 'package:flutter_demos/model/albums_list.dart';
-import 'package:flutter_demos/settings/theme.dart';
+import 'package:flutter_demos/settings/app_themes.dart';
+import 'package:flutter_demos/settings/preferences.dart';
 import 'package:flutter_demos/widgets/error.dart';
 import 'package:flutter_demos/widgets/list_row.dart';
 import 'package:flutter_demos/widgets/loading.dart';
@@ -18,13 +19,25 @@ class AlbumsScreen extends StatefulWidget {
 
 class _AlbumsScreenState extends State<AlbumsScreen> {
   //
-  bool _isDarkTheme;
+  AppTheme _curTheme;
 
   @override
   void initState() {
     super.initState();
-    _isDarkTheme = false;
+    _curTheme = AppTheme.lightTheme;
+    _loadTheme();
     _loadAlbums();
+  }
+
+  _loadTheme() async {
+    _curTheme = await Preferences.getTheme();
+    context.bloc<ThemeBloc>().add(ThemeEvent(appTheme: _curTheme));
+  }
+
+  _setTheme(bool darkTheme) async {
+    _curTheme = darkTheme ? AppTheme.lightTheme : AppTheme.darkTheme;
+    context.bloc<ThemeBloc>().add(ThemeEvent(appTheme: _curTheme));
+    Preferences.saveTheme(_curTheme);
   }
 
   _loadAlbums() async {
@@ -39,10 +52,9 @@ class _AlbumsScreenState extends State<AlbumsScreen> {
         title: Txt(text: 'Albums'),
         actions: [
           Switch(
-            value: _isDarkTheme,
-            onChanged: (val) {
-              _isDarkTheme = !_isDarkTheme;
-              _toggleTheme(context);
+            value: _curTheme == AppTheme.lightTheme,
+            onChanged: (val) async {
+              _setTheme(val);
             },
           )
         ],
@@ -51,11 +63,6 @@ class _AlbumsScreenState extends State<AlbumsScreen> {
         child: _body(),
       ),
     );
-  }
-
-  void _toggleTheme(BuildContext context) {
-    var theme = _isDarkTheme ? AppTheme.darkTheme : AppTheme.lightTheme;
-    context.bloc<ThemeBloc>().add(ThemeEvent(appTheme: theme));
   }
 
   _body() {
