@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_demos/model/albums_list.dart';
+import 'package:flutter_demos/widgets/txt.dart';
 
 class ListRow extends StatelessWidget {
   //
@@ -14,12 +15,8 @@ class ListRow extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            album.title,
-            style: TextStyle(
-              fontSize: 20.0,
-              color: Theme.of(context).textTheme.bodyText1.color,
-            ),
+          Txt(
+            text: album.title,
           ),
           Divider(),
         ],

@@ -9,6 +9,7 @@ import 'package:flutter_demos/settings/theme.dart';
 import 'package:flutter_demos/widgets/error.dart';
 import 'package:flutter_demos/widgets/list_row.dart';
 import 'package:flutter_demos/widgets/loading.dart';
+import 'package:flutter_demos/widgets/txt.dart';
 
 class AlbumsScreen extends StatefulWidget {
   @override
@@ -35,7 +36,7 @@ class _AlbumsScreenState extends State<AlbumsScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).backgroundColor,
-        title: Text('Albums'),
+        title: Txt(text: 'Albums'),
         actions: [
           Switch(
             value: _isDarkTheme,
