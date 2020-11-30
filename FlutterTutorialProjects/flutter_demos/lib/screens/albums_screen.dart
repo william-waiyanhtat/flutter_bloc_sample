@@ -4,6 +4,7 @@ import 'package:flutter_demos/bloc/albums/bloc.dart';
 import 'package:flutter_demos/bloc/albums/events.dart';
 import 'package:flutter_demos/bloc/albums/states.dart';
 import 'package:flutter_demos/bloc/theme/theme_bloc.dart';
+import 'package:flutter_demos/bloc/theme/theme_events.dart';
 import 'package:flutter_demos/model/albums_list.dart';
 import 'package:flutter_demos/settings/app_themes.dart';
 import 'package:flutter_demos/settings/preferences.dart';
@@ -19,6 +20,7 @@ class AlbumsScreen extends StatefulWidget {
 
 class _AlbumsScreenState extends State<AlbumsScreen> {
   //
+
   @override
   void initState() {
     super.initState();
@@ -35,9 +37,10 @@ class _AlbumsScreenState extends State<AlbumsScreen> {
   }
 
   _setTheme(bool darkTheme) async {
-    AppTheme curTheme = darkTheme ? AppTheme.lightTheme : AppTheme.darkTheme;
-    context.bloc<ThemeBloc>().add(ThemeEvent(appTheme: curTheme));
-    Preferences.saveTheme(curTheme);
+    AppTheme selectedTheme =
+        darkTheme ? AppTheme.lightTheme : AppTheme.darkTheme;
+    context.bloc<ThemeBloc>().add(ThemeEvent(appTheme: selectedTheme));
+    Preferences.saveTheme(selectedTheme);
   }
 
   @override

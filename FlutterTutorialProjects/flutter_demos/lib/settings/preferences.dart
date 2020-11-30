@@ -1,29 +1,27 @@
 import 'dart:convert';
 
+import 'package:flutter_demos/settings/app_themes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'app_themes.dart';
 
 class Preferences {
   //
-  static SharedPreferences prefs;
+  static SharedPreferences preferences;
   static const String KEY_SELECTED_THEME = 'key_selected_theme';
 
   static init() async {
-    prefs = await SharedPreferences.getInstance();
+    preferences = await SharedPreferences.getInstance();
   }
 
   static void saveTheme(AppTheme selectedTheme) async {
     if (null == selectedTheme) {
       selectedTheme = AppTheme.lightTheme;
-      return;
     }
     String theme = jsonEncode(selectedTheme.toString());
-    prefs.setString(KEY_SELECTED_THEME, theme);
+    preferences.setString(KEY_SELECTED_THEME, theme);
   }
 
   static AppTheme getTheme() {
-    String theme = prefs.getString(KEY_SELECTED_THEME);
+    String theme = preferences.getString(KEY_SELECTED_THEME);
     if (null == theme) {
       return AppTheme.lightTheme;
     }

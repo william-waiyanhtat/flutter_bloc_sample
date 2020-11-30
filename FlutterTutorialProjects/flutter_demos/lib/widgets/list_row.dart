@@ -15,9 +15,7 @@ class ListRow extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Txt(
-            text: album.title,
-          ),
+          Txt(text: album.title),
           Divider(),
         ],
       ),
