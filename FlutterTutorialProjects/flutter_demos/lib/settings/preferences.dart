@@ -22,18 +22,18 @@ class Preferences {
     prefs.setString(KEY_SELECTED_THEME, theme);
   }
 
-  static Future<AppTheme> getTheme() async {
+  static AppTheme getTheme() {
     String theme = prefs.getString(KEY_SELECTED_THEME);
     if (null == theme) {
       return AppTheme.lightTheme;
     }
-    return getStatusFromString(jsonDecode(theme));
+    return getThemeFromString(jsonDecode(theme));
   }
 
-  static AppTheme getStatusFromString(String statusAsString) {
-    for (AppTheme element in AppTheme.values) {
-      if (element.toString() == statusAsString) {
-        return element;
+  static AppTheme getThemeFromString(String themeString) {
+    for (AppTheme theme in AppTheme.values) {
+      if (theme.toString() == themeString) {
+        return theme;
       }
     }
     return null;

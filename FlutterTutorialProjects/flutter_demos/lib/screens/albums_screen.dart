@@ -19,25 +19,22 @@ class AlbumsScreen extends StatefulWidget {
 
 class _AlbumsScreenState extends State<AlbumsScreen> {
   //
-  AppTheme _curTheme;
-
   @override
   void initState() {
     super.initState();
-    _curTheme = AppTheme.lightTheme;
     _loadTheme();
     _loadAlbums();
   }
 
   _loadTheme() async {
-    _curTheme = await Preferences.getTheme();
-    context.bloc<ThemeBloc>().add(ThemeEvent(appTheme: _curTheme));
+    AppTheme curTheme = Preferences.getTheme();
+    context.bloc<ThemeBloc>().add(ThemeEvent(appTheme: curTheme));
   }
 
   _setTheme(bool darkTheme) async {
-    _curTheme = darkTheme ? AppTheme.lightTheme : AppTheme.darkTheme;
-    context.bloc<ThemeBloc>().add(ThemeEvent(appTheme: _curTheme));
-    Preferences.saveTheme(_curTheme);
+    AppTheme curTheme = darkTheme ? AppTheme.lightTheme : AppTheme.darkTheme;
+    context.bloc<ThemeBloc>().add(ThemeEvent(appTheme: curTheme));
+    Preferences.saveTheme(curTheme);
   }
 
   _loadAlbums() async {
@@ -52,7 +49,7 @@ class _AlbumsScreenState extends State<AlbumsScreen> {
         title: Txt(text: 'Albums'),
         actions: [
           Switch(
-            value: _curTheme == AppTheme.lightTheme,
+            value: Preferences.getTheme() == AppTheme.lightTheme,
             onChanged: (val) async {
               _setTheme(val);
             },
