@@ -29,17 +29,17 @@ class _AlbumsScreenState extends State<AlbumsScreen> {
   }
 
   _loadTheme() async {
-    context.bloc<ThemeBloc>().add(ThemeEvent(appTheme: Preferences.getTheme()));
+    context.read<ThemeBloc>().add(ThemeEvent(appTheme: Preferences.getTheme()));
   }
 
   _loadAlbums() async {
-    context.bloc<AlbumsBloc>().add(AlbumEvents.fetchAlbums);
+    context.read<AlbumsBloc>().add(AlbumEvents.fetchAlbums);
   }
 
   _setTheme(bool darkTheme) async {
     AppTheme selectedTheme =
         darkTheme ? AppTheme.lightTheme : AppTheme.darkTheme;
-    context.bloc<ThemeBloc>().add(ThemeEvent(appTheme: selectedTheme));
+    context.read<ThemeBloc>().add(ThemeEvent(appTheme: selectedTheme));
     Preferences.saveTheme(selectedTheme);
   }
 
